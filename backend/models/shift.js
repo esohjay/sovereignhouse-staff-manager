@@ -10,10 +10,9 @@ const Shift = sequelize.define("shift", {
   venue: DataTypes.STRING,
   description: DataTypes.STRING,
 });
-Shift.hasMany(User, {
-  foreignKey: "shiftId",
-});
-User.belongsTo(Shift);
+
+Shift.belongsToMany(User, { through: "UserShifts" });
+User.belongsToMany(Shift, { through: "UserShifts" });
 
 Shift.sync().then(() => {
   console.log("shift table created");

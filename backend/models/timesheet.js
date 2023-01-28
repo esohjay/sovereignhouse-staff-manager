@@ -4,8 +4,8 @@ const User = require("./user");
 const Shift = require("./shift");
 
 const TimeSheet = sequelize.define("timesheet", {
-  startTime: DataTypes.STRING,
-  endTime: DataTypes.STRING,
+  startTime: DataTypes.DATE,
+  endTime: DataTypes.DATE,
 });
 
 Shift.hasMany(TimeSheet, {
@@ -18,6 +18,6 @@ User.hasMany(TimeSheet, {
 TimeSheet.belongsTo(User);
 
 TimeSheet.sync().then(() => {
-  console.log("table created");
+  console.log("timesheet table created");
 });
 module.exports = TimeSheet;

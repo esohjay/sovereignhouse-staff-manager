@@ -1,17 +1,25 @@
 const { Sequelize, Model, DataTypes } = require("sequelize");
 const sequelize = require("../config/db");
+const { sequelizeJoi, Joi } = require("sequelize-joi");
+sequelizeJoi(sequelize);
 
 const User = sequelize.define("user", {
-  firstName: DataTypes.STRING,
-  lastName: DataTypes.STRING,
-  status: DataTypes.STRING,
-  email: DataTypes.STRING,
-  address: DataTypes.STRING,
-  phone: DataTypes.STRING,
-  contractType: DataTypes.STRING,
+  firstName: { type: DataTypes.STRING, schema: Joi.string().trim().required() },
+  lastName: { type: DataTypes.STRING, schema: Joi.string().trim().required() },
+  status: { type: DataTypes.STRING, schema: Joi.string().trim().required() },
+  email: {
+    type: DataTypes.STRING,
+    // schema: Joi.string().trim().required().email(),
+  },
+  address: { type: DataTypes.STRING, schema: Joi.string().trim().required() },
+  phone: { type: DataTypes.STRING, schema: Joi.string().trim().required() },
+  contractType: {
+    type: DataTypes.STRING,
+    schema: Joi.string().trim().required(),
+  },
 });
 
 User.sync().then(() => {
-  console.log("table created");
+  console.log("user table created");
 });
 module.exports = User;
