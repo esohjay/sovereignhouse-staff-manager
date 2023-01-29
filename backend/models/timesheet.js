@@ -11,11 +11,11 @@ const TimeSheet = sequelize.define("timesheet", {
 Shift.hasMany(TimeSheet, {
   foreignKey: "shiftId",
 });
-TimeSheet.belongsTo(Shift);
+TimeSheet.belongsTo(Shift, { as: "shift" });
 User.hasMany(TimeSheet, {
   foreignKey: "userId",
 });
-TimeSheet.belongsTo(User);
+TimeSheet.belongsTo(User, { as: "user" });
 
 TimeSheet.sync().then(() => {
   console.log("timesheet table created");

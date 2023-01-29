@@ -1,6 +1,7 @@
 const { DataTypes } = require("sequelize");
 const sequelize = require("../config/db");
 const User = require("./user");
+const UserTasks = require("./task");
 
 const Task = sequelize.define("task", {
   title: DataTypes.STRING,
@@ -12,10 +13,15 @@ const Task = sequelize.define("task", {
   priority: DataTypes.STRING,
 });
 
-Task.belongsToMany(User, { through: "UserTasks" });
-User.belongsToMany(Task, { through: "UserTasks" });
+Task.belongsToMany(User, { as: "asignees", through: UserTasks });
+User.belongsToMany(Task, { as: "tasks", through: UserTasks });
 
-Task.sync().then(() => {
+User.hasMany(UserTasks);
+UserTasks.belongsTo(User);
+Task.hasMany(UserTasks);
+UserTasks.belongsTo(Task);
+
+sequelize.sync().then(() => {
   console.log("Task table created");
 });
 module.exports = Task;

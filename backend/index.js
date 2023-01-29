@@ -5,6 +5,8 @@ const db = require("./config/db");
 
 //routes
 const userRoute = require("./routes/user");
+const shiftRoute = require("./routes/shift");
+const timesheetRoute = require("./routes/timesheet");
 
 const app = express();
 app.use(express.json());
@@ -19,6 +21,8 @@ app.get("/", (req, res) => {
   res.send("welcome to soverignhouse");
 });
 app.use("/api/v1/user", userRoute);
+app.use("/api/v1/shift", shiftRoute);
+app.use("/api/v1/timesheet", timesheetRoute);
 app.all("*", (req, res, next) => {
   next(new ExpressError("Page Not Found", 404));
 });
