@@ -7,6 +7,7 @@ const db = require("./config/db");
 const userRoute = require("./routes/user");
 const shiftRoute = require("./routes/shift");
 const timesheetRoute = require("./routes/timesheet");
+const taskRoute = require("./routes/task");
 
 const app = express();
 app.use(express.json());
@@ -23,6 +24,7 @@ app.get("/", (req, res) => {
 app.use("/api/v1/user", userRoute);
 app.use("/api/v1/shift", shiftRoute);
 app.use("/api/v1/timesheet", timesheetRoute);
+app.use("/api/v1/task", taskRoute);
 app.all("*", (req, res, next) => {
   next(new ExpressError("Page Not Found", 404));
 });
