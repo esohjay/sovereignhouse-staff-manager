@@ -3,12 +3,10 @@ const sequelize = require("../config/db");
 const User = require("./user");
 
 const Expenses = sequelize.define("Expenses", {
-  title: DataTypes.STRING,
-  stundentCategory: DataTypes.STRING,
-  startTime: DataTypes.STRING,
-  endTime: DataTypes.STRING,
-  venue: DataTypes.STRING,
+  amount: DataTypes.INTEGER,
   description: DataTypes.STRING,
+  receiptNo: DataTypes.STRING,
+  image: DataTypes.STRING,
 });
 
 User.hasMany(Expenses, {

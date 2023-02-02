@@ -16,9 +16,6 @@ module.exports.assignStaff = async (req, res) => {
   });
   const task = await Task.findByPk(req.body.task);
   await task.addAsignees(users);
-  // for (let user of users) {
-  //   await task.addUser(user);
-  // }
   res.status(201).json(task);
 };
 module.exports.updateTask = async (req, res) => {
