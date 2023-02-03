@@ -2,6 +2,15 @@ import React, { useState } from "react";
 import { NavLink, Link } from "react-router-dom";
 import logo from "../assets/logo.png";
 
+//redux
+import {
+  selectSidebarState,
+  toggleSidebar,
+  toggleDropdown,
+  selectDropdownState,
+} from "../features/appSlice";
+import { useSelector, useDispatch } from "react-redux";
+
 //components
 import NavItem from "./NavItem";
 import NavBtn from "./NavBtn";
@@ -14,24 +23,21 @@ import { VscTasklist } from "react-icons/vsc";
 import { IoReceiptOutline } from "react-icons/io5";
 import { MdTimer, MdOutlineSettingsSuggest, MdLogout } from "react-icons/md";
 import { SlOptionsVertical } from "react-icons/sl";
-import {
-  FaRegBell,
-  FaRegUser,
-  FaHome,
-  FaEnvelope,
-  FaUserCog,
-} from "react-icons/fa";
+import { FaRegBell, FaRegUser, FaEnvelope, FaUserCog } from "react-icons/fa";
 
-function Nav() {
+function MobileNav() {
   const [showNav, setShowNav] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
+  const dispatch = useDispatch();
+  const isSidebarOpen = useSelector(selectSidebarState);
+  const isDropdownOpen = useSelector(selectDropdownState);
   return (
-    <nav className="bg-mainColor px-5 lg:px-9 flex items-center justify-between h-16 relative">
+    <nav className="bg-mainColor px-5 lg:px-9 flex items-center justify-between h-16 relative md:hidden">
       <ul className="flex gap-x-3">
         {/* Sidebar trigger */}
         <button
           className="text-white border-none text-2xl"
-          onClick={() => setShowNav(true)}
+          onClick={() => dispatch(toggleSidebar())}
         >
           <GiHamburgerMenu />
         </button>
@@ -40,27 +46,24 @@ function Nav() {
         </Link>
       </ul>
       <ul className="flex justify-around items-center gap-x-3 md:hidden">
-        <button
-          className="text-white border-none text-xl"
-          //   onClick={() => setShowNav(!showNav)}
-        >
+        <button className="text-white border-none text-xl">
           <FaRegBell />
         </button>
         {/* Dropdown trigger */}
         <button
           className="text-white border-none text-xl"
-          onClick={() => setShowDropdown(!showDropdown)}
+          onClick={() => dispatch(toggleDropdown())}
         >
           <SlOptionsVertical />
         </button>
       </ul>
       {/* Dropdown */}
       <div
-        className={`w-full absolute top-16 left-0 bg-gray ${
-          showDropdown ? "h-64" : "h-0"
+        className={`w-full absolute top-16 left-0 bg-gray  bg-opacity-50  backdrop-blur-md ${
+          isDropdownOpen ? "h-80" : "h-0"
         } transition-all duration-500 overflow-hidden`}
       >
-        <nav className="grid grid-cols-2 p-5 place-items-center gap-3 h-full w-full">
+        <nav className="grid grid-cols-2 p-5 place-items-center gap-3 h-full w-full ">
           <NavBtn icon={<FaRegUser />} text="my profile" path="/profile" />
           <NavBtn icon={<FaUserCog />} text="edit profile" path="/" />
           <NavBtn icon={<MdTimer />} text="timesheets" path="/" />
@@ -70,7 +73,7 @@ function Nav() {
       {/* Sidebar */}
       <aside
         className={`h-screen  bg-gray absolute p-5 w-4/5 top-0 ${
-          showNav ? "left-0" : "-left-full"
+          isSidebarOpen ? "left-0" : "-left-full"
           //   showNav ? "w-4/5 md:w-64 animate-fade" : "w-0 animate-fade"
           //   showNav ? "block animate-contentSlideIn" : "hidden"
         } transition-all duration-500 overflow-hidden`}
@@ -81,7 +84,7 @@ function Nav() {
           </p>
           <button
             className="text-red-500 border-none text-xl "
-            onClick={() => setShowNav(false)}
+            onClick={() => dispatch(toggleSidebar())}
           >
             <VscChromeClose />
           </button>
@@ -111,4 +114,4 @@ function Nav() {
   );
 }
 
-export default Nav;
+export default MobileNav;
