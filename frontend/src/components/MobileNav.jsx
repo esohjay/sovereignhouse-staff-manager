@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { NavLink, Link } from "react-router-dom";
+import React from "react";
+import { Link } from "react-router-dom";
 import logo from "../assets/logo.png";
 
 //redux
@@ -26,8 +26,6 @@ import { SlOptionsVertical } from "react-icons/sl";
 import { FaRegBell, FaRegUser, FaEnvelope, FaUserCog } from "react-icons/fa";
 
 function MobileNav() {
-  const [showNav, setShowNav] = useState(false);
-  const [showDropdown, setShowDropdown] = useState(false);
   const dispatch = useDispatch();
   const isSidebarOpen = useSelector(selectSidebarState);
   const isDropdownOpen = useSelector(selectDropdownState);
