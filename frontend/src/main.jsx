@@ -12,11 +12,18 @@ import {
 } from "react-router-dom";
 
 import Dashboard from "./pages/Dashboard";
+import Home from "./pages/Home";
+import Register from "./pages/Register";
+import Login from "./pages/Login";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<App />}>
-      <Route index element={<Dashboard />} />
+      <Route path="admin" element={<Home />}>
+        <Route index element={<Dashboard />} />
+      </Route>
+      <Route path="register" element={<Register />} />
+      <Route path="login" element={<Login />} />
     </Route>
   )
 );
