@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import logo from "../assets/logo.png";
+import avater from "../assets/User-avatar.png";
 
 //redux
 import { selectSidebarState, toggleSidebar } from "../features/appSlice";
@@ -62,9 +63,60 @@ function DesktopNav({ children }) {
           <DesktopTopNavItem text="logout" path="/n" icon={<MdLogout />} />
         </ul>
       </nav>
-      <section className="flex w-full gap-x-4 p-2">
-        <nav className="w-64 bg-gray h-screen shadow-sm fixed left-0 top-16"></nav>
-        <section className="w-full ml-64 mt-[70px]">{children}</section>
+      <section className="hidden w-full gap-x-4 p-2 md:flex">
+        <nav
+          className={`w-64 bg-gray h-screen shadow-sm fixed top-16 ${
+            !isSidebarOpen ? "left-0" : "-left-full"
+          } transition-all duration-150 p-5`}
+        >
+          <div className=" flex items-center gap-x-3 mb-8">
+            <figure className="h-8 w-8 rounded-full">
+              <img
+                src={avater}
+                alt="user"
+                className="h-full w-full max-h-full max-w-full rounded-full"
+              />
+            </figure>
+            <p className="capitalize text-mainColor text-lg font-semibold">
+              olusoji daramola
+            </p>
+          </div>
+          <form className="mb-7">
+            <input
+              type="text"
+              placeholder="Search"
+              className="block border rounded-md bg-white p-2 focus:outline-none"
+            />
+          </form>
+          <p className="uppercase text-slate-600 font-medium text-xs mb-7">
+            main menu
+          </p>
+          <NavItem text={"dashboard"} path="/" icon={<GoDashboard />} />
+          <NavItem text={"mailbox"} path="/mailbox" icon={<FaEnvelope />} />
+          <NavItem
+            text={"timesheet & leave"}
+            path="/timesheet"
+            icon={<MdTimer />}
+          />
+          <NavItem text={"tasks"} path="/tasks" icon={<VscTasklist />} />
+          <NavItem
+            text={"expenses"}
+            path="/expenses"
+            icon={<IoReceiptOutline />}
+          />
+          <NavItem
+            text={"settings"}
+            path="/settings"
+            icon={<MdOutlineSettingsSuggest />}
+          />
+        </nav>
+        {/* <section
+          className={`w-full  mt-[70px] bg-black h-screen ${
+            !isSidebarOpen ? "ml-64" : "ml-0"
+          } transition-all duration-150`}
+        >
+          {children}
+        </section> */}
       </section>
     </>
   );
