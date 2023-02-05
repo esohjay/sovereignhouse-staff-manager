@@ -1,9 +1,22 @@
 const User = require("../models/user");
 
 module.exports.createUser = async (req, res) => {
-  //const {firstName, lastName, status, email, phone, contractType, address} = req.body
-  const user = await User.create(req.body);
-  console.log(user.toJson());
+  const user = await User.create({ ...req.body, id: req.user.uid });
+  console.log(req.user);
+  res.status(201).json(user);
+};
+module.exports.login = async (req, res) => {
+  const [user, created] = await User.findOrCreate({
+    where: { id: req.user.uid },
+    defaults: {
+      id: req.user.uid,
+      email: req.user.email,
+      firstName: "unknown",
+      lastName: "user",
+    },
+  });
+
+  console.log(user, created);
   res.status(201).json(user);
 };
 module.exports.updateUser = async (req, res) => {

@@ -10,16 +10,5 @@ const UserShifts = sequelize.define("UserShifts", {
     allowNull: false,
   },
 });
-// User.hasMany(UserShifts, {
-//   foreignKey: "userId",
-// });
-// UserShifts.belongsTo(User);
-// Shift.hasMany(UserShifts, {
-//   foreignKey: "shiftId",
-// });
-// UserShifts.belongsTo(Shift);
 
-// UserShifts.sync().then(() => {
-//   console.log("usershift table created");
-// });
 module.exports = UserShifts;

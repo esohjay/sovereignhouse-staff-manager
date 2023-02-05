@@ -5,12 +5,13 @@ class AuthMiddleware {
     if (!token) {
       return res.status(401).send("Token error, please check token.");
     }
-
     try {
       const decodedToken = await admin.auth().verifyIdToken(token);
       req.user = decodedToken;
+      console.log("Decode token ############", decodedToken);
       return next();
     } catch (err) {
+      console.log(err);
       return res.status(401).send("Unauthorized Request");
     }
   }
