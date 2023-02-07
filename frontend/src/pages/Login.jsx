@@ -1,5 +1,7 @@
 import React, { useEffect } from "react";
 
+import { useNavigate } from "react-router-dom";
+
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
 import { useForm } from "react-hook-form";
@@ -10,14 +12,17 @@ import {
   logInWithEmailAndPassword,
   getUserFormData,
   selectUserForm,
+  selectUser,
 } from "../features/authSlice";
 import { useDispatch, useSelector } from "react-redux";
 import useAuth from "../hooks/useAuth";
 
 function Login() {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const user = useSelector(selectUser);
   const formData = useSelector(selectUserForm);
-  const { user } = useAuth();
+  //   const { user } = useAuth();
   // form validation rules
   const validationSchema = Yup.object().shape({
     email: Yup.string().email().required("email is required"),
@@ -32,24 +37,29 @@ function Login() {
     formState: { errors },
   } = useForm(formOptions);
   const onSubmit = (data) => {
-    dispatch(getUserFormData(data));
+    dispatch(logInWithEmailAndPassword(data));
   };
   useEffect(() => {
-    if (formData) {
-      dispatch(
-        logInWithEmailAndPassword({
-          email: formData?.email,
-          password: formData?.password,
-        })
-      );
-    }
-  }, [formData]);
-  useEffect(() => {
     if (user) {
-      console.log(user);
-      console.log(formData);
+      navigate("/admin");
     }
   }, [user]);
+  //   useEffect(() => {
+  //     if (formData) {
+  //       dispatch(
+  //         logInWithEmailAndPassword({
+  //           email: formData?.email,
+  //           password: formData?.password,
+  //         })
+  //       );
+  //     }
+  //   }, [formData]);
+  //   useEffect(() => {
+  //     if (user) {
+  //       console.log(user);
+  //       console.log(formData);
+  //     }
+  //   }, [user]);
   return (
     <section className="bg-mainColor flex flex-col justify-center items-center gap-y-5 py-24 min-h-screen">
       <figure>
