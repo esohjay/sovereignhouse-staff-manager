@@ -1,5 +1,7 @@
 import React, { useEffect } from "react";
 
+import { useNavigate } from "react-router-dom";
+
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
 import { useForm } from "react-hook-form";
@@ -8,16 +10,15 @@ import logo from "../assets/logo.png";
 //redux
 import {
   signUpWithEmailAndPassword,
-  getUserFormData,
-  selectUserForm,
+  selectUser,
+  logOut,
 } from "../features/authSlice";
 import { useDispatch, useSelector } from "react-redux";
-import useAuth from "../hooks/useAuth";
 
 function Register() {
   const dispatch = useDispatch();
-  const formData = useSelector(selectUserForm);
-  const { user } = useAuth();
+  const user = useSelector(selectUser);
+  const navigate = useNavigate();
   // form validation rules
   const validationSchema = Yup.object().shape({
     firstName: Yup.string().required("First name is required"),
@@ -34,28 +35,17 @@ function Register() {
   const {
     register,
     handleSubmit,
-    setError,
     formState: { errors },
   } = useForm(formOptions);
   const onSubmit = (data) => {
-    dispatch(getUserFormData(data));
+    dispatch(signUpWithEmailAndPassword(data));
   };
   useEffect(() => {
-    if (formData) {
-      dispatch(
-        signUpWithEmailAndPassword({
-          email: formData?.email,
-          password: formData?.password,
-        })
-      );
-    }
-  }, [formData]);
-  useEffect(() => {
     if (user) {
-      console.log(user);
-      console.log(formData);
+      navigate("/admin");
     }
   }, [user]);
+  console.log(user);
   return (
     <section className="bg-mainColor grid place-items-center gap-y-5 py-24 min-h-screen">
       <figure>
@@ -63,6 +53,7 @@ function Register() {
       </figure>
       <article className="w-full bg-gray rounded-lg shadow-md max-w-sm p-5">
         <h3 className="uppercase text-center font-medium">register</h3>
+        <button onClick={() => dispatch(logOut())}>logout</button>
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="mb-3">
             <label
