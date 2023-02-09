@@ -15,12 +15,17 @@ import Dashboard from "./pages/Dashboard";
 import Home from "./pages/Home";
 import Register from "./pages/Register";
 import Login from "./pages/Login";
+import Hrm from "./pages/Hrm";
+import NewStaff from "./pages/NewStaff";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<App />}>
       <Route path="admin" element={<Home />}>
         <Route index element={<Dashboard />} />
+        <Route path="manage-staff" element={<Hrm />}>
+          <Route path="newstaff" element={<NewStaff />} />
+        </Route>
       </Route>
       <Route path="register" element={<Register />} />
       <Route path="login" element={<Login />} />

@@ -8,11 +8,11 @@ function App() {
   const location = useLocation();
   const navigate = useNavigate();
 
-  useEffect(() => {
-    if (!user) {
-      navigate(`/login?from=${location.pathname}`);
-    }
-  }, [user]);
+  // useEffect(() => {
+  //   if (!user) {
+  //     navigate(`/login?from=${location.pathname}`);
+  //   }
+  // }, [user]);
   return (
     <main>
       <Outlet />

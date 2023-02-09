@@ -26,10 +26,15 @@ import {
   FaEnvelope,
   FaUserCog,
 } from "react-icons/fa";
+import useAuth from "../hooks/useAuth";
+import { selectUser, logOut } from "../features/authSlice";
 
 function DesktopNav({ children }) {
   const dispatch = useDispatch();
   const isSidebarOpen = useSelector(selectSidebarState);
+  const user = useSelector(selectUser);
+  // const { user } = useAuth();
+  console.log(user);
   return (
     <>
       <nav
@@ -60,7 +65,24 @@ function DesktopNav({ children }) {
             icon={<FaRegBell />}
           />
           <DesktopTopNavItem text="timesheet" path="/n" icon={<MdTimer />} />
-          <DesktopTopNavItem text="logout" path="/n" icon={<MdLogout />} />
+          <div
+            onClick={() => dispatch(logOut())}
+            className={
+              "text-white block font-medium hover:text-mainColor rounded-md hover:bg-lightGreen cursor-pointer"
+            }
+          >
+            <div
+              className="flex p-2 items-center  flex-col justify-center 
+      gap-y-1"
+            >
+              <button className="text-xl">
+                <MdLogout />{" "}
+              </button>
+
+              <p className="capitalize text-xs">logout</p>
+            </div>
+          </div>
+          {/* <DesktopTopNavItem text="logout" path="/n" icon={<MdLogout />} /> */}
         </ul>
       </nav>
       <section className="hidden w-full gap-x-4 p-2 md:flex">
@@ -78,7 +100,7 @@ function DesktopNav({ children }) {
               />
             </figure>
             <p className="capitalize text-mainColor text-lg font-semibold">
-              olusoji daramola
+              {user?.fullName}
             </p>
           </div>
           <form className="mb-7">
@@ -97,6 +119,11 @@ function DesktopNav({ children }) {
             text={"timesheet & leave"}
             path="/timesheet"
             icon={<MdTimer />}
+          />
+          <NavItem
+            text={"HRM"}
+            path="/admin/manage-staff"
+            icon={<FaRegUser />}
           />
           <NavItem text={"tasks"} path="/tasks" icon={<VscTasklist />} />
           <NavItem

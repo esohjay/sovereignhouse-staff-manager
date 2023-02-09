@@ -53,7 +53,7 @@ function Register() {
       </figure>
       <article className="w-full bg-gray rounded-lg shadow-md max-w-sm p-5">
         <h3 className="uppercase text-center font-medium">register</h3>
-        <button onClick={() => dispatch(logOut())}>logout</button>
+        {/* <button onClick={() => dispatch(logOut())}>logout</button> */}
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="mb-3">
             <label

@@ -49,7 +49,8 @@ export const logInWithEmailAndPassword = createAsyncThunk(
       info.password
     );
     //get user token
-    const token = await auth.currentUser.getIdToken({ forceRefresh: true });
+    const token = await auth.currentUser.getIdToken(true);
+    console.log(token);
     //verify user and get record from db
     const { data } = await axios.post(
       `${import.meta.env.VITE_BACKEND_URL}/api/v1/user/login`,
@@ -75,7 +76,7 @@ export const logOut = createAsyncThunk("auth/logout", async () => {
 export const getUserIdToken = createAsyncThunk(
   "auth/getUserIdToken",
   async () => {
-    const token = auth.currentUser.getIdToken({ forceRefresh: true });
+    const token = auth.currentUser.getIdToken(true);
     return token;
   }
 );
