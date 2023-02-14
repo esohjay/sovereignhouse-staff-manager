@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
+import Cookies from "js-cookie";
 
 //fireabse
 import {
@@ -23,7 +24,7 @@ export const signUpWithEmailAndPassword = createAsyncThunk(
     const token = await auth.currentUser.getIdToken({ forceRefresh: true });
     //post new user record to db
     const { data } = await axios.post(
-      `${import.meta.env.VITE_BACKEND_URL}/api/v1/user`,
+      `${import.meta.env.VITE_BACKEND_URL}/user`,
       info,
       {
         headers: {
@@ -32,7 +33,11 @@ export const signUpWithEmailAndPassword = createAsyncThunk(
         },
       }
     );
-
+    if (data) {
+      Cookies.set("user", JSON.stringify({ user: data.fullName }), {
+        expires: 1,
+      });
+    }
     // return user.user.toJSON();
     return data;
   }
@@ -53,7 +58,7 @@ export const logInWithEmailAndPassword = createAsyncThunk(
     console.log(token);
     //verify user and get record from db
     const { data } = await axios.post(
-      `${import.meta.env.VITE_BACKEND_URL}/api/v1/user/login`,
+      `${import.meta.env.VITE_BACKEND_URL}/user/login`,
       info,
       {
         headers: {
@@ -62,7 +67,11 @@ export const logInWithEmailAndPassword = createAsyncThunk(
         },
       }
     );
-
+    if (data) {
+      Cookies.set("user", JSON.stringify({ user: data.fullName }), {
+        expires: 1,
+      });
+    }
     return data;
   }
 );
@@ -76,7 +85,8 @@ export const logOut = createAsyncThunk("auth/logout", async () => {
 export const getUserIdToken = createAsyncThunk(
   "auth/getUserIdToken",
   async () => {
-    const token = auth.currentUser.getIdToken(true);
+    const token = await auth.currentUser?.getIdToken();
+    console.log(token);
     return token;
   }
 );

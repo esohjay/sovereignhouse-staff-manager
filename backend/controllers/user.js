@@ -1,8 +1,24 @@
 const User = require("../models/user");
+const { sendMail } = require("../utils/mailer");
+const { welcomeMessage } = require("../utils/emailTemplate");
 
 module.exports.createUser = async (req, res) => {
   const user = await User.create({ ...req.body, id: req.user.uid });
-  console.log(req.user);
+  if (user) {
+    const message = welcomeMessage(
+      req.body.firstName,
+      `${process.env.FRONTEND_URL}/login`,
+      req.body.email,
+      req.body.password
+    );
+    sendMail(
+      req.body.email,
+      // emailAuth,
+      `You have been added as ${req.body.contractType}`,
+      message
+    );
+  }
+
   res.status(201).json(user);
 };
 module.exports.login = async (req, res) => {
@@ -27,6 +43,7 @@ module.exports.updateUser = async (req, res) => {
 };
 module.exports.getAllUsers = async (req, res) => {
   const users = await User.findAll();
+  console.log(users);
   res.status(200).json(users);
 };
 module.exports.getUser = async (req, res) => {

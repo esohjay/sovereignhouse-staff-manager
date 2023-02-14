@@ -85,7 +85,7 @@ function DesktopNav({ children }) {
           {/* <DesktopTopNavItem text="logout" path="/n" icon={<MdLogout />} /> */}
         </ul>
       </nav>
-      <section className="hidden w-full gap-x-4 p-2 md:flex">
+      <section className="hidden w-full gap-x-4 md:flex">
         <nav
           className={`w-64 bg-gray h-screen shadow-sm fixed top-16 ${
             !isSidebarOpen ? "left-0" : "-left-full"

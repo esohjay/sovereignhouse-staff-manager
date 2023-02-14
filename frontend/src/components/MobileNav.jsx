@@ -57,7 +57,7 @@ function MobileNav() {
       </ul>
       {/* Dropdown */}
       <div
-        className={`w-full absolute top-16 left-0 bg-gray  bg-opacity-50  backdrop-blur-md ${
+        className={`w-full absolute top-16 left-0 bg-gray md:hidden bg-opacity-50  backdrop-blur-md ${
           isDropdownOpen ? "h-80" : "h-0"
         } transition-all duration-500 overflow-hidden`}
       >

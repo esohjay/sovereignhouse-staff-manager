@@ -1,7 +1,10 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
+import { logOut } from "../features/authSlice";
+import { useDispatch } from "react-redux";
 
-function DesktopTopNavItem({ icon, path, text }) {
+function DesktopTopNavItem({ icon, path, text, isLogout }) {
+  const dispatch = useDispatch();
   return (
     <NavLink
       to={path}
@@ -15,7 +18,7 @@ function DesktopTopNavItem({ icon, path, text }) {
         className="flex p-2 items-center  flex-col justify-center 
       gap-y-1"
       >
-        <button className="text-xl">{icon}</button>
+        <button className="text-xl">{icon} </button>
 
         <p className="capitalize text-xs">{text}</p>
       </div>

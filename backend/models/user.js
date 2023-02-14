@@ -28,10 +28,37 @@ const User = sequelize.define("user", {
     // schema: Joi.string().trim().required().email(),
   },
   address: { type: DataTypes.STRING, schema: Joi.string().trim().required() },
-  phone: { type: DataTypes.STRING, schema: Joi.string().trim().required() },
+  religion: { type: DataTypes.STRING, schema: Joi.string().trim().required() },
+  jobPosition: {
+    type: DataTypes.STRING,
+    schema: Joi.string().trim().required(),
+  },
+  placeOfBirth: {
+    type: DataTypes.STRING,
+    schema: Joi.string().trim().required(),
+  },
+  nationality: {
+    type: DataTypes.STRING,
+    schema: Joi.string().trim().required(),
+  },
+  gender: { type: DataTypes.STRING, schema: Joi.string().trim().required() },
+  maritalStatus: {
+    type: DataTypes.STRING,
+    schema: Joi.string().trim().required(),
+  },
+  dateOfBirth: {
+    type: DataTypes.DATEONLY,
+    schema: Joi.string().trim().required(),
+  },
+  phone: { type: DataTypes.INTEGER, schema: Joi.number().required() },
   contractType: {
     type: DataTypes.STRING,
     schema: Joi.string().trim().required(),
+  },
+  isDefaultPassword: {
+    type: DataTypes.BOOLEAN,
+    allowNull: false,
+    defaultValue: true,
   },
 });
 

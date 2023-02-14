@@ -17,5 +17,4 @@ const app = initializeApp({
   appId: "1:1016585238702:web:57f15fd4152feeec19553f",
   measurementId: "G-XSTHDR3ES1",
 });
-console.log(import.meta.env.VITE_FIREBASE_PUBLIC_API_KEY);
 export const auth = getAuth(app);

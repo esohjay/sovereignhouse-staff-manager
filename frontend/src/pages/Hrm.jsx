@@ -16,19 +16,25 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 
 function Hrm() {
+  const navigate = useNavigate();
   return (
-    <section className="p-5">
-      <div className="flex gap-x-3 mb-5">
-        <button className="inline-block px-5 py-2 text-white bg-mainColor rounded-md capitalize">
-          new staff
-        </button>
-        <button className="inline-block px-5 py-2 text-white bg-mainColor rounded-md capitalize">
-          view staff
-        </button>
-      </div>
-      <article>
-        <Outlet />
-      </article>
+    <section className="p-8">
+      <section className=" bg-gray shadow-md rounded-md p-5">
+        <div className="flex gap-x-3 mb-5">
+          <button
+            onClick={() => navigate("addstaff")}
+            className="inline-block px-5 py-2 text-white bg-mainColor rounded-md capitalize"
+          >
+            new staff
+          </button>
+          <button className="inline-block px-5 py-2 text-white bg-mainColor rounded-md capitalize">
+            view staff
+          </button>
+        </div>
+        <article>
+          <Outlet />
+        </article>
+      </section>
     </section>
   );
 }

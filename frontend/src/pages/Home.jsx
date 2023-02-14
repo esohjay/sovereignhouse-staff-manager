@@ -21,7 +21,7 @@ function Home() {
       <MobileNav />
       <DesktopNav />
       <section
-        className={`bg-bodyImg md:mt-[70px] md:bg-black min-h-screen ${
+        className={`bg-bodyImg md:mt-16  min-h-screen ${
           !isSidebarOpen ? "md:ml-64" : "md:ml-0"
         } transition-all duration-150`}
       >
