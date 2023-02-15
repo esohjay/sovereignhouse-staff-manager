@@ -7,14 +7,16 @@ const {
   getUser,
   deleteUser,
   login,
+  makeAdmin,
 } = require("../controllers/user");
-const { verifyUser } = require("../middlewares/auth");
+const { verifyUser, verifyAdmin } = require("../middlewares/auth");
 
 const router = express.Router();
-router.post("/", verifyUser, catchAsync(createUser));
+router.post("/", verifyAdmin, catchAsync(createUser));
+router.get("/admin", verifyUser, catchAsync(makeAdmin));
 router.post("/login", verifyUser, catchAsync(login));
 router.put("/:id", verifyUser, catchAsync(updateUser));
-router.get("/", verifyUser, catchAsync(getAllUsers));
+router.get("/", verifyAdmin, catchAsync(getAllUsers));
 router.get("/:id", verifyUser, catchAsync(getUser));
 router.delete("/:id", verifyUser, catchAsync(deleteUser));
 

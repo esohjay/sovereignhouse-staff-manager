@@ -21,7 +21,8 @@ function Login() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const user = useSelector(selectUser);
-  const formData = useSelector(selectUserForm);
+  // const user = Cookies.get("user") ? JSON.parse(Cookies.get("user")) : null;
+
   //   const { user } = useAuth();
   // form validation rules
   const validationSchema = Yup.object().shape({

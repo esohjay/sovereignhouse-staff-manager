@@ -4,11 +4,37 @@ import { useDispatch, useSelector } from "react-redux";
 import Cookies from "js-cookie";
 
 import { auth } from "../config/firebase";
-import { setCurrentUser, selectCurrentUser } from "../features/authSlice";
+import {
+  setCurrentUser,
+  selectCurrentUser,
+  getUserIdToken,
+  selectToken,
+  setAdminStatus,
+  selectAdminStatus,
+} from "../features/authSlice";
 
 function useAuth() {
   const dispatch = useDispatch();
   const user = useSelector(selectCurrentUser);
+  const newToken = useSelector(selectToken);
+  const admin = useSelector(selectAdminStatus);
+  auth.currentUser
+    ?.getIdTokenResult()
+    .then((token) => {
+      if (!!token.claims.admin) {
+        dispatch(setAdminStatus());
+      }
+      const tokenExpired = new Date() < token.expirationTime;
+      if (tokenExpired) {
+        dispatch(getUserIdToken());
+        Cookies.set("token", `Bearer ${newToken}`, { expires: 1 });
+      } else {
+        console.log("not expired");
+      }
+    })
+    .catch((error) => {
+      console.log(error);
+    });
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
@@ -25,7 +51,7 @@ function useAuth() {
       unsubscribe();
     };
   }, []);
-  return { user };
+  return { user, isAdmin: admin };
 }
 
 export default useAuth;

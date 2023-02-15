@@ -21,7 +21,7 @@ export const signUpWithEmailAndPassword = createAsyncThunk(
       info.password
     );
     //get user token
-    const token = await auth.currentUser.getIdToken({ forceRefresh: true });
+    const token = await auth.currentUser.getIdToken(true);
     //post new user record to db
     const { data } = await axios.post(
       `${import.meta.env.VITE_BACKEND_URL}/user`,
@@ -55,7 +55,6 @@ export const logInWithEmailAndPassword = createAsyncThunk(
     );
     //get user token
     const token = await auth.currentUser.getIdToken(true);
-    console.log(token);
     //verify user and get record from db
     const { data } = await axios.post(
       `${import.meta.env.VITE_BACKEND_URL}/user/login`,
@@ -71,6 +70,17 @@ export const logInWithEmailAndPassword = createAsyncThunk(
       Cookies.set("user", JSON.stringify({ user: data.fullName }), {
         expires: 1,
       });
+      auth.currentUser.getIdTokenResult().then((token) => {
+        if (!!token.claims.admin) {
+          Cookies.set("isAdmin", JSON.stringify(true), {
+            expires: 1,
+          });
+        } else {
+          Cookies.set("isAdmin", JSON.stringify(false), {
+            expires: 1,
+          });
+        }
+      });
     }
     return data;
   }
@@ -78,6 +88,9 @@ export const logInWithEmailAndPassword = createAsyncThunk(
 //Logout
 export const logOut = createAsyncThunk("auth/logout", async () => {
   await signOut(auth);
+  Cookies.remove("user");
+  Cookies.remove("isAdmin");
+
   return null;
 });
 
@@ -85,8 +98,7 @@ export const logOut = createAsyncThunk("auth/logout", async () => {
 export const getUserIdToken = createAsyncThunk(
   "auth/getUserIdToken",
   async () => {
-    const token = await auth.currentUser?.getIdToken();
-    console.log(token);
+    const token = await auth.currentUser?.getIdToken(true);
     return token;
   }
 );
@@ -109,12 +121,11 @@ export const registerUserToDb = createAsyncThunk(
 );
 
 const initialState = {
-  userForm: null,
   status: "idle",
   user: null,
   currentUser: null,
   token: null,
-  userDb: null,
+  isAdmin: false,
 };
 
 export const authSlice = createSlice({
@@ -126,6 +137,9 @@ export const authSlice = createSlice({
     },
     setCurrentUser: (state, action) => {
       state.currentUser = action.payload;
+    },
+    setAdminStatus: (state) => {
+      state.isAdmin = true;
     },
   },
   extraReducers: (builder) => {
@@ -165,21 +179,22 @@ export const authSlice = createSlice({
     builder.addCase(getUserIdToken.pending, (state, action) => {
       state.status = "pending";
     });
-    //register to db
-    builder.addCase(registerUserToDb.fulfilled, (state, action) => {
-      state.token = action.payload;
-      state.status = "success";
-    });
-    builder.addCase(registerUserToDb.rejected, (state, action) => {
-      state.error = action.error;
-      state.status = "failed";
-    });
-    builder.addCase(registerUserToDb.pending, (state, action) => {
-      state.status = "pending";
-    });
+    // //register to db
+    // builder.addCase(registerUserToDb.fulfilled, (state, action) => {
+    //   state.token = action.payload;
+    //   state.status = "success";
+    // });
+    // builder.addCase(registerUserToDb.rejected, (state, action) => {
+    //   state.error = action.error;
+    //   state.status = "failed";
+    // });
+    // builder.addCase(registerUserToDb.pending, (state, action) => {
+    //   state.status = "pending";
+    // });
     //logout
     builder.addCase(logOut.fulfilled, (state, action) => {
       state.currentUser = action.payload;
+      state.user = action.payload;
       state.status = "success";
     });
     builder.addCase(logOut.rejected, (state, action) => {
@@ -193,11 +208,13 @@ export const authSlice = createSlice({
 });
 
 // Action creators are generated for each case reducer function
-export const { getUserFormData, setCurrentUser } = authSlice.actions;
+export const { getUserFormData, setCurrentUser, setAdminStatus } =
+  authSlice.actions;
 
 export const selectUserForm = (state) => state.auth.userForm;
 export const selectUser = (state) => state.auth.user;
 export const selectCurrentUser = (state) => state.auth.currentUser;
 export const selectToken = (state) => state.auth.token;
+export const selectAdminStatus = (state) => state.auth.isAdmin;
 
 export default authSlice.reducer;

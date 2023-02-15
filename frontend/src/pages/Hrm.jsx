@@ -27,7 +27,10 @@ function Hrm() {
           >
             new staff
           </button>
-          <button className="inline-block px-5 py-2 text-white bg-mainColor rounded-md capitalize">
+          <button
+            onClick={() => navigate("allstaff")}
+            className="inline-block px-5 py-2 text-white bg-mainColor rounded-md capitalize"
+          >
             view staff
           </button>
         </div>

@@ -1,6 +1,8 @@
 const User = require("../models/user");
 const { sendMail } = require("../utils/mailer");
 const { welcomeMessage } = require("../utils/emailTemplate");
+const admin = require("../config/firebase");
+const getAuth = require("firebase-admin/auth");
 
 module.exports.createUser = async (req, res) => {
   const user = await User.create({ ...req.body, id: req.user.uid });
@@ -20,6 +22,14 @@ module.exports.createUser = async (req, res) => {
   }
 
   res.status(201).json(user);
+};
+module.exports.makeAdmin = async (req, res) => {
+  const newAmin = await admin
+    .auth()
+    .setCustomUserClaims(req.user.uid, { admin: true });
+  console.log("success");
+  console.log(newAmin);
+  res.status(200).json("done");
 };
 module.exports.login = async (req, res) => {
   const [user, created] = await User.findOrCreate({
