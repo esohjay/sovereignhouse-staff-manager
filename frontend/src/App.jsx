@@ -35,9 +35,9 @@ function App() {
           <Route element={<ProtectedRoute />}>
             <Route index element={<Dashboard />} />
             <Route element={<AdminRoute />}>
-              <Route path="manage-staff" element={<Hrm />}>
-                <Route path="addstaff" element={<NewStaff />} />
-                <Route path="allstaff" element={<AllStaff />} />
+              <Route path="staff" element={<Hrm />}>
+                <Route path="add" element={<NewStaff />} />
+                <Route index element={<AllStaff />} />
               </Route>
             </Route>
           </Route>

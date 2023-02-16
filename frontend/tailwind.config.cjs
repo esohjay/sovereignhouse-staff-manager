@@ -16,6 +16,15 @@ module.exports = {
         lightColor: "#AFAFAF",
         gray: "#FAFAFA",
       },
+      fontFamily: {
+        bold: ["Poppins-bold"],
+        semibold: ["Poppins-semibold"],
+        regular: ["Poppins-regular"],
+        medium: ["Poppins-medium"],
+        mediumItalic: ["Poppins-mediumItalic"],
+        boldItalic: ["Poppins-semiboldItalic"],
+        semiBoldItalic: ["Poppins-semiboldItalic"],
+      },
       backgroundImage: {
         bodyImg: "url('assets/pattern_background.jpg')",
       },

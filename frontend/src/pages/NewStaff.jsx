@@ -49,7 +49,7 @@ function NewStaff() {
   }, [user]);
   console.log(user);
   return (
-    <article className="w-full">
+    <article className="w-full p-5">
       <form onSubmit={handleSubmit(onSubmit)}>
         <article className="w-full grid md:grid-cols-3 gap-x-3">
           <div className="mb-3">

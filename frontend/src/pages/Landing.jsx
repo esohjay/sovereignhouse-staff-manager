@@ -3,7 +3,7 @@ import { Outlet } from "react-router-dom";
 
 function Landing() {
   return (
-    <main>
+    <main className="font-regular">
       <Outlet />
     </main>
   );

@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { Navigate, useLocation, Outlet } from "react-router-dom";
 import Cookies from "js-cookie";
 
-function AdminRoute({ children }) {
+function AdminRoute() {
   const location = useLocation().pathname;
   const isAdmin = Cookies.get("isAdmin")
     ? JSON.parse(Cookies.get("isAdmin"))
