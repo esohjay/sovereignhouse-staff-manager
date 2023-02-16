@@ -1,3 +1,49 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@font-face {
+  font-family: "Poppins-regular";
+  src: url("./assets/fonts/Poppins-Regular.ttf");
+}
+@font-face {
+  font-family: "Poppins-medium";
+  src: url("./assets/fonts/Poppins-Medium.ttf");
+}
+@font-face {
+  font-family: "Poppins-mediumItalic";
+  src: url("./assets/fonts/Poppins-MediumItalic.ttf");
+}
+@font-face {
+  font-family: "Poppins-semibold";
+  src: url("./assets/fonts/Poppins-SemiBold.ttf");
+}
+@font-face {
+  font-family: "Poppins-semiboldItalic";
+  src: url("./assets/fonts/Poppins-SemiBoldItalic.ttf");
+}
+@font-face {
+  font-family: "Poppins-bold";
+  src: url("./assets/fonts/Poppins-Bold.ttf");
+}
+@font-face {
+  font-family: "Poppins-boldItalic";
+  src: url("./assets/fonts/Poppins-BoldItalic.ttf");
+}
+
+@layer utilities {
+  /* Chrome, Safari and Opera */
+  .scrollbar::-webkit-scrollbar {
+    width: 1px;
+  }
+  .scrollbar::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 1px rgba(0, 0, 0, 0.3);
+  }
+  .scrollbar::-webkit-scrollbar-thumb {
+    background-color: #043d3b;
+  }
+  .scrollbar {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: 1px; /* Firefox */
+  }
+}
