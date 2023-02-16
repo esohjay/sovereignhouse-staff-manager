@@ -10,6 +10,8 @@ const shiftRoute = require("./routes/shift");
 const timesheetRoute = require("./routes/timesheet");
 const taskRoute = require("./routes/task");
 const expensesRoute = require("./routes/expenses");
+const campaignRoute = require("./routes/campaign");
+const applicantRoute = require("./routes/applicant");
 
 const app = express();
 app.use(cors());
@@ -29,6 +31,8 @@ app.use("/api/v1/shift", shiftRoute);
 app.use("/api/v1/timesheet", timesheetRoute);
 app.use("/api/v1/task", taskRoute);
 app.use("/api/v1/expenses", expensesRoute);
+app.use("/api/v1/campaign", campaignRoute);
+app.use("/api/v1/applicant", applicantRoute);
 app.all("*", (req, res, next) => {
   next(new ExpressError("Page Not Found", 404));
 });
