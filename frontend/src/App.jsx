@@ -19,6 +19,9 @@ import Login from "./pages/Login";
 import Hrm from "./pages/Hrm";
 import NewStaff from "./pages/NewStaff";
 import AllStaff from "./pages/AllStaff";
+import Recruitment from "./pages/Recruitment";
+import AddCampaign from "./pages/AddCampaign";
+import Campaigns from "./pages/Campaigns";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Unauthorized from "./pages/401";
 import AdminRoute from "./components/AdminRoute";
@@ -38,6 +41,10 @@ function App() {
               <Route path="staff" element={<Hrm />}>
                 <Route path="add" element={<NewStaff />} />
                 <Route index element={<AllStaff />} />
+              </Route>
+              <Route path="recruitment" element={<Recruitment />}>
+                <Route path="add" element={<AddCampaign />} />
+                <Route index element={<Campaigns />} />
               </Route>
             </Route>
           </Route>

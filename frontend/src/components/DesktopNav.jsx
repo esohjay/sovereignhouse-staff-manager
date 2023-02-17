@@ -27,19 +27,19 @@ import {
   FaUserCog,
 } from "react-icons/fa";
 import useAuth from "../hooks/useAuth";
-import { selectUser, logOut } from "../features/authSlice";
+import { selectCurrentUser, logOut } from "../features/authSlice";
 
 function DesktopNav({ children }) {
   const dispatch = useDispatch();
   const isSidebarOpen = useSelector(selectSidebarState);
-  const user = useSelector(selectUser);
+  const user = useSelector(selectCurrentUser);
   // const { user } = useAuth();
   console.log(user);
   return (
     <>
       <nav
         className="bg-mainColor px-5 lg:px-9 hidden items-center justify-between h-16  md:flex
-      fixed top-0 left-0 w-full"
+      fixed top-0 left-0 w-full z-30"
       >
         <ul className="flex gap-x-3">
           {/* Sidebar trigger */}
@@ -85,9 +85,9 @@ function DesktopNav({ children }) {
           {/* <DesktopTopNavItem text="logout" path="/n" icon={<MdLogout />} /> */}
         </ul>
       </nav>
-      <section className="hidden w-full gap-x-4 md:flex">
+      <section className="hidden w-full  relative gap-x-4 md:flex">
         <nav
-          className={`w-64 bg-gray h-screen shadow-sm fixed top-16 ${
+          className={`w-64 bg-gray h-screen  shadow-sm fixed top-16 ${
             !isSidebarOpen ? "left-0" : "-left-full"
           } transition-all duration-150 p-5`}
         >
@@ -120,11 +120,13 @@ function DesktopNav({ children }) {
             path="/timesheet"
             icon={<MdTimer />}
           />
+          <NavItem text={"HRM"} path="/admin/staff" icon={<FaRegUser />} />
           <NavItem
-            text={"HRM"}
-            path="/admin/manage-staff"
+            text={"Recruitment"}
+            path="/admin/recruitment"
             icon={<FaRegUser />}
           />
+          <NavItem text={"shifts"} path="/shifts" icon={<VscTasklist />} />
           <NavItem text={"tasks"} path="/tasks" icon={<VscTasklist />} />
           <NavItem
             text={"expenses"}
