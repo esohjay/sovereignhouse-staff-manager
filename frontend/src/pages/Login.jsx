@@ -12,7 +12,7 @@ import {
   logInWithEmailAndPassword,
   getUserFormData,
   selectUserForm,
-  selectUser,
+  selectCurrentUser,
 } from "../features/authSlice";
 import { useDispatch, useSelector } from "react-redux";
 import useAuth from "../hooks/useAuth";
@@ -20,7 +20,7 @@ import useAuth from "../hooks/useAuth";
 function Login() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const user = useSelector(selectUser);
+  const user = useSelector(selectCurrentUser);
   // const user = Cookies.get("user") ? JSON.parse(Cookies.get("user")) : null;
 
   //   const { user } = useAuth();

@@ -13,7 +13,6 @@ function AllStaff() {
     <article className="w-full overflow-x-scroll rounded-md  scrollbar">
       <table className="w-[1300px]">
         <thead className="">
-          {/* <thead className="grid grid-cols-[50px_280px_180px_280px_110px_150px]_180px_100px]"> */}
           <tr className="bg-gray">
             <th className="capitalize p-4 text-left font-semibold w-14">s/n</th>
             <th className="capitalize px-2 py-4 text-left font-semibold w-[280px]">
@@ -82,55 +81,6 @@ function AllStaff() {
           ))}
         </tbody>
       </table>
-      {/* <article className="w-full rounded-md overflow-x-visible">
-        <div
-          className="w-full grid grid-cols-[50px_280px_180px_280px_110px_150px_180px_100px] place-items-start 
-        bg-gray p-3"
-        >
-          <h3 className="capitalize font-semibold w-full">s/n</h3>
-          <h3 className="capitalize font-semibold w-full">fullname</h3>
-          <h3 className="capitalize font-semibold w-full">phone</h3>
-          <h3 className="capitalize font-semibold w-full ">email</h3>
-          <h3 className="capitalize font-semibold w-full">gender</h3>
-          <h3 className="capitalize font-semibold w-full">contract type</h3>
-          <h3 className="capitalize font-semibold w-full ">job role</h3>
-          <h3 className="capitalize font-semibold w-full">status</h3>
-        </div>
-        <article className="p-3 w-full overflow-x-visible">
-          {currentData?.map((staff, i) => (
-            <div
-              key={staff.id}
-              className="w-full grid grid-cols-[50px_280px_180px_280px_110px_150px_180px_100px] place-items-start 
-              hover:bg-lightGreen cursor-pointer group  overflow-x-visible"
-            >
-              <p className="w-full p-2 ">{i + 1}</p>
-              <div className="w-full p-2 ">
-                <p className="mb-1">{staff.fullName}</p>
-                <div className="hidden group-hover:flex group-hover:gap-2 w-full">
-                  <Link
-                    to={`/admin/staff/${staff.id}`}
-                    className="text-mainColor p-1 text-xs inline-block rounded-md border border-mainColor fornt-medium capitalize"
-                  >
-                    view
-                  </Link>
-                  <Link
-                    to={`/admin/staff/${staff.id}/edit`}
-                    className="text-mainColor p-1 text-xs inline-block rounded-md border border-yellow-500 fornt-medium capitalize"
-                  >
-                    edit
-                  </Link>
-                </div>
-              </div>
-              <p className="w-full p-2 ">{staff.phone}</p>
-              <p className="w-full p-2 ">{staff.email}</p>
-              <p className="w-full p-2 ">{staff.gender}</p>
-              <p className="w-full p-2 ">{staff.contractType}</p>
-              <p className="w-full p-2 ">{staff.jobPosition}</p>
-              <p className="w-full p-2 ">{staff.status}</p>
-            </div>
-          ))}
-        </article>
-      </article> */}
     </article>
   );
 }

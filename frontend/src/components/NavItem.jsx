@@ -12,9 +12,9 @@ function NavItem({ icon, path, text }) {
       }
     >
       <div className="flex p-2 gap-x-3 items-center  rounded-lg group">
-        <button className="text-xl group-hover:font-bold ">{icon}</button>
+        <button className="text-lg group-hover:font-bold ">{icon}</button>
 
-        <p className="capitalize group-hover:font-bold">{text}</p>
+        <p className="capitalize group-hover:font-bold text-sm">{text}</p>
       </div>
     </NavLink>
   );

@@ -7,6 +7,15 @@ const getAuth = require("firebase-admin/auth");
 module.exports.createUser = async (req, res) => {
   const user = await User.create({ ...req.body, id: req.user.uid });
   if (user) {
+    try {
+      await admin
+        .auth()
+        .updateUser(req.user.uid, {
+          displayName: `${user.firstName} ${user.lastName}`,
+        });
+    } catch (err) {
+      console.log(err);
+    }
     const message = welcomeMessage(
       req.body.firstName,
       `${process.env.FRONTEND_URL}/login`,

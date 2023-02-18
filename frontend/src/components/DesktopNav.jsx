@@ -91,8 +91,8 @@ function DesktopNav({ children }) {
             !isSidebarOpen ? "left-0" : "-left-full"
           } transition-all duration-150 p-5`}
         >
-          <div className=" flex items-center gap-x-3 mb-8">
-            <figure className="h-8 w-8 rounded-full">
+          {/* <div className=" flex items-center gap-x-3 mb-8">
+            <figure className="h-5 w- rounded-full">
               <img
                 src={avater}
                 alt="user"
@@ -109,7 +109,7 @@ function DesktopNav({ children }) {
               placeholder="Search"
               className="block border rounded-md bg-white p-2 focus:outline-none"
             />
-          </form>
+          </form> */}
           <p className="uppercase text-slate-600 font-medium text-xs mb-7">
             main menu
           </p>
