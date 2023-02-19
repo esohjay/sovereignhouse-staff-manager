@@ -8,6 +8,8 @@ const Shift = sequelize.define("shift", {
   studentCategory: DataTypes.STRING,
   startTime: DataTypes.STRING,
   endTime: DataTypes.STRING,
+  shiftLength: DataTypes.INTEGER,
+  dayOfTheWeek: DataTypes.STRING,
   venue: DataTypes.STRING,
   description: DataTypes.STRING,
 });
