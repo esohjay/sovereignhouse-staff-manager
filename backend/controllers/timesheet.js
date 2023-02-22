@@ -1,9 +1,21 @@
 const Timesheet = require("../models/timesheet");
 
 module.exports.createTimesheet = async (req, res) => {
-  //const {firstName, lastName, status, email, phone, contractType, address} = req.body
-  const timesheet = await Timesheet.create(req.body);
-  res.status(201).json(timesheet);
+  const lastestTimesheet = await Timesheet.findAll({
+    limit: 1,
+    order: [["createdAt", "DESC"]],
+  });
+  console.log(lastestTimesheet);
+  if (
+    lastestTimesheet &&
+    lastestTimesheet.length &&
+    !lastestTimesheet.endTime
+  ) {
+    res.status(500).send({ message: "You have a shift in progress" });
+  } else {
+    const timesheet = await Timesheet.create(req.body);
+    res.status(201).json(timesheet);
+  }
 };
 module.exports.updateTimesheet = async (req, res) => {
   const { id } = req.params;

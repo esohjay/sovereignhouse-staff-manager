@@ -1,6 +1,8 @@
 const User = require("../models/user");
 const { sendMail } = require("../utils/mailer");
 const { welcomeMessage } = require("../utils/emailTemplate");
+const Shift = require("../models/shift");
+const Timesheet = require("../models/timesheet");
 const admin = require("../config/firebase");
 const getAuth = require("firebase-admin/auth");
 
@@ -8,11 +10,9 @@ module.exports.createUser = async (req, res) => {
   const user = await User.create({ ...req.body, id: req.user.uid });
   if (user) {
     try {
-      await admin
-        .auth()
-        .updateUser(req.user.uid, {
-          displayName: `${user.firstName} ${user.lastName}`,
-        });
+      await admin.auth().updateUser(req.user.uid, {
+        displayName: `${user.firstName} ${user.lastName}`,
+      });
     } catch (err) {
       console.log(err);
     }
@@ -67,7 +67,7 @@ module.exports.getAllUsers = async (req, res) => {
 };
 module.exports.getUser = async (req, res) => {
   const { id } = req.params;
-  const user = await User.findByPk(id);
+  const user = await User.findByPk(id, { include: ["shifts", Timesheet] });
   res.status(200).json(user);
 };
 module.exports.deleteUser = async (req, res) => {

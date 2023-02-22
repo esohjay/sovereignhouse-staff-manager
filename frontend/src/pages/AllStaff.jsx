@@ -40,7 +40,10 @@ function AllStaff() {
         </thead>
         <tbody>
           {currentData?.map((staff, i) => (
-            <tr className="hover:bg-lightGreen p-3 cursor-pointer group">
+            <tr
+              key={staff.id}
+              className="hover:bg-lightGreen p-3 cursor-pointer group"
+            >
               <td className="w-ful text-left p-4 w-14">{i + 1}</td>
               <td className="w-ful text-left px-2 py-3 w-[280px]">
                 <p className="mb-1">{staff.fullName}</p>

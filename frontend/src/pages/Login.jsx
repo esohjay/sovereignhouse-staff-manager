@@ -6,12 +6,12 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
 import { useForm } from "react-hook-form";
 import logo from "../assets/logo.png";
+import Cookies from "js-cookie";
 
 //redux
 import {
   logInWithEmailAndPassword,
-  getUserFormData,
-  selectUserForm,
+  selectUser,
   selectCurrentUser,
 } from "../features/authSlice";
 import { useDispatch, useSelector } from "react-redux";
@@ -20,8 +20,11 @@ import useAuth from "../hooks/useAuth";
 function Login() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const user = useSelector(selectCurrentUser);
-  // const user = Cookies.get("user") ? JSON.parse(Cookies.get("user")) : null;
+  // const user = useSelector(selectCurrentUser);
+  const user = useSelector(selectUser);
+  const storedUser = Cookies.get("user")
+    ? JSON.parse(Cookies.get("user"))
+    : null;
 
   //   const { user } = useAuth();
   // form validation rules
@@ -42,7 +45,7 @@ function Login() {
   };
   useEffect(() => {
     if (user) {
-      navigate("/admin");
+      navigate(`/admin/${user?.id}`);
     }
   }, [user]);
   //   useEffect(() => {

@@ -1,8 +1,5 @@
-import React, { useEffect } from "react";
+import React from "react";
 import {
-  Outlet,
-  useLocation,
-  useNavigate,
   createBrowserRouter,
   RouterProvider,
   createRoutesFromElements,
@@ -22,6 +19,11 @@ import AllStaff from "./pages/AllStaff";
 import Recruitment from "./pages/Recruitment";
 import AddCampaign from "./pages/AddCampaign";
 import Campaigns from "./pages/Campaigns";
+import AddShift from "./pages/AddShift";
+import Shift from "./pages/Shift";
+import ShiftList from "./pages/ShiftList";
+import ShiftDetails from "./pages/ShiftDetails";
+import Timesheet from "./pages/Timesheet";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Unauthorized from "./pages/401";
 import AdminRoute from "./components/AdminRoute";
@@ -34,9 +36,10 @@ function App() {
   const router = createBrowserRouter(
     createRoutesFromElements(
       <Route path="/" element={<Landing />}>
-        <Route path="admin" element={<Home />}>
+        <Route path="admin/:id" element={<Home />}>
           <Route element={<ProtectedRoute />}>
             <Route index element={<Dashboard />} />
+            <Route path="timesheet" element={<Timesheet />} />
             <Route element={<AdminRoute />}>
               <Route path="staff" element={<Hrm />}>
                 <Route path="add" element={<NewStaff />} />
@@ -45,6 +48,11 @@ function App() {
               <Route path="recruitment" element={<Recruitment />}>
                 <Route path="add" element={<AddCampaign />} />
                 <Route index element={<Campaigns />} />
+              </Route>
+              <Route path="shift" element={<Shift />}>
+                <Route path="add" element={<AddShift />} />
+                <Route index element={<ShiftList />} />
+                <Route path=":shiftId" element={<ShiftDetails />} />
               </Route>
             </Route>
           </Route>

@@ -7,26 +7,27 @@ import { useForm } from "react-hook-form";
 import { useCreateShiftMutation } from "../api/shift/shiftApi";
 
 function AddShift() {
-  const [createShift, result] = useCreateShiftMutation();
-  const validationSchema = Yup.object().shape({
-    title: Yup.string().required("title is required"),
-    venue: Yup.string().required("venue is required"),
-    dayOfTheWeek: Yup.string().required("this field is required"),
-    shiftLength: Yup.string().required("shift length is required"),
-    studentCategory: Yup.string().required("student category is required"),
-    description: Yup.string().required("description is required"),
-    startTime: Yup.date().required("start time is required"),
-    endTime: Yup.date().required("end time is required"),
-  });
-  const formOptions = { resolver: yupResolver(validationSchema) };
+  const [createShift, { data }] = useCreateShiftMutation();
+  //   const validationSchema = Yup.object().shape({
+  //     title: Yup.string().required("title is required"),
+  //     venue: Yup.string().required("venue is required"),
+  //     dayOfTheWeek: Yup.string().required("this field is required"),
+  //     shiftLength: Yup.string().required("shift length is required"),
+  //     studentCategory: Yup.string().required("student category is required"),
+  //     description: Yup.string().required("description is required"),
+  //     startTime: Yup.string().required("start time is required"),
+  //     endTime: Yup.date().required("end time is required"),
+  //   });
+  //   const formOptions = { resolver: yupResolver(validationSchema) };
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm(formOptions);
+  } = useForm();
   const onSubmit = (data) => {
-    dispatch(logInWithEmailAndPassword(data));
+    createShift(data);
   };
+  console.log(data);
   return (
     <article className="w-full p-5">
       <form onSubmit={handleSubmit(onSubmit)}>
@@ -45,7 +46,7 @@ function AddShift() {
               className="p-2 rounded-md mb-2 block bg-white w-full focus:outline-none border border-slate-300"
             />
             {errors.title && (
-              <span className="text-red-500 ">{errors.title?.message}</span>
+              <span className="text-red-500 ">title is required</span>
             )}
           </div>
           {/* venue */}
@@ -62,10 +63,134 @@ function AddShift() {
               className="p-2 rounded-md mb-2 block bg-white w-full focus:outline-none border border-slate-300"
             />
             {errors.venue && (
-              <span className="text-red-500">{errors.venue?.message}</span>
+              <span className="text-red-500">venue is required</span>
             )}
           </div>
         </article>
+        <article className="w-full grid md:grid-cols-2 gap-x-3">
+          {/* student category */}
+          <div className="mb-3 w-full">
+            <label
+              htmlFor="studentCategory"
+              className="capitalize font-medium mb-1 block text-sm"
+            >
+              student category
+            </label>
+            <select
+              {...register("studentCategory", { required: true })}
+              className="p-2  rounded-md mb-2 block bg-white w-full focus:outline-none border border-slate-300"
+            >
+              <option value="">Select category</option>
+              <option value="junior">Junior</option>
+              <option value="mid-level">Mid-level</option>
+              <option value="advanced">Advanced</option>
+            </select>
+            {errors.studentCategory && (
+              <span className="text-red-500">student category is required</span>
+            )}
+          </div>
+          {/* week day */}
+          <div className="mb-3 w-full">
+            <label
+              htmlFor="dayOfTheWeek"
+              className="capitalize font-medium mb-1 block text-sm"
+            >
+              week day
+            </label>
+            <select
+              {...register("dayOfTheWeek", { required: true })}
+              className="p-2  rounded-md mb-2 block bg-white w-full focus:outline-none border border-slate-300"
+            >
+              <option value="">Select day</option>
+              <option value="monday">Monday</option>
+              <option value="tuesday">Tuesday</option>
+              <option value="wednesday">Wednesday</option>
+              <option value="thursday">Thursday</option>
+              <option value="friday">Friday</option>
+              <option value="saturday">Saturday</option>
+            </select>
+            {errors.dayOfTheWeek && (
+              <span className="text-red-500">week day is required</span>
+            )}
+          </div>
+        </article>
+        <article className="w-full grid md:grid-cols-3 gap-x-3">
+          {/* start time */}
+          <div className="mb-3">
+            <label
+              htmlFor="startTime"
+              className="capitalize font-medium mb-1 block text-sm"
+            >
+              start time
+            </label>
+            <input
+              type="time"
+              {...register("startTime", { required: true })}
+              className="p-2 rounded-md mb-2 block bg-white w-full focus:outline-none border border-slate-300"
+            />
+            {errors.startTime && (
+              <span className="text-red-500 ">start time is required</span>
+            )}
+          </div>
+          {/* end time */}
+          <div className="mb-3">
+            <label
+              htmlFor="endTime"
+              className="capitalize font-medium mb-1 block text-sm"
+            >
+              end time
+            </label>
+            <input
+              type="time"
+              {...register("endTime", { required: true })}
+              className="p-2 rounded-md mb-2 block bg-white w-full focus:outline-none border border-slate-300"
+            />
+            {errors.endTime && (
+              <span className="text-red-500">end time is required</span>
+            )}
+          </div>
+          {/* duration */}
+          <div className="mb-3">
+            <label
+              htmlFor="duration"
+              className="capitalize font-medium mb-1 block text-sm"
+            >
+              duration &#40;hours&#41;
+            </label>
+            <input
+              type="number"
+              {...register("duration", { required: true })}
+              className="p-2 rounded-md mb-2 block bg-white w-full focus:outline-none border border-slate-300"
+            />
+            {errors.duration && (
+              <span className="text-red-500">duration is required</span>
+            )}
+          </div>
+        </article>
+        {/* description */}
+        <div className="mb-3">
+          <label
+            htmlFor="description"
+            className="capitalize font-medium mb-1 block text-sm"
+          >
+            description
+          </label>
+          <textarea
+            type="text"
+            {...register("description", { required: true })}
+            rows="7"
+            className="p-2 rounded-md mb-2 block bg-white w-full focus:outline-none border border-slate-300"
+          />
+          {errors.description && (
+            <span className="text-red-500">description is required</span>
+          )}
+        </div>
+        <button
+          type="submit"
+          className="bg-mainColor text-white capitalize font-medium rounded-md inline-block py-2 px-6"
+        >
+          submit
+        </button>
       </form>
     </article>
   );

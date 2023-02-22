@@ -2,7 +2,7 @@ import { appApi } from "../app";
 const shiftApi = appApi.injectEndpoints({
   endpoints: (build) => ({
     getAllShift: build.query({
-      query: () => "/user",
+      query: () => "/shift",
       providesTags: (result) =>
         // is result available?
         result
@@ -22,7 +22,39 @@ const shiftApi = appApi.injectEndpoints({
       }),
       invalidatesTags: [{ type: "Shift", id: "LIST" }],
     }),
+    getShift: build.query({
+      query: (id) => ({
+        url: `/shift/${id}`,
+      }),
+      providesTags: (result, error, id) => [{ type: "Shift", id }],
+    }),
+    assignTeacher: build.mutation({
+      query(data) {
+        return {
+          url: `/shift`,
+          method: "PUT",
+          body: data,
+        };
+      },
+      // Invalidates all queries that subscribe to this Post `id` only.
+      // In this case, `getPost` will be re-run. `getPosts` *might*  rerun, if this id was under its results.
+      invalidatesTags: (result, error, { id }) => [{ type: "Shift", id }],
+    }),
+    recordClockIn: build.mutation({
+      query: (formBody) => ({
+        url: "/timesheet",
+        method: "POST",
+        body: formBody,
+      }),
+      invalidatesTags: [{ type: "Timesheet", id: "LIST" }],
+    }),
   }),
   overrideExisting: false,
 });
-export const { useGetAllShiftQuery, useCreateShiftMutation } = shiftApi;
+export const {
+  useGetAllShiftQuery,
+  useCreateShiftMutation,
+  useGetShiftQuery,
+  useAssignTeacherMutation,
+  useRecordClockInMutation,
+} = shiftApi;

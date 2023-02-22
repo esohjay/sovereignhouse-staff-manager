@@ -8,6 +8,7 @@ module.exports.createShift = async (req, res) => {
 module.exports.assignStaff = async (req, res) => {
   const user = await User.findByPk(req.body.user);
   const shift = await Shift.findByPk(req.body.shift);
+  console.log(user, "user to be added");
   await shift.addUser(user);
 
   res.status(201).json(shift);

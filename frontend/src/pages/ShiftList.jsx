@@ -1,10 +1,11 @@
 import React from "react";
-import { useGetCampaignsQuery } from "../api/recruitment/campaignApi";
-import { Link } from "react-router-dom";
+import { useGetAllShiftQuery } from "../api/shift/shiftApi";
+import { Link, useParams } from "react-router-dom";
 
-function Campaigns() {
+function ShiftList() {
+  const { id } = useParams();
   const { currentData, isError, isFetching, isLoading, isSuccess } =
-    useGetCampaignsQuery();
+    useGetAllShiftQuery();
   return (
     <article className="w-full overflow-x-scroll  md:overflow-x-hidden rounded-md  scrollbar">
       <table className="w-full">
@@ -15,34 +16,37 @@ function Campaigns() {
               title
             </th>
             <th className="capitalize px-2 py-4 text-left font-semibold w-[180px">
-              position
+              venue
             </th>
             <th className="capitalize px-2 py-4 text-left font-semibold w-[180px">
-              contract type
+              week day
             </th>
             <th className="capitalize px-2 py-4 font-semibold w-[280px text-left">
-              status
+              student category
+            </th>
+            <th className="capitalize px-2 py-4 font-semibold w-[280px text-left">
+              duration
             </th>
           </tr>
         </thead>
         <tbody>
-          {currentData?.map((campaign, i) => (
+          {currentData?.map((shift, i) => (
             <tr
-              key={campaign.id}
+              key={shift.id}
               className="hover:bg-lightGreen p-3 cursor-pointer group"
             >
               <td className="w-ful text-left p-4 -14">{i + 1}</td>
               <td className="w-ful text-left px-2 py-3 w-[280px">
-                <p className="mb-1">{campaign.title}</p>
+                <p className="mb-1">{shift.title}</p>
                 <div className="hidden group-hover:flex group-hover:gap-2 w-full">
                   <Link
-                    to={`/admin/recruitment/${campaign.id}`}
+                    to={`/admin/${id}/shift/${shift.id}`}
                     className="text-mainColor p-1 text-xs inline-block rounded-md border border-mainColor fornt-medium capitalize"
                   >
                     view
                   </Link>
                   <Link
-                    to={`/admin/recruitment/${campaign.id}/edit`}
+                    to={`/admin/${id}/shift/${shift.id}/edit`}
                     className="text-mainColor p-1 text-xs inline-block rounded-md border border-yellow-500 fornt-medium capitalize"
                   >
                     edit
@@ -50,13 +54,16 @@ function Campaigns() {
                 </div>
               </td>
               <td className="w-ful text-left px-2 py-3 w-[180px">
-                {campaign.position}
+                {shift.venue}
               </td>
               <td className="w-ful text-left px-2 py-3 w-[180px">
-                {campaign.contractType}
+                {shift.dayOfTheWeek}
               </td>
               <td className="w-ful text-left px-2 py-3 w-[280px">
-                {campaign.status}
+                {shift.studentCategory}
+              </td>
+              <td className="w-ful text-left px-2 py-3 w-[280px">
+                {shift.duration}
               </td>
             </tr>
           ))}
@@ -66,4 +73,4 @@ function Campaigns() {
   );
 }
 
-export default Campaigns;
+export default ShiftList;

@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import logo from "../assets/logo.png";
 import avater from "../assets/User-avatar.png";
 
@@ -17,7 +17,13 @@ import { GiHamburgerMenu } from "react-icons/gi";
 import { GoDashboard } from "react-icons/go";
 import { VscTasklist } from "react-icons/vsc";
 import { IoReceiptOutline } from "react-icons/io5";
-import { MdTimer, MdOutlineSettingsSuggest, MdLogout } from "react-icons/md";
+import {
+  MdTimer,
+  MdOutlineSettingsSuggest,
+  MdLogout,
+  MdOutlineWorkspaces,
+  MdPendingActions,
+} from "react-icons/md";
 import { SlOptionsVertical } from "react-icons/sl";
 import {
   FaRegBell,
@@ -33,8 +39,8 @@ function DesktopNav({ children }) {
   const dispatch = useDispatch();
   const isSidebarOpen = useSelector(selectSidebarState);
   const user = useSelector(selectCurrentUser);
-  // const { user } = useAuth();
-  console.log(user);
+  const { id } = useParams();
+
   return (
     <>
       <nav
@@ -64,7 +70,11 @@ function DesktopNav({ children }) {
             path="/n"
             icon={<FaRegBell />}
           />
-          <DesktopTopNavItem text="timesheet" path="/n" icon={<MdTimer />} />
+          <DesktopTopNavItem
+            text="timesheet"
+            path={`/admin/${id}/timesheet`}
+            icon={<MdTimer />}
+          />
           <div
             onClick={() => dispatch(logOut())}
             className={
@@ -113,24 +123,40 @@ function DesktopNav({ children }) {
           <p className="uppercase text-slate-600 font-medium text-xs mb-7">
             main menu
           </p>
-          <NavItem text={"dashboard"} path="/" icon={<GoDashboard />} />
-          <NavItem text={"mailbox"} path="/mailbox" icon={<FaEnvelope />} />
+          <NavItem
+            text={"dashboard"}
+            path={`/admin/${id}`}
+            icon={<GoDashboard />}
+          />
+          <NavItem
+            text={"mailbox"}
+            path={`/admin/${id}/mailbox`}
+            icon={<FaEnvelope />}
+          />
           <NavItem
             text={"timesheet & leave"}
-            path="/timesheet"
+            path={`/admin/${id}/timesheet`}
             icon={<MdTimer />}
           />
           <NavItem text={"HRM"} path="/admin/staff" icon={<FaRegUser />} />
           <NavItem
             text={"Recruitment"}
-            path="/admin/recruitment"
-            icon={<FaRegUser />}
+            path={`/admin/${id}/recruitment`}
+            icon={<MdOutlineWorkspaces />}
           />
-          <NavItem text={"shifts"} path="/shifts" icon={<VscTasklist />} />
-          <NavItem text={"tasks"} path="/tasks" icon={<VscTasklist />} />
+          <NavItem
+            text={"shifts"}
+            path={`/admin/${id}/shift`}
+            icon={<MdPendingActions />}
+          />
+          <NavItem
+            text={"tasks"}
+            path={`/admin/${id}/task`}
+            icon={<VscTasklist />}
+          />
           <NavItem
             text={"expenses"}
-            path="/expenses"
+            path={`/admin/${id}/expense`}
             icon={<IoReceiptOutline />}
           />
           <NavItem

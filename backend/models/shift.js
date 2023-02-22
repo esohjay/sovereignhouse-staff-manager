@@ -6,9 +6,9 @@ const UserShifts = require("./userShift");
 const Shift = sequelize.define("shift", {
   title: DataTypes.STRING,
   studentCategory: DataTypes.STRING,
-  startTime: DataTypes.STRING,
-  endTime: DataTypes.STRING,
-  shiftLength: DataTypes.INTEGER,
+  startTime: DataTypes.TIME,
+  endTime: DataTypes.TIME,
+  duration: DataTypes.INTEGER,
   dayOfTheWeek: DataTypes.STRING,
   venue: DataTypes.STRING,
   description: DataTypes.STRING,
