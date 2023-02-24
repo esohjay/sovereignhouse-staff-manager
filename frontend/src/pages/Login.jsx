@@ -65,7 +65,7 @@ function Login() {
   //     }
   //   }, [user]);
   return (
-    <section className="bg-mainColor flex flex-col justify-center items-center gap-y-5 py-24 min-h-screen">
+    <section className="bg-mainColor px-5 flex flex-col justify-center items-center gap-y-5 py-24 min-h-screen">
       <figure>
         <img src={logo} alt="logo" />
       </figure>

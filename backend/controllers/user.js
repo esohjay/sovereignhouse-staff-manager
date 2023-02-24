@@ -50,8 +50,6 @@ module.exports.login = async (req, res) => {
       lastName: "user",
     },
   });
-
-  console.log(user, created);
   res.status(201).json(user);
 };
 module.exports.updateUser = async (req, res) => {
@@ -67,7 +65,9 @@ module.exports.getAllUsers = async (req, res) => {
 };
 module.exports.getUser = async (req, res) => {
   const { id } = req.params;
-  const user = await User.findByPk(id, { include: ["shifts", Timesheet] });
+  const user = await User.findByPk(id, {
+    include: ["shifts", Timesheet],
+  });
   res.status(200).json(user);
 };
 module.exports.deleteUser = async (req, res) => {

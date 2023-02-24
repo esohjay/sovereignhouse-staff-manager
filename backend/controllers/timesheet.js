@@ -1,21 +1,9 @@
 const Timesheet = require("../models/timesheet");
+const User = require("../models/user");
 
 module.exports.createTimesheet = async (req, res) => {
-  const lastestTimesheet = await Timesheet.findAll({
-    limit: 1,
-    order: [["createdAt", "DESC"]],
-  });
-  console.log(lastestTimesheet);
-  if (
-    lastestTimesheet &&
-    lastestTimesheet.length &&
-    !lastestTimesheet.endTime
-  ) {
-    res.status(500).send({ message: "You have a shift in progress" });
-  } else {
-    const timesheet = await Timesheet.create(req.body);
-    res.status(201).json(timesheet);
-  }
+  const timesheet = await Timesheet.create(req.body);
+  res.status(201).json(timesheet);
 };
 module.exports.updateTimesheet = async (req, res) => {
   const { id } = req.params;
@@ -25,6 +13,14 @@ module.exports.updateTimesheet = async (req, res) => {
 };
 module.exports.getAllTimesheets = async (req, res) => {
   const timesheets = await Timesheet.findAll({ include: ["user", "shift"] });
+  res.status(200).json(timesheets);
+};
+module.exports.getUserTimesheets = async (req, res) => {
+  const { id } = req.params;
+  const timesheets = await Timesheet.findAll({
+    where: { userId: id },
+    include: ["shift"],
+  });
   res.status(200).json(timesheets);
 };
 module.exports.getTimesheet = async (req, res) => {

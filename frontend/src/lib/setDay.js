@@ -28,3 +28,9 @@ export const setDay = (day) => {
   }
   return weekDay;
 };
+export const formatDate = (date) => {
+  const year = date.getFullYear();
+  const day = date.getDate();
+  const month = date.getMonth() + 1;
+  return `${month}/${day}/${year}`;
+};

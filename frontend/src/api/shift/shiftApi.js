@@ -40,13 +40,42 @@ const shiftApi = appApi.injectEndpoints({
       // In this case, `getPost` will be re-run. `getPosts` *might*  rerun, if this id was under its results.
       invalidatesTags: (result, error, { id }) => [{ type: "Shift", id }],
     }),
+    endShift: build.mutation({
+      query(data) {
+        return {
+          url: `/timesheet/${data.id}`,
+          method: "PUT",
+          body: data,
+        };
+      },
+      invalidatesTags: (result, error, { id }) => [
+        { type: "UserTimesheet", id },
+      ],
+    }),
+    getAllTimesheets: build.query({
+      query: () => "/timesheet",
+      providesTags: (result) =>
+        // is result available?
+        result
+          ? // successful query
+            [
+              ...result.map(({ id }) => ({ type: "Timesheet", id })),
+              { type: "Timesheet", id: "LIST" },
+            ]
+          : // an error occurred, but we still want to refetch this query when `{ type: 'Posts', id: 'LIST' }` is invalidated
+            [{ type: "Timesheet", id: "LIST" }],
+    }),
+    getUserTimesheet: build.query({
+      query: (id) => `/timesheet/user/${id}`,
+      providesTags: (result, error, id) => [{ type: "UserTimesheet", id }],
+    }),
     recordClockIn: build.mutation({
       query: (formBody) => ({
         url: "/timesheet",
         method: "POST",
         body: formBody,
       }),
-      invalidatesTags: [{ type: "Timesheet", id: "LIST" }],
+      invalidatesTags: [{ type: "UserTimesheet", id: "TIMESHEETLIST" }],
     }),
   }),
   overrideExisting: false,
@@ -55,6 +84,9 @@ export const {
   useGetAllShiftQuery,
   useCreateShiftMutation,
   useGetShiftQuery,
+  useGetAllTimesheetsQuery,
+  useGetUserTimesheetQuery,
   useAssignTeacherMutation,
   useRecordClockInMutation,
+  useEndShiftMutation,
 } = shiftApi;
