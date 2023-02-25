@@ -24,6 +24,7 @@ import Shift from "./pages/Shift";
 import ShiftList from "./pages/ShiftList";
 import ShiftDetails from "./pages/ShiftDetails";
 import Timesheet from "./pages/Timesheet";
+import AllStaffTimesheets from "./pages/AllStaffTimesheets";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Unauthorized from "./pages/401";
 import AdminRoute from "./components/AdminRoute";
@@ -36,11 +37,16 @@ function App() {
   const router = createBrowserRouter(
     createRoutesFromElements(
       <Route path="/" element={<Landing />}>
-        <Route path="admin/:id" element={<Home />}>
+        <Route path="vms/:id" element={<Home />}>
           <Route element={<ProtectedRoute />}>
-            <Route index element={<Dashboard />} />
+            <Route index path="dashboard" element={<Dashboard />} />
             <Route path="timesheet" element={<Timesheet />} />
-            <Route element={<AdminRoute />}>
+            <Route path="admin" element={<AdminRoute />}>
+              <Route path="timesheet/:userId" element={<Timesheet />} />
+              <Route
+                path="all-staff-timesheets"
+                element={<AllStaffTimesheets />}
+              />
               <Route path="staff" element={<Hrm />}>
                 <Route path="add" element={<NewStaff />} />
                 <Route index element={<AllStaff />} />

@@ -1,5 +1,7 @@
 import React from "react";
 import { Link, useParams } from "react-router-dom";
+import Cookies from "js-cookie";
+
 import logo from "../assets/logo.png";
 import avater from "../assets/User-avatar.png";
 
@@ -40,6 +42,9 @@ function DesktopNav({ children }) {
   const isSidebarOpen = useSelector(selectSidebarState);
   const user = useSelector(selectCurrentUser);
   const { id } = useParams();
+  const isAdmin = Cookies.get("isAdmin")
+    ? JSON.parse(Cookies.get("isAdmin"))
+    : null;
 
   return (
     <>
@@ -72,7 +77,7 @@ function DesktopNav({ children }) {
           />
           <DesktopTopNavItem
             text="timesheet"
-            path={`/admin/${id}/timesheet`}
+            path={`/vms/${id}/timesheet`}
             icon={<MdTimer />}
           />
           <div
@@ -125,38 +130,46 @@ function DesktopNav({ children }) {
           </p>
           <NavItem
             text={"dashboard"}
-            path={`/admin/${id}`}
+            path={`/admin/${id}/dashboard`}
             icon={<GoDashboard />}
           />
           <NavItem
             text={"mailbox"}
-            path={`/admin/${id}/mailbox`}
+            path={`/vms/${id}/mailbox`}
             icon={<FaEnvelope />}
           />
           <NavItem
             text={"timesheet & leave"}
-            path={`/admin/${id}/timesheet`}
+            path={
+              isAdmin
+                ? `/vms/${id}/admin/all-staff-timesheets`
+                : `/vms/${id}/timesheet`
+            }
             icon={<MdTimer />}
           />
-          <NavItem text={"HRM"} path="/admin/staff" icon={<FaRegUser />} />
+          <NavItem
+            text={"HRM"}
+            path={`/vms/${id}/admin/staff`}
+            icon={<FaRegUser />}
+          />
           <NavItem
             text={"Recruitment"}
-            path={`/admin/${id}/recruitment`}
+            path={`/vms/${id}/admin/recruitment`}
             icon={<MdOutlineWorkspaces />}
           />
           <NavItem
             text={"shifts"}
-            path={`/admin/${id}/shift`}
+            path={`/vms/${id}/admin/shift`}
             icon={<MdPendingActions />}
           />
           <NavItem
             text={"tasks"}
-            path={`/admin/${id}/task`}
+            path={`/vms/${id}/task`}
             icon={<VscTasklist />}
           />
           <NavItem
             text={"expenses"}
-            path={`/admin/${id}/expense`}
+            path={`/vms/${id}/expense`}
             icon={<IoReceiptOutline />}
           />
           <NavItem

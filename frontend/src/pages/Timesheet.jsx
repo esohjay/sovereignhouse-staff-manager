@@ -9,12 +9,13 @@ import { useParams, Link } from "react-router-dom";
 import { setDay, formatDate } from "../lib/setDay";
 
 function Timesheet() {
-  const { id } = useParams();
+  const { id, userId } = useParams();
+  const reqParam = userId ? userId : id;
   const [clockIn, result] = useRecordClockInMutation();
   const [clockOut, clockResult] = useEndShiftMutation();
   const [clockInError, setClockInError] = useState("");
-  const { currentData } = useGetStaffQuery(id);
-  const { currentData: userTimesheet } = useGetUserTimesheetQuery(id);
+  const { currentData } = useGetStaffQuery(reqParam);
+  const { currentData: userTimesheet } = useGetUserTimesheetQuery(reqParam);
   console.log(userTimesheet);
   const handleClockIn = (shiftDay, shiftId) => {
     const date = new Date();
@@ -59,6 +60,9 @@ function Timesheet() {
       <article className=" bg-white rounded-md shadow-md">
         <article className="mb-7">
           <div className="p-3 border-b border-b-mainColor">
+            <h3 className="text-center font-semibold text-mainColor capitalize p-3">
+              {userId && currentData?.fullName}
+            </h3>
             <h3 className="text-center font-semibold text-mainColor capitalize p-3">
               available shifts
             </h3>
