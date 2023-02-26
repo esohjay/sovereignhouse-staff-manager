@@ -8,13 +8,14 @@ const {
   deleteTimesheet,
   getUserTimesheets,
 } = require("../controllers/timesheet");
+const { verifyUser, verifyAdmin } = require("../middlewares/auth");
 
 const router = express.Router();
-router.post("/", catchAsync(createTimesheet));
-router.put("/:id", catchAsync(updateTimesheet));
-router.get("/", catchAsync(getAllTimesheets));
-router.get("/:id", catchAsync(getTimesheet));
-router.get("/user/:id", catchAsync(getUserTimesheets));
-router.delete("/:id", catchAsync(deleteTimesheet));
+router.post("/", verifyUser, catchAsync(createTimesheet));
+router.put("/:id", verifyAdmin, catchAsync(updateTimesheet));
+router.get("/", verifyUser, catchAsync(getAllTimesheets));
+router.get("/:id", verifyUser, catchAsync(getTimesheet));
+router.get("/user/:id", verifyUser, catchAsync(getUserTimesheets));
+router.delete("/:id", verifyAdmin, catchAsync(deleteTimesheet));
 
 module.exports = router;

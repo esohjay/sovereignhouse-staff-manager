@@ -2,6 +2,7 @@ const { Sequelize, Model, DataTypes } = require("sequelize");
 const sequelize = require("../config/db");
 const { sequelizeJoi, Joi } = require("sequelize-joi");
 sequelizeJoi(sequelize);
+const Leave = require("./leave");
 
 const User = sequelize.define("user", {
   id: {
@@ -62,7 +63,9 @@ const User = sequelize.define("user", {
   },
 });
 
-User.sync().then(() => {
-  console.log("user table created");
+User.hasMany(Leave);
+Leave.belongsTo(User, { as: "user" });
+sequelize.sync().then(() => {
+  console.log("user table and others created");
 });
 module.exports = User;
