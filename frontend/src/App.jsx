@@ -5,8 +5,6 @@ import {
   createRoutesFromElements,
   Route,
 } from "react-router-dom";
-// import ProtectedRoute from "./components/ProtectedRoute";
-import useAuth from "./hooks/useAuth";
 
 import Landing from "./pages/Landing";
 import Dashboard from "./pages/Dashboard";
@@ -25,15 +23,15 @@ import ShiftList from "./pages/ShiftList";
 import ShiftDetails from "./pages/ShiftDetails";
 import Timesheet from "./pages/Timesheet";
 import AllStaffTimesheets from "./pages/AllStaffTimesheets";
+import RequestLeave from "./pages/leave/RequestLeave";
+import LeaveContainer from "./pages/leave/LeaveContainer";
+import AllLeaveRequests from "./pages/leave/AllLeaveRequests";
+
 import ProtectedRoute from "./components/ProtectedRoute";
 import Unauthorized from "./pages/401";
 import AdminRoute from "./components/AdminRoute";
 
 function App() {
-  const { user } = useAuth();
-  // const location = useLocation();
-  // const navigate = useNavigate();
-  console.log(user);
   const router = createBrowserRouter(
     createRoutesFromElements(
       <Route path="/" element={<Landing />}>
@@ -41,12 +39,20 @@ function App() {
           <Route element={<ProtectedRoute />}>
             <Route index path="dashboard" element={<Dashboard />} />
             <Route path="timesheet" element={<Timesheet />} />
+            <Route path="leave" element={<LeaveContainer />}>
+              <Route path="request" element={<RequestLeave />} />
+            </Route>
+            {/* Admin views */}
             <Route path="admin" element={<AdminRoute />}>
               <Route path="timesheet/:userId" element={<Timesheet />} />
               <Route
                 path="all-staff-timesheets"
                 element={<AllStaffTimesheets />}
               />
+              <Route path="leave" element={<LeaveContainer />}>
+                <Route path="request" element={<RequestLeave />} />
+                <Route index element={<AllLeaveRequests />} />
+              </Route>
               <Route path="staff" element={<Hrm />}>
                 <Route path="add" element={<NewStaff />} />
                 <Route index element={<AllStaff />} />

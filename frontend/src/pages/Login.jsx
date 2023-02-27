@@ -45,7 +45,7 @@ function Login() {
   };
   useEffect(() => {
     if (user) {
-      navigate(`/admin/${user?.id}`);
+      navigate(`/vms/${user?.id}/dashboard`);
     }
   }, [user]);
   //   useEffect(() => {

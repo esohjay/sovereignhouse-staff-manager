@@ -1,15 +1,16 @@
 import React, { useEffect } from "react";
 
-import { useNavigate, Outlet, NavLink } from "react-router-dom";
+import { useNavigate, useParams, Outlet, NavLink } from "react-router-dom";
 
 function Recruitment() {
   const navigate = useNavigate();
+  const { id } = useParams();
   return (
     <section className="p-8">
       <section className=" ">
         <div className="grid grid-cols-3 gap-3 mb-7 font-medium  w-fit">
           <NavLink
-            to="/admin/recruitment"
+            to={`/vms/${id}/admin/recruitment`}
             className={({ isActive }) =>
               isActive
                 ? "inline-block px-5 py-2 text-white text-center rounded-md shadow-md bg-mainColor capitalize hover:bg-lightGreen hover:text-mainColor"
@@ -19,7 +20,7 @@ function Recruitment() {
             campaigns
           </NavLink>
           <NavLink
-            to="/admin/recruitment/add"
+            to={`/vms/${id}/admin/recruitment/add`}
             className={({ isActive }) =>
               isActive
                 ? "inline-block px-5 py-2 text-white bg-mainColor text-center rounded-md shadow-md capitalize hover:bg-lightGreen hover:text-mainColor"
@@ -29,7 +30,7 @@ function Recruitment() {
             add campaign
           </NavLink>
           <NavLink
-            to="/admin/recruitment/applicants"
+            to={`/vms/${id}/admin/recruitment/applicants`}
             className={({ isActive }) =>
               isActive
                 ? "inline-block px-5 py-2 text-white bg-mainColor text-center rounded-md shadow-md capitalize hover:bg-lightGreen hover:text-mainColor"

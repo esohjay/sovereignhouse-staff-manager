@@ -118,6 +118,42 @@ function AddCampaign() {
             )}
           </div>
         </article>
+        <article className="w-full grid grid-cols-2 gap-x-3">
+          {/* start date */}
+          <div className="mb-3">
+            <label
+              htmlFor="startDate"
+              className="capitalize font-medium mb-1 block text-sm"
+            >
+              start date
+            </label>
+            <input
+              type="date"
+              {...register("startDate", { required: true })}
+              className="p-2 rounded-md mb-2 block bg-white w-full focus:outline-none border border-slate-300"
+            />
+            {errors.startDate && (
+              <span className="text-red-500 ">start date is required</span>
+            )}
+          </div>
+          {/* end date */}
+          <div className="mb-3">
+            <label
+              htmlFor="endDate"
+              className="capitalize font-medium mb-1 block text-sm"
+            >
+              end date
+            </label>
+            <input
+              type="date"
+              {...register("endDate", { required: true })}
+              className="p-2 rounded-md mb-2 block bg-white w-full focus:outline-none border border-slate-300"
+            />
+            {errors.endDate && (
+              <span className="text-red-500 ">end date is required</span>
+            )}
+          </div>
+        </article>
         <article className="w-full grid md:grid-cols-2 gap-x-3">
           {/* workplace */}
           <div className="mb-3">

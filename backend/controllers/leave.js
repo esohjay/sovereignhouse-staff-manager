@@ -1,7 +1,7 @@
 const Leave = require("../models/leave");
 
 module.exports.createLeave = async (req, res) => {
-  const leave = await Leave.create(req.body);
+  const leave = await Leave.create({ ...req.body, userId: req.user.uid });
   res.status(201).json(leave);
 };
 module.exports.updateLeave = async (req, res) => {

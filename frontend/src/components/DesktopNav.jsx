@@ -25,6 +25,7 @@ import {
   MdLogout,
   MdOutlineWorkspaces,
   MdPendingActions,
+  MdOutlineEventBusy,
 } from "react-icons/md";
 import { SlOptionsVertical } from "react-icons/sl";
 import {
@@ -139,13 +140,18 @@ function DesktopNav({ children }) {
             icon={<FaEnvelope />}
           />
           <NavItem
-            text={"timesheet & leave"}
+            text={"timesheet"}
             path={
               isAdmin
                 ? `/vms/${id}/admin/all-staff-timesheets`
                 : `/vms/${id}/timesheet`
             }
             icon={<MdTimer />}
+          />
+          <NavItem
+            text={"leave"}
+            path={isAdmin ? `/vms/${id}/admin/leave` : `/vms/${id}/leave`}
+            icon={<MdOutlineEventBusy />}
           />
           <NavItem
             text={"HRM"}
