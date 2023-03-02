@@ -60,10 +60,10 @@ const shiftApi = appApi.injectEndpoints({
           ? // successful query
             [
               ...result.map(({ id }) => ({ type: "Timesheet", id })),
-              { type: "Timesheet", id: "LIST" },
+              { type: "Timesheet", id: "TIMESHEETLIST" },
             ]
           : // an error occurred, but we still want to refetch this query when `{ type: 'Posts', id: 'LIST' }` is invalidated
-            [{ type: "Timesheet", id: "LIST" }],
+            [{ type: "Timesheet", id: "TIMESHEETLIST" }],
     }),
     getUserTimesheet: build.query({
       query: (id) => `/timesheet/user/${id}`,

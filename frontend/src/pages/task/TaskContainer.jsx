@@ -9,7 +9,7 @@ function Task() {
       <section className=" ">
         <div className="grid grid-cols-3 gap-3 mb-7 font-medium  w-fit">
           <NavLink
-            to={`/vms/${id}/admin/task`}
+            to={`/vms/${id}/task`}
             className={({ isActive }) =>
               isActive
                 ? "inline-block px-5 py-2 text-white text-center rounded-md shadow-md bg-mainColor capitalize hover:bg-lightGreen hover:text-mainColor"
@@ -19,7 +19,7 @@ function Task() {
             tasks
           </NavLink>
           <NavLink
-            to={`/vms/${id}/admin/task/add`}
+            to={`/vms/${id}/task/add`}
             className={({ isActive }) =>
               isActive
                 ? "inline-block px-5 py-2 text-white bg-mainColor text-center rounded-md shadow-md capitalize hover:bg-lightGreen hover:text-mainColor"

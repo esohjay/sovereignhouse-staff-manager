@@ -24,7 +24,7 @@ module.exports.updateTask = async (req, res) => {
   res.status(201).json(task);
 };
 module.exports.getAllTasks = async (req, res) => {
-  const tasks = await Task.findAll();
+  const tasks = await Task.findAll({ include: "asignedBy" });
   res.status(200).json(tasks);
 };
 module.exports.getTask = async (req, res) => {
@@ -34,6 +34,14 @@ module.exports.getTask = async (req, res) => {
     include: ["asignees", "asignedBy"],
   });
   res.status(200).json(task);
+};
+module.exports.getUserTasks = async (req, res) => {
+  const { id } = req.params;
+  const tasks = await Task.findAll({
+    // where: { taskCreatorId: id },
+    include: [User],
+  });
+  res.status(200).json(tasks);
 };
 module.exports.deleteTask = async (req, res) => {
   const { id } = req.params;

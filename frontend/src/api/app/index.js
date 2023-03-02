@@ -13,7 +13,7 @@ export const appApi = createApi({
       return headers;
     },
   }),
-  tagTypes: ["Staff", "Campaign, Timesheet, UserTimesheet"],
+  tagTypes: ["Staff", "Campaign, Timesheet, UserTimesheet, Task"],
   endpoints: (builder) => ({}),
 });
 

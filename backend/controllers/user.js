@@ -1,7 +1,7 @@
 const User = require("../models/user");
 const { sendMail } = require("../utils/mailer");
 const { welcomeMessage } = require("../utils/emailTemplate");
-const Shift = require("../models/shift");
+const Task = require("../models/task");
 const Timesheet = require("../models/timesheet");
 const admin = require("../config/firebase");
 const getAuth = require("firebase-admin/auth");
@@ -66,7 +66,7 @@ module.exports.getAllUsers = async (req, res) => {
 module.exports.getUser = async (req, res) => {
   const { id } = req.params;
   const user = await User.findByPk(id, {
-    include: ["shifts", Timesheet],
+    include: ["shifts", Timesheet, "tasks"],
   });
   res.status(200).json(user);
 };
