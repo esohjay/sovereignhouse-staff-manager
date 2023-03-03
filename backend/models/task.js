@@ -13,17 +13,16 @@ const Task = sequelize.define("task", {
   priority: DataTypes.STRING,
 });
 
-Task.belongsToMany(User, { as: "asignees", through: UserTasks });
-User.belongsToMany(Task, { as: "tasks", through: UserTasks });
+// User.hasMany(Task, { as: "asignedBy" });
+// // Task.belongsTo(User, { as: "asignedBy" });
+// Task.belongsToMany(User, { as: "asignees", through: UserTasks });
+// User.belongsToMany(Task, { as: "tasks", through: UserTasks });
+// User.hasMany(UserTasks);
+// UserTasks.belongsTo(User);
+// Task.hasMany(UserTasks);
+// UserTasks.belongsTo(Task);
 
-User.hasMany(Task);
-Task.belongsTo(User, { as: "asignedBy", foreignKey: "taskCreatorId" });
-User.hasMany(UserTasks);
-UserTasks.belongsTo(User);
-Task.hasMany(UserTasks);
-UserTasks.belongsTo(Task);
-
-sequelize.sync().then(() => {
-  console.log("Task table created");
-});
+// sequelize.sync().then(() => {
+//   console.log("Task table created");
+// });
 module.exports = Task;
