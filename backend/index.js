@@ -29,8 +29,8 @@ app.get("/", (req, res) => {
 });
 app.use("/api/v1/user", userRoute);
 app.use("/api/v1/shift", shiftRoute);
-app.use("/api/v1/timesheet", timesheetRoute);
 app.use("/api/v1/task", taskRoute);
+app.use("/api/v1/timesheet", timesheetRoute);
 app.use("/api/v1/expenses", expensesRoute);
 app.use("/api/v1/campaign", campaignRoute);
 app.use("/api/v1/applicant", applicantRoute);

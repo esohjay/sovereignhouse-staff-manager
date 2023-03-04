@@ -14,7 +14,7 @@ function NewTask() {
     formState: { errors },
   } = useForm();
   const onSubmit = (data) => {
-    createTask({ ...data, userId: id, taskCreatorId: id });
+    createTask({ ...data, userId: id });
   };
   console.log(data);
   return (

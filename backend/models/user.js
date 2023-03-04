@@ -3,8 +3,6 @@ const sequelize = require("../config/db");
 const { sequelizeJoi, Joi } = require("sequelize-joi");
 sequelizeJoi(sequelize);
 const Leave = require("./leave");
-const Task = require("./task");
-const UserTasks = require("./userTask");
 
 const User = sequelize.define("user", {
   id: {
@@ -65,26 +63,8 @@ const User = sequelize.define("user", {
   },
 });
 
-// const Task = sequelize.define("task", {
-//   title: DataTypes.STRING,
-//   description: DataTypes.STRING,
-//   startDate: DataTypes.STRING,
-//   dueDate: DataTypes.STRING,
-//   // assignedBy: DataTypes.STRING,
-//   status: DataTypes.STRING,
-//   priority: DataTypes.STRING,
-// });
 User.hasMany(Leave);
 Leave.belongsTo(User, { as: "user" });
-
-User.hasMany(Task, { as: "asignedBy" });
-Task.belongsTo(User, { as: "asignedBy" });
-Task.belongsToMany(User, { as: "asignees", through: UserTasks });
-User.belongsToMany(Task, { as: "tasks", through: UserTasks });
-User.hasMany(UserTasks);
-UserTasks.belongsTo(User);
-Task.hasMany(UserTasks);
-UserTasks.belongsTo(Task);
 
 sequelize.sync().then(() => {
   console.log("user table and others created");

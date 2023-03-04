@@ -1,4 +1,4 @@
-const Task = require("../models/Task");
+const Task = require("../models/task");
 const User = require("../models/user");
 const { Op } = require("sequelize");
 
@@ -7,16 +7,20 @@ module.exports.createTask = async (req, res) => {
   res.status(201).json(task);
 };
 module.exports.assignStaff = async (req, res) => {
-  const users = await User.findAll({
-    where: {
-      id: {
-        [Op.or]: req.body.asignees,
-      },
-    },
-  });
   const task = await Task.findByPk(req.body.task);
-  await task.addAsignees(users);
-  res.status(201).json(task);
+  if (task.userId === req.user.uid) {
+    const users = await User.findAll({
+      where: {
+        id: {
+          [Op.or]: req.body.asignees,
+        },
+      },
+    });
+    await task.addAsignees(users);
+    res.status(201).json(task);
+  } else {
+    return res.status(401).send("Unauthorized Request");
+  }
 };
 module.exports.updateTask = async (req, res) => {
   const { id } = req.params;
@@ -31,15 +35,15 @@ module.exports.getTask = async (req, res) => {
   const { id } = req.params;
   const task = await Task.findOne({
     where: { id },
-    include: ["asignees", "asignedBy"],
+    include: [User, "asignees"],
   });
   res.status(200).json(task);
 };
 module.exports.getUserTasks = async (req, res) => {
   const { id } = req.params;
   const tasks = await Task.findAll({
-    // where: { taskCreatorId: id },
-    include: [User],
+    where: { userId: id },
+    include: "asignees",
   });
   res.status(200).json(tasks);
 };

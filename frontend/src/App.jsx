@@ -29,6 +29,7 @@ import AllLeaveRequests from "./pages/leave/AllLeaveRequests";
 import Task from "./pages/task/TaskContainer";
 import NewTask from "./pages/task/NewTask";
 import AllUserTasks from "./pages/task/AllUserTasks";
+import TaskDetails from "./pages/task/TaskDeatils";
 
 import ProtectedRoute from "./components/ProtectedRoute";
 import Unauthorized from "./pages/401";
@@ -48,6 +49,7 @@ function App() {
             <Route path="task" element={<Task />}>
               <Route index element={<AllUserTasks />} />
               <Route path="add" element={<NewTask />} />
+              <Route path=":taskId" element={<TaskDetails />} />
             </Route>
 
             {/* Admin views */}

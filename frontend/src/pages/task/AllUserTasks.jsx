@@ -58,7 +58,12 @@ function AllUserTasks() {
                 className="hover:bg-lightGreen p-3 cursor-pointer group"
               >
                 <td className="w-ful text-left p-4 w-14">{i + 1}</td>
-                <td className="w-ful text-left px-2 py-3 ">{task.title}</td>
+                <td
+                  onClick={() => navigate(`/vms/${id}/task/${task.id}`)}
+                  className="w-ful text-left px-2 py-3 "
+                >
+                  {task.title}
+                </td>
                 <td className="w-ful text-left px-2 py-3 ">
                   {dayjs(task.startDate).format("MMM D, YYYY")}
                 </td>
