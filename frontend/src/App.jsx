@@ -11,9 +11,10 @@ import Dashboard from "./pages/Dashboard";
 import Home from "./pages/Home";
 import Register from "./pages/Register";
 import Login from "./pages/Login";
-import Hrm from "./pages/Hrm";
-import NewStaff from "./pages/NewStaff";
-import AllStaff from "./pages/AllStaff";
+import Hrm from "./pages/hrm/Hrm";
+import NewStaff from "./pages/hrm/NewStaff";
+import AllStaff from "./pages/hrm/AllStaff";
+import Profile from "./pages/hrm/Profile";
 import Recruitment from "./pages/Recruitment";
 import AddCampaign from "./pages/AddCampaign";
 import Campaigns from "./pages/Campaigns";
@@ -46,6 +47,9 @@ function App() {
             <Route path="leave" element={<LeaveContainer />}>
               <Route path="request" element={<RequestLeave />} />
             </Route>
+            <Route path="profile" element={<Profile />}>
+              {/* <Route path="request" element={<RequestLeave />} /> */}
+            </Route>
             <Route path="task" element={<Task />}>
               <Route index element={<AllUserTasks />} />
               <Route path="add" element={<NewTask />} />
@@ -59,12 +63,14 @@ function App() {
                 path="all-staff-timesheets"
                 element={<AllStaffTimesheets />}
               />
+
               <Route path="leave" element={<LeaveContainer />}>
                 <Route path="request" element={<RequestLeave />} />
                 <Route index element={<AllLeaveRequests />} />
               </Route>
               <Route path="staff" element={<Hrm />}>
                 <Route path="add" element={<NewStaff />} />
+                <Route path=":userId" element={<Profile />} />
                 <Route index element={<AllStaff />} />
               </Route>
               <Route path="recruitment" element={<Recruitment />}>
