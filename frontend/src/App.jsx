@@ -11,10 +11,13 @@ import Dashboard from "./pages/Dashboard";
 import Home from "./pages/Home";
 import Register from "./pages/Register";
 import Login from "./pages/Login";
+
 import Hrm from "./pages/hrm/Hrm";
 import NewStaff from "./pages/hrm/NewStaff";
 import AllStaff from "./pages/hrm/AllStaff";
 import Profile from "./pages/hrm/Profile";
+import UpdateStaff from "./pages/hrm/UpdateStaff";
+
 import Recruitment from "./pages/Recruitment";
 import AddCampaign from "./pages/AddCampaign";
 import Campaigns from "./pages/Campaigns";
@@ -48,7 +51,7 @@ function App() {
               <Route path="request" element={<RequestLeave />} />
             </Route>
             <Route path="profile" element={<Profile />}>
-              {/* <Route path="request" element={<RequestLeave />} /> */}
+              <Route path="request" element={<UpdateStaff />} />
             </Route>
             <Route path="task" element={<Task />}>
               <Route index element={<AllUserTasks />} />
@@ -71,6 +74,7 @@ function App() {
               <Route path="staff" element={<Hrm />}>
                 <Route path="add" element={<NewStaff />} />
                 <Route path=":userId" element={<Profile />} />
+                <Route path=":userId/edit" element={<UpdateStaff />} />
                 <Route index element={<AllStaff />} />
               </Route>
               <Route path="recruitment" element={<Recruitment />}>
