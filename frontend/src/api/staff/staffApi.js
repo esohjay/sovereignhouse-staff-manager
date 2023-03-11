@@ -3,6 +3,15 @@ const staffApi = appApi.injectEndpoints({
   endpoints: (build) => ({
     getAllStaff: build.query({
       query: () => "/user",
+      providesTags: (result) =>
+        // is result available?
+        result
+          ? // successful query
+            [
+              ...result.map(({ id }) => ({ type: "Staff", id })),
+              { type: "Staff", id: "STAFFLIST" },
+            ]
+          : [{ type: "Staff", id: "STAFFLIST" }],
     }),
     getStaff: build.query({
       query: (id) => ({
@@ -10,7 +19,32 @@ const staffApi = appApi.injectEndpoints({
       }),
       providesTags: (result, error, id) => [{ type: "Staff", id }],
     }),
+    updateUserDetails: build.mutation({
+      query(data) {
+        return {
+          url: `/user/${data.id}`,
+          method: "PUT",
+          body: data,
+        };
+      },
+      invalidatesTags: (result, error, { id }) => [{ type: "Staff", id }],
+    }),
+    updateUserStatus: build.mutation({
+      query(data) {
+        return {
+          url: `/user/${data.id}/status`,
+          method: "PUT",
+          body: data,
+        };
+      },
+      invalidatesTags: (result, error, { id }) => [{ type: "Staff", id }],
+    }),
   }),
   overrideExisting: false,
 });
-export const { useGetAllStaffQuery, useGetStaffQuery } = staffApi;
+export const {
+  useGetAllStaffQuery,
+  useGetStaffQuery,
+  useUpdateUserDetailsMutation,
+  useUpdateUserStatusMutation,
+} = staffApi;
