@@ -1,6 +1,11 @@
-import React from "react";
+import React, { useEffect } from "react";
 
-import { useGetStaffQuery } from "../../api/staff/staffApi";
+import {
+  useGetStaffQuery,
+  useDeleteStaffMutation,
+} from "../../api/staff/staffApi";
+import { changeEmail, selectStatusMsg } from "../../features/authSlice";
+import { useDispatch, useSelector } from "react-redux";
 import { useParams, useNavigate } from "react-router-dom";
 
 import { MdOutlinePersonAddAlt } from "react-icons/md";
@@ -12,10 +17,14 @@ import localizedFormat from "dayjs/plugin/localizedFormat";
 dayjs.extend(localizedFormat);
 
 function Profile() {
+  const statusText = useSelector(selectStatusMsg);
+  const dispatch = useDispatch();
   const { id, userId } = useParams();
   const navigate = useNavigate();
   const reqParam = userId ? userId : id;
   const { currentData } = useGetStaffQuery(reqParam);
+  const [deletStaff, { data, error, status: staffDeleted }] =
+    useDeleteStaffMutation();
   const {
     register,
     handleSubmit,
@@ -25,7 +34,32 @@ function Profile() {
     const password = generateRandomString();
     // dispatch(signUpWithEmailAndPassword({ ...data, password }));
   };
-
+  const {
+    register: registerEmail,
+    handleSubmit: handleSubmitEmail,
+    formState: { errors: errorsEmail },
+    getValues: getEmailValue,
+    setError: setEmailError,
+  } = useForm();
+  const onSubmitEmail = (data) => {
+    const password = generateRandomString();
+    // dispatch(signUpWithEmailAndPassword({ ...data, password }));
+  };
+  const handUpdateEmail = () => {
+    if (!getEmailValue("email")) {
+      setEmailError("email", { type: "required" });
+      return;
+    }
+    console.log(getEmailValue("email"));
+    dispatch(
+      changeEmail({ email: getEmailValue("email"), id: currentData?.id })
+    );
+  };
+  //   useEffect(() => {
+  //     if (staffDeleted) {
+  //       navigate(-1);
+  //     }
+  //   }, staffDeleted);
   return (
     <article className="p-5">
       <article className="border rounded-md border-mainColor">
@@ -143,11 +177,41 @@ function Profile() {
           </button>
 
           <Modal
+            style="bg-yellow-500 px-6 pt-2.5 pb-2 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#dc4c64] transition duration-150 ease-in-out hover:bg-danger-600 hover:shadow-[0_8px_9px_-4px_rgba(220,76,100,0.3),0_4px_18px_0_rgba(220,76,100,0.2)] focus:bg-danger-600 focus:shadow-[0_8px_9px_-4px_rgba(220,76,100,0.3),0_4px_18px_0_rgba(220,76,100,0.2)] focus:outline-none focus:ring-0 active:bg-danger-700 active:shadow-[0_8px_9px_-4px_rgba(220,76,100,0.3),0_4px_18px_0_rgba(220,76,100,0.2)]"
+            btnText={`Change email`}
+            targetId="changeEmail"
+            modalTitle="Update Email?"
+            confirmText="update"
+            action={handUpdateEmail}
+            // size="small"
+          >
+            <form>
+              {/* email */}
+              <div className="mb-3">
+                <label
+                  htmlFor="email"
+                  className="capitalize font-medium mb-1 block text-sm"
+                >
+                  email
+                </label>
+                <input
+                  type="text"
+                  {...registerEmail("email", { required: true })}
+                  className="p-2 rounded-md mb-2 block bg-white w-full focus:outline-none border border-slate-300"
+                />
+                {errorsEmail.email && (
+                  <span className="text-red-500">email is required</span>
+                )}
+              </div>
+            </form>
+          </Modal>
+          <Modal
             style="bg-danger px-6 pt-2.5 pb-2 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#dc4c64] transition duration-150 ease-in-out hover:bg-danger-600 hover:shadow-[0_8px_9px_-4px_rgba(220,76,100,0.3),0_4px_18px_0_rgba(220,76,100,0.2)] focus:bg-danger-600 focus:shadow-[0_8px_9px_-4px_rgba(220,76,100,0.3),0_4px_18px_0_rgba(220,76,100,0.2)] focus:outline-none focus:ring-0 active:bg-danger-700 active:shadow-[0_8px_9px_-4px_rgba(220,76,100,0.3),0_4px_18px_0_rgba(220,76,100,0.2)]"
             btnText={`Remove ${currentData?.firstName}`}
             targetId="deleteUser"
             modalTitle="Do you want to delete?"
             confirmText="delete"
+            action={() => deletStaff(currentData?.id)}
             // size="small"
           >
             <p>{currentData?.firstName} will be deleted permanently</p>

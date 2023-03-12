@@ -7,6 +7,7 @@ import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
   signOut,
+  updateEmail,
 } from "firebase/auth";
 import { auth } from "../config/firebase";
 
@@ -85,6 +86,39 @@ export const logInWithEmailAndPassword = createAsyncThunk(
     return data;
   }
 );
+
+//change email
+export const changeEmail = createAsyncThunk(
+  "auth/changeEmail",
+  async (info, { rejectWithValue, dispatch }) => {
+    try {
+      //firebase update
+      await updateEmail(auth.currentUser, info.email);
+      //get user token
+      const token = await auth?.currentUser?.getIdToken(true);
+      //update db record
+      const { data } = await axios.put(
+        `${import.meta.env.VITE_BACKEND_URL}/user/${info.id}`,
+        info,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      return data;
+    } catch (error) {
+      const message =
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message;
+      dispatch(setStatusMsg(message));
+      return rejectWithValue();
+    }
+  }
+);
+
 //Logout
 export const logOut = createAsyncThunk("auth/logout", async () => {
   await signOut(auth);
@@ -126,6 +160,7 @@ const initialState = {
   currentUser: null,
   token: null,
   isAdmin: false,
+  statusMsg: null,
 };
 
 export const authSlice = createSlice({
@@ -140,6 +175,9 @@ export const authSlice = createSlice({
     },
     setAdminStatus: (state) => {
       state.isAdmin = true;
+    },
+    setStatusMsg: (state, action) => {
+      state.statusMsg = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -179,18 +217,18 @@ export const authSlice = createSlice({
     builder.addCase(getUserIdToken.pending, (state, action) => {
       state.status = "pending";
     });
-    // //register to db
-    // builder.addCase(registerUserToDb.fulfilled, (state, action) => {
-    //   state.token = action.payload;
-    //   state.status = "success";
-    // });
-    // builder.addCase(registerUserToDb.rejected, (state, action) => {
-    //   state.error = action.error;
-    //   state.status = "failed";
-    // });
-    // builder.addCase(registerUserToDb.pending, (state, action) => {
-    //   state.status = "pending";
-    // });
+    //register to db
+    builder.addCase(changeEmail.fulfilled, (state, action) => {
+      state.user = action.payload;
+      state.status = "success";
+    });
+    builder.addCase(changeEmail.rejected, (state, action) => {
+      // state.error = action.error;
+      state.status = "failed";
+    });
+    builder.addCase(changeEmail.pending, (state, action) => {
+      state.status = "pending";
+    });
     //logout
     builder.addCase(logOut.fulfilled, (state, action) => {
       state.currentUser = action.payload;
@@ -208,11 +246,12 @@ export const authSlice = createSlice({
 });
 
 // Action creators are generated for each case reducer function
-export const { getUserFormData, setCurrentUser, setAdminStatus } =
+export const { getUserFormData, setCurrentUser, setAdminStatus, setStatusMsg } =
   authSlice.actions;
 
 export const selectUserForm = (state) => state.auth.userForm;
 export const selectUser = (state) => state.auth.user;
+export const selectStatusMsg = (state) => state.auth.statusMsg;
 export const selectCurrentUser = (state) => state.auth.currentUser;
 export const selectToken = (state) => state.auth.token;
 export const selectAdminStatus = (state) => state.auth.isAdmin;

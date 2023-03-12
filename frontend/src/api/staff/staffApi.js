@@ -39,6 +39,16 @@ const staffApi = appApi.injectEndpoints({
       },
       invalidatesTags: (result, error, { id }) => [{ type: "Staff", id }],
     }),
+    deleteStaff: build.mutation({
+      query(id) {
+        return {
+          url: `user/${id}`,
+          method: "DELETE",
+        };
+      },
+      // Invalidates all queries that subscribe to this Staff `id` only.
+      invalidatesTags: (result, error, id) => [{ type: "Staff", id }],
+    }),
   }),
   overrideExisting: false,
 });
@@ -47,4 +57,5 @@ export const {
   useGetStaffQuery,
   useUpdateUserDetailsMutation,
   useUpdateUserStatusMutation,
+  useDeleteStaffMutation,
 } = staffApi;

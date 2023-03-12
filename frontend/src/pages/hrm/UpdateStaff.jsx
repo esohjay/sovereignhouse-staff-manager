@@ -4,7 +4,6 @@ import { useNavigate, useParams } from "react-router-dom";
 import {
   useGetStaffQuery,
   useUpdateUserDetailsMutation,
-  useUpdateUserStatusMutation,
 } from "../../api/staff/staffApi";
 
 import { yupResolver } from "@hookform/resolvers/yup";
