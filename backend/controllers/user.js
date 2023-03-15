@@ -55,7 +55,15 @@ module.exports.login = async (req, res) => {
 module.exports.updateUser = async (req, res) => {
   const { id } = req.params;
   const user = await User.update(req.body, { where: { id: id } });
-  console.log(JSON.stringify(user));
+  if (user) {
+    try {
+      await admin.auth().updateUser(id, {
+        displayName: `${user.firstName} ${user.lastName}`,
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  }
   res.status(201).json(user);
 };
 module.exports.getAllUsers = async (req, res) => {
@@ -72,6 +80,20 @@ module.exports.getUser = async (req, res) => {
 };
 module.exports.deleteUser = async (req, res) => {
   const { id } = req.params;
-  await User.destroy({ where: { id } });
-  res.status(204).json({ message: "user deleted" });
+  if (req.user.admin && req.user.uid === id) {
+    res.status(401).send("Deletion of admin profile not allowed");
+  } else if (
+    (req.user.admin && req.user.uid !== id) ||
+    (!req.user.admin && req.user.uid === id)
+  ) {
+    await User.destroy({ where: { id } });
+    try {
+      await admin.auth().deleteUser(id);
+    } catch (err) {
+      console.log(err);
+    }
+    res.status(204).json({ message: "user deleted" });
+  } else {
+    res.status(401).send("Permission denied");
+  }
 };

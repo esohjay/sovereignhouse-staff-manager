@@ -8,7 +8,9 @@ class AuthMiddleware {
     try {
       const decodedToken = await admin.auth().verifyIdToken(token);
       req.user = decodedToken;
-      console.log("Decode token ############", decodedToken);
+
+      // console.log("Decode token ############", decodedToken);
+      // console.log("req ############", req.user);
       return next();
     } catch (err) {
       console.log(err);
