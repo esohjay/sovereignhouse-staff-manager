@@ -8,6 +8,7 @@ const {
   deleteUser,
   login,
   makeAdmin,
+  resetPassword,
 } = require("../controllers/user");
 const { verifyUser, verifyAdmin } = require("../middlewares/auth");
 
@@ -16,6 +17,7 @@ router.post("/", verifyAdmin, catchAsync(createUser));
 router.get("/admin", verifyUser, catchAsync(makeAdmin));
 router.post("/login", verifyUser, catchAsync(login));
 router.put("/:id", verifyUser, catchAsync(updateUser));
+router.post("/reset-password", verifyAdmin, catchAsync(resetPassword));
 router.get("/", verifyAdmin, catchAsync(getAllUsers));
 router.get("/:id", verifyUser, catchAsync(getUser));
 router.delete("/:id", verifyUser, catchAsync(deleteUser));

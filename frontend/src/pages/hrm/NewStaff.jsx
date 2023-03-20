@@ -6,17 +6,20 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
 import { useForm } from "react-hook-form";
 import { countries } from "../../lib/countries";
+import { useCreateStaffMutation } from "../../api/staff/staffApi";
 import generateRandomString from "../../lib/generatePassword";
 //redux
 import {
   signUpWithEmailAndPassword,
-  selectUser,
+  selectRegisteredUser,
+  resetRegistedUser,
 } from "../../features/authSlice";
 import { useDispatch, useSelector } from "react-redux";
 
 function NewStaff() {
   const dispatch = useDispatch();
-  const user = useSelector(selectUser);
+  const [registerStaff, { data, status, error }] = useCreateStaffMutation();
+  const user = useSelector(selectRegisteredUser);
   const navigate = useNavigate();
   // form validation rules
   const validationSchema = Yup.object().shape({
@@ -39,20 +42,29 @@ function NewStaff() {
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm(formOptions);
   const onSubmit = (data) => {
     const password = generateRandomString();
-    dispatch(signUpWithEmailAndPassword({ ...data, password }));
+    // dispatch(signUpWithEmailAndPassword({ ...data, password }));
+    registerStaff({ ...data, password });
   };
   useEffect(() => {
-    if (user) {
-      navigate("/admin");
+    if (data) {
+      // navigate("/admin");
+      reset();
     }
-  }, [user]);
+    return () => {
+      dispatch(resetRegistedUser());
+    };
+  }, [data]);
   console.log(user);
+  console.log(data, status, error);
+  console.log(error?.data?.message);
   return (
     <article className="w-full p-5">
+      {data && <p className="bg-green-500 p-3 text-white">User added</p>}
       <form onSubmit={handleSubmit(onSubmit)}>
         <article className="w-full grid md:grid-cols-3 gap-x-3">
           <div className="mb-3">

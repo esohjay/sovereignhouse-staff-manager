@@ -1,6 +1,7 @@
 import React from "react";
 import { useGetAllShiftQuery } from "../api/shift/shiftApi";
 import { Link, useParams } from "react-router-dom";
+import { setDay, formatDate } from "../lib/setDay";
 
 function ShiftList() {
   const { id } = useParams();
@@ -30,43 +31,44 @@ function ShiftList() {
           </tr>
         </thead>
         <tbody>
-          {currentData?.map((shift, i) => (
-            <tr
-              key={shift.id}
-              className="hover:bg-lightGreen p-3 cursor-pointer group"
-            >
-              <td className="w-ful text-left p-4 -14">{i + 1}</td>
-              <td className="w-ful text-left px-2 py-3 w-[280px">
-                <p className="mb-1">{shift.title}</p>
-                <div className="hidden group-hover:flex group-hover:gap-2 w-full">
-                  <Link
-                    to={`/admin/${id}/shift/${shift.id}`}
-                    className="text-mainColor p-1 text-xs inline-block rounded-md border border-mainColor fornt-medium capitalize"
-                  >
-                    view
-                  </Link>
-                  <Link
-                    to={`/admin/${id}/shift/${shift.id}/edit`}
-                    className="text-mainColor p-1 text-xs inline-block rounded-md border border-yellow-500 fornt-medium capitalize"
-                  >
-                    edit
-                  </Link>
-                </div>
-              </td>
-              <td className="w-ful text-left px-2 py-3 w-[180px">
-                {shift.venue}
-              </td>
-              <td className="w-ful text-left px-2 py-3 w-[180px">
-                {shift.dayOfTheWeek}
-              </td>
-              <td className="w-ful text-left px-2 py-3 w-[280px">
-                {shift.studentCategory}
-              </td>
-              <td className="w-ful text-left px-2 py-3 w-[280px">
-                {shift.duration}
-              </td>
-            </tr>
-          ))}
+          {currentData?.map((shift, i) => {
+            const day = setDay(shift.dayOfTheWeek);
+            return (
+              <tr
+                key={shift.id}
+                className="hover:bg-lightGreen p-3 cursor-pointer group"
+              >
+                <td className="w-ful text-left p-4 -14">{i + 1}</td>
+                <td className="w-ful text-left px-2 py-3 w-[280px">
+                  <p className="mb-1">{shift.title}</p>
+                  <div className="hidden group-hover:flex group-hover:gap-2 w-full">
+                    <Link
+                      to={`${shift.id}`}
+                      className="text-mainColor p-1 text-xs inline-block rounded-md border border-mainColor fornt-medium capitalize"
+                    >
+                      view
+                    </Link>
+                    <Link
+                      to={`vms/${id}/admin/shift/${shift.id}/edit`}
+                      className="text-mainColor p-1 text-xs inline-block rounded-md border border-yellow-500 fornt-medium capitalize"
+                    >
+                      edit
+                    </Link>
+                  </div>
+                </td>
+                <td className="w-ful text-left px-2 py-3 w-[180px">
+                  {shift.venue}
+                </td>
+                <td className="w-ful text-left px-2 py-3 w-[180px">{day}</td>
+                <td className="w-ful text-left px-2 py-3 w-[280px">
+                  {shift.studentCategory}
+                </td>
+                <td className="w-ful text-left px-2 py-3 w-[280px">
+                  {shift.duration}
+                </td>
+              </tr>
+            );
+          })}
         </tbody>
       </table>
     </article>

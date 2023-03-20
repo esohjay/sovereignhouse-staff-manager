@@ -157,6 +157,7 @@ export const registerUserToDb = createAsyncThunk(
 const initialState = {
   status: "idle",
   user: null,
+  registeredUser: null,
   currentUser: null,
   token: null,
   isAdmin: false,
@@ -179,11 +180,14 @@ export const authSlice = createSlice({
     setStatusMsg: (state, action) => {
       state.statusMsg = action.payload;
     },
+    resetRegistedUser: (state) => {
+      state.registeredUser = null;
+    },
   },
   extraReducers: (builder) => {
     //sign up
     builder.addCase(signUpWithEmailAndPassword.fulfilled, (state, action) => {
-      state.user = action.payload;
+      state.registeredUser = action.payload;
       state.status = "success";
     });
     builder.addCase(signUpWithEmailAndPassword.rejected, (state, action) => {
@@ -246,11 +250,17 @@ export const authSlice = createSlice({
 });
 
 // Action creators are generated for each case reducer function
-export const { getUserFormData, setCurrentUser, setAdminStatus, setStatusMsg } =
-  authSlice.actions;
+export const {
+  getUserFormData,
+  setCurrentUser,
+  setAdminStatus,
+  setStatusMsg,
+  resetRegistedUser,
+} = authSlice.actions;
 
 export const selectUserForm = (state) => state.auth.userForm;
 export const selectUser = (state) => state.auth.user;
+export const selectRegisteredUser = (state) => state.auth.registeredUser;
 export const selectStatusMsg = (state) => state.auth.statusMsg;
 export const selectCurrentUser = (state) => state.auth.currentUser;
 export const selectToken = (state) => state.auth.token;

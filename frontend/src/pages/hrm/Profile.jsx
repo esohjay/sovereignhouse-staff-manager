@@ -3,15 +3,19 @@ import React, { useEffect } from "react";
 import {
   useGetStaffQuery,
   useDeleteStaffMutation,
+  useResetPasswordMutation,
 } from "../../api/staff/staffApi";
 import { changeEmail, selectStatusMsg } from "../../features/authSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams, useNavigate } from "react-router-dom";
 
+import generateRandomString from "../../lib/generatePassword";
+
 import { MdOutlinePersonAddAlt } from "react-icons/md";
 
 import { useForm } from "react-hook-form";
 import Modal from "../../components/Modal";
+import Btn from "../../components/Btn";
 import dayjs from "dayjs";
 import localizedFormat from "dayjs/plugin/localizedFormat";
 dayjs.extend(localizedFormat);
@@ -25,6 +29,8 @@ function Profile() {
   const { currentData } = useGetStaffQuery(reqParam);
   const [deletStaff, { data, error, status: staffDeleted }] =
     useDeleteStaffMutation();
+  const [resePassword, { error: resetError, status: resetStatus }] =
+    useResetPasswordMutation();
   const {
     register,
     handleSubmit,
@@ -34,6 +40,21 @@ function Profile() {
     const password = generateRandomString();
     // dispatch(signUpWithEmailAndPassword({ ...data, password }));
   };
+  const handleResetPassword = () => {
+    const password = generateRandomString();
+    resePassword({
+      firstName: currentData?.firstName,
+      email: currentData?.email,
+      password,
+      contractType: currentData?.contractType,
+      userId: currentData?.id,
+    });
+  };
+  const onChangePassword = (data) => {
+    const password = generateRandomString();
+    // dispatch(signUpWithEmailAndPassword({ ...data, password }));
+  };
+  console.log(resetError);
   const {
     register: registerEmail,
     handleSubmit: handleSubmitEmail,
@@ -62,6 +83,7 @@ function Profile() {
   //   }, staffDeleted);
   return (
     <article className="p-5">
+      {resetStatus === "fulfilled" && <p>Reset</p>}
       <article className="border rounded-md border-mainColor">
         <div className="p-3 border-b border-b-mainColor">
           <h3 className="text-center font-semibold text-mainColor capitalize p-3">
@@ -218,49 +240,16 @@ function Profile() {
           </Modal>
           <Modal
             style="bg-danger px-6 pt-2.5 pb-2 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#dc4c64] transition duration-150 ease-in-out hover:bg-danger-600 hover:shadow-[0_8px_9px_-4px_rgba(220,76,100,0.3),0_4px_18px_0_rgba(220,76,100,0.2)] focus:bg-danger-600 focus:shadow-[0_8px_9px_-4px_rgba(220,76,100,0.3),0_4px_18px_0_rgba(220,76,100,0.2)] focus:outline-none focus:ring-0 active:bg-danger-700 active:shadow-[0_8px_9px_-4px_rgba(220,76,100,0.3),0_4px_18px_0_rgba(220,76,100,0.2)]"
-            btnText={`Change Password`}
-            targetId="changePw"
-            modalTitle="Change Password"
-            confirmText="submit"
-            action={() => deletStaff(currentData?.id)}
+            btnText={`Reset password`}
+            targetId="resetPasssword"
+            modalTitle={`Reset password`}
+            confirmText="reset"
+            action={handleResetPassword}
             // size="small"
           >
-            <form>
-              {/* email */}
-              <div className="mb-3">
-                <label
-                  htmlFor="password"
-                  className="capitalize font-medium mb-1 block text-sm"
-                >
-                  password
-                </label>
-                <input
-                  type="text"
-                  {...registerEmail("password", { required: true })}
-                  className="p-2 rounded-md mb-2 block bg-white w-full focus:outline-none border border-slate-300"
-                />
-                {errorsEmail.password && (
-                  <span className="text-red-500">password is required</span>
-                )}
-              </div>
-              <div className="mb-3">
-                <label
-                  htmlFor="email"
-                  className="capitalize font-medium mb-1 block text-sm"
-                >
-                  email
-                </label>
-                <input
-                  type="text"
-                  {...registerEmail("email", { required: true })}
-                  className="p-2 rounded-md mb-2 block bg-white w-full focus:outline-none border border-slate-300"
-                />
-                {errorsEmail.email && (
-                  <span className="text-red-500">email is required</span>
-                )}
-              </div>
-            </form>
+            <p>{currentData?.firstName}'s password will reset</p>
           </Modal>
+          {/* <Btn text={"reset password"} onClick={handleResetPassword} /> */}
         </div>
       </article>
     </article>

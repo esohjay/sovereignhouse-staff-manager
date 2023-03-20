@@ -7,30 +7,47 @@ const admin = require("../config/firebase");
 const getAuth = require("firebase-admin/auth");
 
 module.exports.createUser = async (req, res) => {
-  const user = await User.create({ ...req.body, id: req.user.uid });
-  if (user) {
-    try {
-      await admin.auth().updateUser(req.user.uid, {
-        displayName: `${user.firstName} ${user.lastName}`,
-      });
-    } catch (err) {
-      console.log(err);
-    }
-    const message = welcomeMessage(
-      req.body.firstName,
-      `${process.env.FRONTEND_URL}/login`,
-      req.body.email,
-      req.body.password
-    );
-    sendMail(
-      req.body.email,
-      // emailAuth,
-      `You have been added as ${req.body.contractType}`,
-      message
-    );
+  const { email } = req.body;
+  let firebaseUser = null;
+  try {
+    const user = await admin.auth().createUser({
+      email: req.body.email,
+      emailVerified: false,
+      // phoneNumber: `${req.body.phone}`,
+      password: req.body.password,
+      displayName: `${req.body.firstName} ${req.body.lastName}`,
+      disabled: false,
+    });
+    firebaseUser = user;
+  } catch (error) {
+    return res.status(400).json(error);
   }
+  const user = await User.create({
+    ...req.body,
+    id: firebaseUser.uid,
+  });
 
-  res.status(201).json(user);
+  //send email
+  const message = welcomeMessage(
+    req.body.firstName,
+    `${process.env.FRONTEND_URL}/login`,
+    req.body.email,
+    req.body.password
+  );
+  const mailSent = sendMail(
+    req.body.email,
+    // emailAuth,
+    `You have been added as ${req.body.contractType}`,
+    message
+  );
+
+  if (mailSent) {
+    res.status(201).json(user);
+  } else {
+    res
+      .status(400)
+      .json({ message: "User has been created but email not sent" });
+  }
 };
 module.exports.makeAdmin = async (req, res) => {
   const newAmin = await admin
@@ -39,6 +56,36 @@ module.exports.makeAdmin = async (req, res) => {
   console.log("success");
   console.log(newAmin);
   res.status(200).json("done");
+};
+module.exports.resetPassword = async (req, res) => {
+  try {
+    await admin.auth().updateUser(req.body.userId, {
+      password: `${req.body.password}`,
+    });
+  } catch (error) {
+    return res.status(400).json(error);
+  }
+  //send email
+  const message = welcomeMessage(
+    req.body.firstName,
+    `${process.env.FRONTEND_URL}/login`,
+    req.body.email,
+    req.body.password
+  );
+  const mailSent = sendMail(
+    req.body.email,
+    // emailAuth,
+    `Your password has been reset`,
+    message
+  );
+
+  if (mailSent) {
+    res.status(201).json({ message: "Password reset successfully" });
+  } else {
+    res
+      .status(400)
+      .json({ message: "Password has been reset but can't send email" });
+  }
 };
 module.exports.login = async (req, res) => {
   const [user, created] = await User.findOrCreate({
