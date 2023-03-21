@@ -5,7 +5,11 @@ import {
   useDeleteStaffMutation,
   useResetPasswordMutation,
 } from "../../api/staff/staffApi";
-import { changeEmail, selectStatusMsg } from "../../features/authSlice";
+import {
+  changeEmail,
+  selectStatusMsg,
+  changePassword,
+} from "../../features/authSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams, useNavigate } from "react-router-dom";
 
@@ -29,11 +33,13 @@ function Profile() {
   const { currentData } = useGetStaffQuery(reqParam);
   const [deletStaff, { data, error, status: staffDeleted }] =
     useDeleteStaffMutation();
-  const [resePassword, { error: resetError, status: resetStatus }] =
+  const [resetPassword, { error: resetError, status: resetStatus }] =
     useResetPasswordMutation();
   const {
     register,
     handleSubmit,
+    getValues,
+    setError,
     formState: { errors },
   } = useForm();
   const onSubmit = (data) => {
@@ -42,7 +48,7 @@ function Profile() {
   };
   const handleResetPassword = () => {
     const password = generateRandomString();
-    resePassword({
+    resetPassword({
       firstName: currentData?.firstName,
       email: currentData?.email,
       password,
@@ -50,10 +56,7 @@ function Profile() {
       userId: currentData?.id,
     });
   };
-  const onChangePassword = (data) => {
-    const password = generateRandomString();
-    // dispatch(signUpWithEmailAndPassword({ ...data, password }));
-  };
+  console.log(statusText);
   console.log(resetError);
   const {
     register: registerEmail,
@@ -62,25 +65,24 @@ function Profile() {
     getValues: getEmailValue,
     setError: setEmailError,
   } = useForm();
-  const onSubmitEmail = (data) => {
-    const password = generateRandomString();
-    // dispatch(signUpWithEmailAndPassword({ ...data, password }));
-  };
-  const handUpdateEmail = () => {
+
+  const handleUpdateEmail = () => {
     if (!getEmailValue("email")) {
       setEmailError("email", { type: "required" });
       return;
     }
-    console.log(getEmailValue("email"));
     dispatch(
       changeEmail({ email: getEmailValue("email"), id: currentData?.id })
     );
   };
-  //   useEffect(() => {
-  //     if (staffDeleted) {
-  //       navigate(-1);
-  //     }
-  //   }, staffDeleted);
+  const updateClientPassword = () => {
+    if (!getValues("password")) {
+      setError("password", { type: "required" });
+      return;
+    }
+    dispatch(changePassword({ password: getValues("password") }));
+  };
+
   return (
     <article className="p-5">
       {resetStatus === "fulfilled" && <p>Reset</p>}
@@ -204,7 +206,7 @@ function Profile() {
             targetId="changeEmail"
             modalTitle="Update Email?"
             confirmText="update"
-            action={handUpdateEmail}
+            action={handleUpdateEmail}
             // size="small"
           >
             <form>
@@ -223,6 +225,35 @@ function Profile() {
                 />
                 {errorsEmail.email && (
                   <span className="text-red-500">email is required</span>
+                )}
+              </div>
+            </form>
+          </Modal>
+          <Modal
+            style="bg-yellow-500 px-6 pt-2.5 pb-2 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#dc4c64] transition duration-150 ease-in-out hover:bg-danger-600 hover:shadow-[0_8px_9px_-4px_rgba(220,76,100,0.3),0_4px_18px_0_rgba(220,76,100,0.2)] focus:bg-danger-600 focus:shadow-[0_8px_9px_-4px_rgba(220,76,100,0.3),0_4px_18px_0_rgba(220,76,100,0.2)] focus:outline-none focus:ring-0 active:bg-danger-700 active:shadow-[0_8px_9px_-4px_rgba(220,76,100,0.3),0_4px_18px_0_rgba(220,76,100,0.2)]"
+            btnText={`Change password`}
+            targetId="changePassword"
+            modalTitle="To change password, you must have recently signed in."
+            confirmText="update"
+            action={updateClientPassword}
+            // size="small"
+          >
+            <form>
+              {/* password */}
+              <div className="mb-3">
+                <label
+                  htmlFor="password"
+                  className="capitalize font-medium mb-1 block text-sm"
+                >
+                  password
+                </label>
+                <input
+                  type="password"
+                  {...register("password", { required: true })}
+                  className="p-2 rounded-md mb-2 block bg-white w-full focus:outline-none border border-slate-300"
+                />
+                {errors.password && (
+                  <span className="text-red-500">password is required</span>
                 )}
               </div>
             </form>

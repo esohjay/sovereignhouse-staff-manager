@@ -8,6 +8,7 @@ import {
   createUserWithEmailAndPassword,
   signOut,
   updateEmail,
+  updatePassword,
 } from "firebase/auth";
 import { auth } from "../config/firebase";
 
@@ -119,6 +120,25 @@ export const changeEmail = createAsyncThunk(
   }
 );
 
+//change password
+export const changePassword = createAsyncThunk(
+  "auth/changePassword",
+  async (info, { rejectWithValue, dispatch }) => {
+    try {
+      //firebase update oassword
+      await updatePassword(auth.currentUser, info.password);
+      return true;
+    } catch (error) {
+      const message =
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message;
+      dispatch(setStatusMsg(message));
+      return rejectWithValue();
+    }
+  }
+);
+
 //Logout
 export const logOut = createAsyncThunk("auth/logout", async () => {
   await signOut(auth);
@@ -161,6 +181,7 @@ const initialState = {
   currentUser: null,
   token: null,
   isAdmin: false,
+  changedPassword: false,
   statusMsg: null,
 };
 
@@ -207,6 +228,18 @@ export const authSlice = createSlice({
       state.status = "failed";
     });
     builder.addCase(logInWithEmailAndPassword.pending, (state, action) => {
+      state.status = "pending";
+    });
+    //reset password
+    builder.addCase(changePassword.fulfilled, (state, action) => {
+      state.changedPassword = action.payload;
+      state.status = "success";
+    });
+    builder.addCase(changePassword.rejected, (state, action) => {
+      state.error = action.error;
+      state.status = "failed";
+    });
+    builder.addCase(changePassword.pending, (state, action) => {
       state.status = "pending";
     });
     //token

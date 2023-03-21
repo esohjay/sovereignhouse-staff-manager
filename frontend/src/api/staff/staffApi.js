@@ -1,6 +1,14 @@
 import { appApi } from "../app";
 const staffApi = appApi.injectEndpoints({
   endpoints: (build) => ({
+    createStaff: build.mutation({
+      query: (formBody) => ({
+        url: "/user",
+        method: "POST",
+        body: formBody,
+      }),
+      invalidatesTags: [{ type: "Staff", id: "LIST" }],
+    }),
     getAllStaff: build.query({
       query: () => "/user",
       providesTags: (result) =>
@@ -18,6 +26,13 @@ const staffApi = appApi.injectEndpoints({
         url: `/user/${id}`,
       }),
       providesTags: (result, error, id) => [{ type: "Staff", id }],
+    }),
+    resetPassword: build.mutation({
+      query: (formBody) => ({
+        url: "/user/reset-password",
+        method: "POST",
+        body: formBody,
+      }),
     }),
     updateUserDetails: build.mutation({
       query(data) {
@@ -58,4 +73,6 @@ export const {
   useUpdateUserDetailsMutation,
   useUpdateUserStatusMutation,
   useDeleteStaffMutation,
+  useCreateStaffMutation,
+  useResetPasswordMutation,
 } = staffApi;
