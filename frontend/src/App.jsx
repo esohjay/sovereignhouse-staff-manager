@@ -25,10 +25,12 @@ import AddShift from "./pages/AddShift";
 import Shift from "./pages/Shift";
 import ShiftList from "./pages/ShiftList";
 import ShiftDetails from "./pages/ShiftDetails";
-import Timesheet from "./pages/Timesheet";
-import AllStaffTimesheets from "./pages/AllStaffTimesheets";
+import Timesheet from "./pages/timesheet/Timesheet";
+import AllStaffTimesheets from "./pages/timesheet/AllStaffTimesheets";
 import RequestLeave from "./pages/leave/RequestLeave";
 import LeaveContainer from "./pages/leave/LeaveContainer";
+import LeaveDetails from "./pages/leave/LeaveDetails";
+import EditLeave from "./pages/leave/EditLeave";
 import AllLeaveRequests from "./pages/leave/AllLeaveRequests";
 import Task from "./pages/task/TaskContainer";
 import NewTask from "./pages/task/NewTask";
@@ -49,6 +51,8 @@ function App() {
             <Route path="timesheet" element={<Timesheet />} />
             <Route path="leave" element={<LeaveContainer />}>
               <Route path="request" element={<RequestLeave />} />
+              <Route path=":leaveId" element={<LeaveDetails />} />
+              <Route path=":leaveId/edit" element={<EditLeave />} />
             </Route>
             <Route path="profile" element={<Profile />}>
               <Route path="request" element={<UpdateStaff />} />
@@ -69,6 +73,8 @@ function App() {
 
               <Route path="leave" element={<LeaveContainer />}>
                 <Route path="request" element={<RequestLeave />} />
+                <Route path=":leaveId" element={<LeaveDetails />} />
+                <Route path=":leaveId/edit" element={<EditLeave />} />
                 <Route index element={<AllLeaveRequests />} />
               </Route>
               <Route path="staff" element={<Hrm />}>

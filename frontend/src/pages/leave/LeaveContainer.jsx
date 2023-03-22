@@ -10,7 +10,7 @@ function LeaveContainer() {
     ? JSON.parse(Cookies.get("isAdmin"))
     : null;
   return (
-    <section className="p-8">
+    <section className="p-5 md:p-8">
       <section className=" ">
         {!isAdmin && (
           <div className="grid grid-cols-2 gap-3 mb-7 font-medium  w-fit">

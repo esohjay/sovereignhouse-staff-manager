@@ -1,9 +1,10 @@
 import React, { useEffect } from "react";
-import { useGetAllStaffQuery } from "../api/staff/staffApi";
+import { useGetAllStaffQuery } from "../../api/staff/staffApi";
 import { useNavigate, useParams } from "react-router-dom";
-import { selectToken, getUserIdToken } from "../features/authSlice";
+import { selectToken, getUserIdToken } from "../../features/authSlice";
 import { useDispatch, useSelector } from "react-redux";
-import { auth } from "../config/firebase";
+import Btn from "../../components/Btn";
+import { auth } from "../../config/firebase";
 
 function AllStaffTimesheets() {
   const dispatch = useDispatch();
@@ -41,29 +42,30 @@ function AllStaffTimesheets() {
                 className="hover:bg-lightGreen p-3 cursor-pointer group"
               >
                 <td className="w-ful text-left p-4 w-14">{i + 1}</td>
-                <td className="w-ful text-left px-2 py-3 ">{staff.fullName}</td>
-                <td className="w-ful text-left px-2 py-3 ">
+                <td className="w-ful text-left px-2 py-3 capitalize">
+                  {staff.fullName}
+                </td>
+                <td className="w-ful text-left px-2 py-3 first-letter:uppercase">
                   {staff.contractType}
                 </td>
-                <td className="w-ful text-left px-2 py-3 ">
+                <td className="w-ful text-left px-2 py-3 first-letter:uppercase">
                   {staff.jobPosition}
                 </td>
                 <td className="w-ful text-left px-2 py-3 ">
                   <div className="flex gap-x-2">
-                    <button
+                    <Btn
+                      text={"timesheet"}
                       onClick={() =>
                         navigate(`/vms/${id}/admin/timesheet/${staff.id}`)
                       }
-                      className="inline-block p-1 rounded-md bg-mainColor text-white text-xs"
-                    >
-                      Timesheet
-                    </button>
-                    <button
-                      className="inline-block py-1 px-2 rounded-md bg-lightGreen text-mainColor text-xs
-                    border border-mainColor"
-                    >
-                      Leave
-                    </button>
+                    />
+                    <Btn
+                      text={"leave"}
+                      onClick={() =>
+                        navigate(`/vms/${id}/admin/timesheet/${staff.id}`)
+                      }
+                      color={2}
+                    />
                   </div>
                 </td>
               </tr>

@@ -20,6 +20,7 @@ module.exports.getUserTimesheets = async (req, res) => {
   const timesheets = await Timesheet.findAll({
     where: { userId: id },
     include: ["shift"],
+    order: [["createdAt", "DESC"]],
   });
   res.status(200).json(timesheets);
 };

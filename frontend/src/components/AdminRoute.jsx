@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Navigate, useLocation, Outlet } from "react-router-dom";
 import Cookies from "js-cookie";
 
@@ -7,7 +7,12 @@ function AdminRoute() {
   const isAdmin = Cookies.get("isAdmin")
     ? JSON.parse(Cookies.get("isAdmin"))
     : null;
-  console.log(isAdmin);
+  const user = Cookies.get("user") ? JSON.parse(Cookies.get("user")) : null;
+  useEffect(() => {
+    if (!user && !isAdmin) {
+      <Navigate to="/login" state={{ from: location }} replace />;
+    }
+  }, [user, isAdmin]);
   return isAdmin ? (
     <Outlet />
   ) : (

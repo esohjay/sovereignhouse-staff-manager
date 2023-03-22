@@ -15,8 +15,8 @@ module.exports.getAllLeaves = async (req, res) => {
 };
 module.exports.getLeave = async (req, res) => {
   const { id } = req.params;
-  const Leave = await Leave.findByPk(id, { include: "user" });
-  res.status(200).json(Leave);
+  const leave = await Leave.findByPk(id, { include: "user" });
+  res.status(200).json(leave);
 };
 module.exports.deleteLeave = async (req, res) => {
   const { id } = req.params;

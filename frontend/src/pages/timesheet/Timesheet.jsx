@@ -1,15 +1,21 @@
 import React, { useState } from "react";
-import { useGetStaffQuery } from "../api/staff/staffApi";
+import { useGetStaffQuery } from "../../api/staff/staffApi";
 import {
   useRecordClockInMutation,
   useGetUserTimesheetQuery,
   useEndShiftMutation,
-} from "../api/shift/shiftApi";
-import { useParams, Link } from "react-router-dom";
-import { setDay, formatDate } from "../lib/setDay";
+} from "../../api/shift/shiftApi";
+import { useParams, Link, useNavigate } from "react-router-dom";
+import { setDay, formatDate } from "../../lib/setDay";
+import Btn from "../../components/Btn";
+
+import dayjs from "dayjs";
+import localizedFormat from "dayjs/plugin/localizedFormat";
+dayjs.extend(localizedFormat);
 
 function Timesheet() {
   const { id, userId } = useParams();
+  const navigate = useNavigate();
   const reqParam = userId ? userId : id;
   const [clockIn, result] = useRecordClockInMutation();
   const [clockOut, clockResult] = useEndShiftMutation();
@@ -57,18 +63,93 @@ function Timesheet() {
   console.log(clockInError);
   return (
     <article className="p-5 md:p-20">
-      <article className=" bg-white rounded-md shadow-md">
-        <article className="mb-7">
+      <article className="space-y-3">
+        <Btn text={"back"} onClick={() => navigate(-1)} />
+        <article className="mb-7 bg-white rounded-md shadow-md p-2">
           <div className="p-3 border-b border-b-mainColor">
             <h3 className="text-center font-semibold text-mainColor capitalize p-3">
-              {userId && currentData?.fullName}
-            </h3>
-            <h3 className="text-center font-semibold text-mainColor capitalize p-3">
-              available shifts
+              {userId
+                ? `${currentData?.fullName}'s shifts`
+                : "available shifts"}
             </h3>
           </div>
           {/* Shifts */}
-          <table className="w-full">
+          <div className="flex flex-col">
+            <div className="overflow-x-auto sm:-mx-6 lg:-mx-8">
+              <div className="inline-block min-w-full py-2 sm:px-6 lg:px-8">
+                <div className="overflow-hidden">
+                  <table className="min-w-full text-left text-sm font-light">
+                    <thead className="border-b font-medium dark:border-neutral-500">
+                      <tr>
+                        <th scope="col" className="px-6 py-4 hidden md:block">
+                          S/N
+                        </th>
+                        <th scope="col" className="px-6 py-4">
+                          Title
+                        </th>
+                        <th scope="col" className="px-6 py-4 hidden md:block">
+                          Venue
+                        </th>
+                        <th scope="col" className="px-6 py-4">
+                          Action
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {currentData?.shifts?.map((shift, i) => {
+                        const day = setDay(shift.dayOfTheWeek);
+                        return (
+                          <tr
+                            key={shift.id}
+                            className="border-b transition duration-300 ease-in-out hover:bg-neutral-100 dark:border-neutral-500 dark:hover:bg-neutral-600"
+                          >
+                            <td className="whitespace-nowrap px-6 py-4 font-medium hidden md:block">
+                              {i + 1}
+                            </td>
+                            <td className="whitespace-nowrap px-6 py-4">
+                              {" "}
+                              <Link
+                                to={`/admin/${id}/shift/${shift.id}`}
+                                className="mb-1 text-sm font-semibold  capitalize"
+                              >
+                                {shift.title}
+                              </Link>
+                              <p className="text-xs">
+                                &#40;{shift.startTime.substring(0, 5)} to{" "}
+                                {shift.endTime.substring(0, 5)}&#41;
+                              </p>
+                            </td>
+                            <td className="whitespace-nowrap px-6 py-4 hidden md:block">
+                              {" "}
+                              <p className="text-sm first-letter:uppercase">
+                                {shift.venue}
+                              </p>
+                              <p className="text-xs">&#40;{day}&#41;</p>
+                            </td>
+                            <td className="whitespace-nowrap px-6 py-4">
+                              <button
+                                type="button"
+                                onClick={() =>
+                                  handleClockIn(shift.dayOfTheWeek, shift.id)
+                                }
+                                data-te-ripple-init
+                                data-te-ripple-color="light"
+                                className="inline-block rounded bg-mainColor px-6 pt-2.5 pb-2 text-xs font-medium uppercase leading-normal text-white shadow-mainColor transition duration-150 ease-in-out hover:bg-altColor hover:shadow-altColor focus:bg-warning focus:shadow-warning focus:outline-none focus:ring-0 "
+                              >
+                                Clock in
+                              </button>
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* <table className="w-full">
             <thead className="">
               <tr className="bg-gray">
                 <th className="capitalize px-2 py-4 text-left font-semibold w-[280px">
@@ -123,9 +204,9 @@ function Timesheet() {
                 );
               })}
             </tbody>
-          </table>
+          </table> */}
         </article>
-        <article className="mb-7">
+        <article className="mb-7 bg-white rounded-md shadow-md p-2">
           <div className="p-3 border-b border-b-mainColor">
             <h3 className="text-center font-semibold text-mainColor capitalize p-3">
               timesheets
@@ -156,20 +237,26 @@ function Timesheet() {
                     <td className=" text-left px-2 py-3 first-letter:uppercase">
                       <Link
                         to={`/admin/${id}/timesheet/${timesheet.id}`}
-                        className="mb-1 text-sm font-semibold"
+                        className="mb-1 text-xs font-semibold"
                       >
                         {timesheet.shift.title}
                       </Link>
+                      <p className="text-xs">
+                        {" "}
+                        &#40;{dayjs(timesheet.startTime).format("MM/DD/YYYY")}
+                        &#41;
+                      </p>
                     </td>
                     <td className="text-left px-2 py-3 ">
                       <p className="text-sm">
-                        {timesheet.startTime.substring(11, 16)}
+                        {/* {timesheet.startTime.substring(11, 16)} */}
+                        {dayjs(timesheet.startTime).format("hh:mma")}
                       </p>
                     </td>
                     <td className="text-left px-2 py-3">
                       {timesheet.endTime ? (
                         <p className="text-sm">
-                          {timesheet.endTime.substring(11, 16)}
+                          {dayjs(timesheet.endTime).format("hh:mma")}
                         </p>
                       ) : (
                         <button

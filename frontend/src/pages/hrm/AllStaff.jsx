@@ -55,7 +55,7 @@ function AllStaff() {
                       {i + 1}
                     </td>
                     <td
-                      className="whitespace-nowrap  px-6 py-4 capitalize"
+                      className="whitespace-nowrap  px-6 py-4 capitalize cursor-pointer"
                       data-te-dropdown-ref
                     >
                       <p
