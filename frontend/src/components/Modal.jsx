@@ -8,20 +8,35 @@ function Modal({
   action,
   style,
   size,
+  btn,
+  cta,
   children,
 }) {
   return (
     <div>
-      <button
-        type="button"
-        className={`inline-block rounded  leading-normal ${style}`}
-        data-te-toggle="modal"
-        data-te-target={`#${targetId}`}
-        data-te-ripple-init
-        data-te-ripple-color="light"
-      >
-        {btnText}
-      </button>
+      {btn ? (
+        <button
+          type="button"
+          className={`inline-block rounded  leading-normal ${style}`}
+          data-te-toggle="modal"
+          data-te-target={`#${targetId}`}
+          data-te-ripple-init
+          data-te-ripple-color="light"
+        >
+          {btnText}
+        </button>
+      ) : (
+        <p
+          type="button"
+          className={`inline-block rounded cursor-pointer  leading-normal ${style}`}
+          data-te-toggle="modal"
+          data-te-target={`#${targetId}`}
+          data-te-ripple-init
+          data-te-ripple-color="light"
+        >
+          {cta}
+        </p>
+      )}
       <div
         data-te-modal-init
         className="fixed top-0 left-0 z-[1055] hidden p-2 h-full w-full overflow-y-auto overflow-x-hidden outline-none"
@@ -102,6 +117,7 @@ function Modal({
 Modal.defaultProps = {
   confirmText: "proceed",
   size: "normal",
+  btn: true,
 };
 
 export default Modal;

@@ -18,9 +18,10 @@ import AllStaff from "./pages/hrm/AllStaff";
 import Profile from "./pages/hrm/Profile";
 import UpdateStaff from "./pages/hrm/UpdateStaff";
 
-import Recruitment from "./pages/Recruitment";
-import AddCampaign from "./pages/AddCampaign";
-import Campaigns from "./pages/Campaigns";
+import Recruitment from "./pages/campaign/Recruitment";
+import AddCampaign from "./pages/campaign/AddCampaign";
+import Campaigns from "./pages/campaign/Campaigns";
+import CampaignDetails from "./pages/campaign/CampaignDetails";
 import AddShift from "./pages/AddShift";
 import Shift from "./pages/Shift";
 import ShiftList from "./pages/ShiftList";
@@ -85,6 +86,7 @@ function App() {
               </Route>
               <Route path="recruitment" element={<Recruitment />}>
                 <Route path="add" element={<AddCampaign />} />
+                <Route path=":campaignId" element={<CampaignDetails />} />
                 <Route index element={<Campaigns />} />
               </Route>
               <Route path="shift" element={<Shift />}>

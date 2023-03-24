@@ -1,4 +1,5 @@
 const Campaign = require("../models/campaign");
+const Applicants = require("../models/applicant");
 
 module.exports.createCampaign = async (req, res) => {
   const campaign = await Campaign.create(req.body);
@@ -10,12 +11,12 @@ module.exports.updateCampaign = async (req, res) => {
   res.status(201).json(campaign);
 };
 module.exports.getAllCampaigns = async (req, res) => {
-  const campaigns = await Campaign.findAll();
+  const campaigns = await Campaign.findAll({ include: Applicants });
   res.status(200).json(campaigns);
 };
 module.exports.getCampaign = async (req, res) => {
   const { id } = req.params;
-  const campaign = await Campaign.findByPk(id);
+  const campaign = await Campaign.findByPk(id, { include: Applicants });
   res.status(200).json(campaign);
 };
 

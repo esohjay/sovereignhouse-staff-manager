@@ -18,12 +18,33 @@ const campaignApi = appApi.injectEndpoints({
           ? // successful query
             [
               ...result.map(({ id }) => ({ type: "Campaign", id })),
-              { type: "Campaign", id: "LIST" },
+              { type: "Campaign", id: "CAMPAIGNLIST" },
             ]
           : // an error occurred, but we still want to refetch this query when `{ type: 'Posts', id: 'LIST' }` is invalidated
-            [{ type: "Campaign", id: "LIST" }],
+            [{ type: "Campaign", id: "CAMPAIGNLIST" }],
+    }),
+    getCampaign: build.query({
+      query: (id) => ({
+        url: `/campaign/${id}`,
+      }),
+      providesTags: (result, error, id) => [{ type: "Campaign", id }],
+    }),
+    deleteCampaign: build.mutation({
+      query(id) {
+        return {
+          url: `campaign/${id}`,
+          method: "DELETE",
+        };
+      },
+      // Invalidates all queries that subscribe to this Staff `id` only.
+      invalidatesTags: (result, error, id) => [{ type: "Campaign", id }],
     }),
   }),
   overrideExisting: false,
 });
-export const { useCreateCampaignMutation, useGetCampaignsQuery } = campaignApi;
+export const {
+  useCreateCampaignMutation,
+  useGetCampaignsQuery,
+  useGetCampaignQuery,
+  useDeleteCampaignMutation,
+} = campaignApi;
