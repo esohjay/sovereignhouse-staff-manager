@@ -61,6 +61,16 @@ const taskApi = appApi.injectEndpoints({
       // In this case, `getPost` will be re-run. `getPosts` *might*  rerun, if this id was under its results.
       invalidatesTags: (result, error, { id }) => [{ type: "Shift", id }],
     }),
+    deleteTask: build.mutation({
+      query(id) {
+        return {
+          url: `task/${id}`,
+          method: "DELETE",
+        };
+      },
+      // Invalidates all queries that subscribe to this Staff `id` only.
+      invalidatesTags: (result, error, id) => [{ type: "Task", id }],
+    }),
   }),
   overrideExisting: false,
 });
@@ -71,4 +81,5 @@ export const {
   useGetUserTasksQuery,
   useUpdateTaskMutation,
   useAssignStaffMutation,
+  useDeleteTaskMutation,
 } = taskApi;

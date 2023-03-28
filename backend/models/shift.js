@@ -9,7 +9,7 @@ const Shift = sequelize.define("shift", {
   startTime: DataTypes.TIME,
   endTime: DataTypes.TIME,
   duration: DataTypes.INTEGER,
-  dayOfTheWeek: DataTypes.STRING,
+  dayOfTheWeek: DataTypes.INTEGER,
   venue: DataTypes.STRING,
   description: DataTypes.STRING,
 });

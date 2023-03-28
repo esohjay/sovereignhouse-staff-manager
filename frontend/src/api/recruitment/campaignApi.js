@@ -29,6 +29,14 @@ const campaignApi = appApi.injectEndpoints({
       }),
       providesTags: (result, error, id) => [{ type: "Campaign", id }],
     }),
+    updateCampaign: build.mutation({
+      query: (formBody) => ({
+        url: `/campaign/${formBody.id}`,
+        method: "PUT",
+        body: formBody,
+      }),
+      invalidatesTags: [{ type: "Campaign", id: "CAMPAIGNLIST" }],
+    }),
     deleteCampaign: build.mutation({
       query(id) {
         return {
@@ -47,4 +55,5 @@ export const {
   useGetCampaignsQuery,
   useGetCampaignQuery,
   useDeleteCampaignMutation,
+  useUpdateCampaignMutation,
 } = campaignApi;

@@ -19,6 +19,7 @@ function CampaignDetails() {
   const { campaignId } = useParams();
   const { currentData, isError, isFetching, isLoading, isSuccess } =
     useGetCampaignQuery(campaignId);
+  const [deleteCampaign, { status }] = useDeleteCampaignMutation();
   return (
     <article className="p-2 lg:px-5 lg:py-10 space-y-3">
       <Btn text={"back"} onClick={() => navigate(-1)} />
@@ -119,49 +120,29 @@ function CampaignDetails() {
           </p>
         </article>
       </article>
-      {/* <article className="items-center lg:flex-row flex-col gap-3 flex">
-      <div className="h-full flex gap-2 items-center justify-items-center">
-        <button
-          type="button"
-          onClick={() => navigate("edit")}
-          className="inline-block rounded bg-warning px-6 pt-2.5 pb-2 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#e4a11b] transition duration-150 ease-in-out hover:bg-warning-600 hover:shadow-[0_8px_9px_-4px_rgba(228,161,27,0.3),0_4px_18px_0_rgba(228,161,27,0.2)] focus:bg-warning-600 focus:shadow-[0_8px_9px_-4px_rgba(228,161,27,0.3),0_4px_18px_0_rgba(228,161,27,0.2)] focus:outline-none focus:ring-0 active:bg-warning-700 active:shadow-[0_8px_9px_-4px_rgba(228,161,27,0.3),0_4px_18px_0_rgba(228,161,27,0.2)]"
-        >
-          Edit details
-        </button>
+      <article className="items-center lg:flex-row flex-col gap-3 flex">
+        <div className="h-full flex gap-2 items-center justify-items-center">
+          <button
+            type="button"
+            onClick={() => navigate("edit")}
+            className="inline-block rounded bg-warning px-6 pt-2.5 pb-2 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#e4a11b] transition duration-150 ease-in-out hover:bg-warning-600 hover:shadow-[0_8px_9px_-4px_rgba(228,161,27,0.3),0_4px_18px_0_rgba(228,161,27,0.2)] focus:bg-warning-600 focus:shadow-[0_8px_9px_-4px_rgba(228,161,27,0.3),0_4px_18px_0_rgba(228,161,27,0.2)] focus:outline-none focus:ring-0 active:bg-warning-700 active:shadow-[0_8px_9px_-4px_rgba(228,161,27,0.3),0_4px_18px_0_rgba(228,161,27,0.2)]"
+          >
+            Edit details
+          </button>
 
-        {isAdmin && leaveId && (
           <Modal
-            style="bg-mainColor px-6 pt-2.5 pb-2 text-xs font-medium uppercase leading-normal text-white shadow-mainColor transition duration-150 ease-in-out hover:bg-altColor hover:shadow-[0_8px_9px_-4px_rgba(220,76,100,0.3),0_4px_18px_0_rgba(220,76,100,0.2)] focus:bg-altColor focus:shadow-altColor focus:outline-none focus:ring-0 active:bg-altColor active:shadow-altColor"
-            btnText={"leave comment"}
-            targetId="leaveComment"
-            modalTitle={`Leave a comment`}
-            confirmText="send"
-            action={leaveComment}
+            style="bg-danger px-6 pt-2.5 pb-2 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#dc4c64] transition duration-150 ease-in-out hover:bg-danger-600 hover:shadow-[0_8px_9px_-4px_rgba(220,76,100,0.3),0_4px_18px_0_rgba(220,76,100,0.2)] focus:bg-danger-600 focus:shadow-[0_8px_9px_-4px_rgba(220,76,100,0.3),0_4px_18px_0_rgba(220,76,100,0.2)] focus:outline-none focus:ring-0 active:bg-danger-700 active:shadow-[0_8px_9px_-4px_rgba(220,76,100,0.3),0_4px_18px_0_rgba(220,76,100,0.2)]"
+            btnText={`Delete campaign`}
+            targetId="deleteCampaign"
+            modalTitle="Do you want to delete?"
+            confirmText="delete"
+            action={() => deleteCampaign(currentData?.id)}
             // size="small"
           >
-            <textarea
-              {...register("statusMessage", {
-                required: true,
-              })}
-              rows="5"
-              className="w-full p-3 rounded-md border border-mainColor focus:outline-none"
-            ></textarea>
+            <p>This will be deleted permanently</p>
           </Modal>
-        )}
-
-        <Modal
-          style="bg-danger px-6 pt-2.5 pb-2 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#dc4c64] transition duration-150 ease-in-out hover:bg-danger-600 hover:shadow-[0_8px_9px_-4px_rgba(220,76,100,0.3),0_4px_18px_0_rgba(220,76,100,0.2)] focus:bg-danger-600 focus:shadow-[0_8px_9px_-4px_rgba(220,76,100,0.3),0_4px_18px_0_rgba(220,76,100,0.2)] focus:outline-none focus:ring-0 active:bg-danger-700 active:shadow-[0_8px_9px_-4px_rgba(220,76,100,0.3),0_4px_18px_0_rgba(220,76,100,0.2)]"
-          btnText={`Delete request`}
-          targetId="deleteLeave"
-          modalTitle="Do you want to delete?"
-          confirmText="delete"
-          action={() => deleteLeave(currentData?.id)}
-          // size="small"
-        >
-          <p>This will be deleted permanently</p>
-        </Modal>
-      </div>
-    </article> */}
+        </div>
+      </article>
     </article>
   );
 }

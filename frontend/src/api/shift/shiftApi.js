@@ -77,6 +77,24 @@ const shiftApi = appApi.injectEndpoints({
       }),
       invalidatesTags: [{ type: "UserTimesheet", id: "TIMESHEETLIST" }],
     }),
+    updateShift: build.mutation({
+      query: (formBody) => ({
+        url: `/shift/${formBody.id}`,
+        method: "PUT",
+        body: formBody,
+      }),
+      invalidatesTags: [{ type: "Shift", id: "SHIFTLIST" }],
+    }),
+    deleteShift: build.mutation({
+      query(id) {
+        return {
+          url: `shift/${id}`,
+          method: "DELETE",
+        };
+      },
+      // Invalidates all queries that subscribe to this Staff `id` only.
+      invalidatesTags: (result, error, id) => [{ type: "Shift", id }],
+    }),
   }),
   overrideExisting: false,
 });
@@ -89,4 +107,6 @@ export const {
   useAssignTeacherMutation,
   useRecordClockInMutation,
   useEndShiftMutation,
+  useDeleteShiftMutation,
+  useUpdateShiftMutation,
 } = shiftApi;

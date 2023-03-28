@@ -22,10 +22,12 @@ import Recruitment from "./pages/campaign/Recruitment";
 import AddCampaign from "./pages/campaign/AddCampaign";
 import Campaigns from "./pages/campaign/Campaigns";
 import CampaignDetails from "./pages/campaign/CampaignDetails";
-import AddShift from "./pages/AddShift";
-import Shift from "./pages/Shift";
-import ShiftList from "./pages/ShiftList";
-import ShiftDetails from "./pages/ShiftDetails";
+import EditCampaign from "./pages/campaign/EditCampaign";
+import AddShift from "./pages/shift/AddShift";
+import Shift from "./pages/shift/Shift";
+import ShiftList from "./pages/shift/ShiftList";
+import ShiftDetails from "./pages/shift/ShiftDetails";
+import EditShift from "./pages/shift/EditShift";
 import Timesheet from "./pages/timesheet/Timesheet";
 import AllStaffTimesheets from "./pages/timesheet/AllStaffTimesheets";
 import RequestLeave from "./pages/leave/RequestLeave";
@@ -36,6 +38,7 @@ import AllLeaveRequests from "./pages/leave/AllLeaveRequests";
 import Task from "./pages/task/TaskContainer";
 import NewTask from "./pages/task/NewTask";
 import AllUserTasks from "./pages/task/AllUserTasks";
+import EditTask from "./pages/task/EditTask";
 import TaskDetails from "./pages/task/TaskDeatils";
 
 import ProtectedRoute from "./components/ProtectedRoute";
@@ -62,6 +65,7 @@ function App() {
               <Route index element={<AllUserTasks />} />
               <Route path="add" element={<NewTask />} />
               <Route path=":taskId" element={<TaskDetails />} />
+              <Route path=":taskId/edit" element={<EditTask />} />
             </Route>
 
             {/* Admin views */}
@@ -87,12 +91,14 @@ function App() {
               <Route path="recruitment" element={<Recruitment />}>
                 <Route path="add" element={<AddCampaign />} />
                 <Route path=":campaignId" element={<CampaignDetails />} />
+                <Route path=":campaignId/edit" element={<EditCampaign />} />
                 <Route index element={<Campaigns />} />
               </Route>
               <Route path="shift" element={<Shift />}>
                 <Route path="add" element={<AddShift />} />
                 <Route index element={<ShiftList />} />
                 <Route path=":shiftId" element={<ShiftDetails />} />
+                <Route path=":shiftId/edit" element={<EditShift />} />
               </Route>
             </Route>
           </Route>

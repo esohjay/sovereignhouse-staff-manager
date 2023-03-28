@@ -11,7 +11,10 @@ module.exports.updateCampaign = async (req, res) => {
   res.status(201).json(campaign);
 };
 module.exports.getAllCampaigns = async (req, res) => {
-  const campaigns = await Campaign.findAll({ include: Applicants });
+  const campaigns = await Campaign.findAll({
+    include: Applicants,
+    order: [["startDate", "DESC"]],
+  });
   res.status(200).json(campaigns);
 };
 module.exports.getCampaign = async (req, res) => {

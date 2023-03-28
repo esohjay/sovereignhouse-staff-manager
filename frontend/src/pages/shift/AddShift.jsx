@@ -4,7 +4,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
 import { useForm } from "react-hook-form";
 
-import { useCreateShiftMutation } from "../api/shift/shiftApi";
+import { useCreateShiftMutation } from "../../api/shift/shiftApi";
 
 function AddShift() {
   const [createShift, { data }] = useCreateShiftMutation();
@@ -25,9 +25,9 @@ function AddShift() {
     formState: { errors },
   } = useForm();
   const onSubmit = (data) => {
-    createShift(data);
+    createShift({ ...data, dayOfTheWeek: parseInt(data.dayOfTheWeek) });
   };
-  console.log(data);
+
   return (
     <article className="w-full p-5">
       <form onSubmit={handleSubmit(onSubmit)}>
@@ -102,12 +102,12 @@ function AddShift() {
               className="p-2  rounded-md mb-2 block bg-white w-full focus:outline-none border border-slate-300"
             >
               <option value="">Select day</option>
-              <option value="monday">Monday</option>
-              <option value="tuesday">Tuesday</option>
-              <option value="wednesday">Wednesday</option>
-              <option value="thursday">Thursday</option>
-              <option value="friday">Friday</option>
-              <option value="saturday">Saturday</option>
+              <option value="1">Monday</option>
+              <option value="2">Tuesday</option>
+              <option value="3">Wednesday</option>
+              <option value="4">Thursday</option>
+              <option value="5">Friday</option>
+              <option value="6">Saturday</option>
             </select>
             {errors.dayOfTheWeek && (
               <span className="text-red-500">week day is required</span>
