@@ -36,26 +36,26 @@ function Dashboard() {
         </div>
         <div className="flex gap-x-1 items-baseline">
           <p className="font-semibold text-2xl text-mainColor">
-            {volunteers.length}
+            {volunteers?.length}
           </p>
           <p className="text-sm text-mainColor">
-            {volunteers.length > 0 ? "Volunteers" : "Volunteer"}
+            {volunteers?.length > 0 ? "Volunteers" : "Volunteer"}
           </p>
         </div>
         <div className="flex gap-x-1 items-baseline">
           <p className="font-semibold text-2xl text-mainColor">
-            {employee.length}
+            {employee?.length}
           </p>
           <p className="text-sm text-mainColor">
-            {employee.length > 0 ? "Employees" : "Employee"}
+            {employee?.length > 0 ? "Employees" : "Employee"}
           </p>
         </div>
         <div className="flex gap-x-1 items-baseline">
           <p className="font-semibold text-2xl text-mainColor">
-            {interns.length}
+            {interns?.length}
           </p>
           <p className="text-sm text-mainColor">
-            {interns.length > 0 ? "Interns" : "Intern"}
+            {interns?.length > 0 ? "Interns" : "Intern"}
           </p>
         </div>
       </article>
