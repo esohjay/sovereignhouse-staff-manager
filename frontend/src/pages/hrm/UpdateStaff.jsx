@@ -387,6 +387,7 @@ function UpdateStaff() {
                 </label>
                 <select
                   {...register("status", { value: `${currentData?.status}` })}
+                  disabled
                   className="p-2  rounded-md mb-2 block bg-white w-full focus:outline-none border border-slate-300"
                 >
                   <option value="">Select status</option>

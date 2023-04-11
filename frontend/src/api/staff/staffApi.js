@@ -34,6 +34,13 @@ const staffApi = appApi.injectEndpoints({
         body: formBody,
       }),
     }),
+    changeStatus: build.mutation({
+      query: (formBody) => ({
+        url: "/user/change-status",
+        method: "PUT",
+        body: formBody,
+      }),
+    }),
     updateUserDetails: build.mutation({
       query(data) {
         return {
@@ -75,4 +82,5 @@ export const {
   useDeleteStaffMutation,
   useCreateStaffMutation,
   useResetPasswordMutation,
+  useChangeStatusMutation,
 } = staffApi;

@@ -53,14 +53,14 @@ function App() {
           <Route element={<ProtectedRoute />}>
             <Route index path="dashboard" element={<Dashboard />} />
             <Route path="timesheet" element={<Timesheet />} />
+            <Route path="profile" element={<Profile />} />
+            <Route path="profile/edit" element={<UpdateStaff />} />
             <Route path="leave" element={<LeaveContainer />}>
               <Route path="request" element={<RequestLeave />} />
               <Route path=":leaveId" element={<LeaveDetails />} />
               <Route path=":leaveId/edit" element={<EditLeave />} />
             </Route>
-            <Route path="profile" element={<Profile />}>
-              <Route path="request" element={<UpdateStaff />} />
-            </Route>
+
             <Route path="task" element={<Task />}>
               <Route index element={<AllUserTasks />} />
               <Route path="add" element={<NewTask />} />

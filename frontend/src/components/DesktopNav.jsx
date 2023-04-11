@@ -61,7 +61,10 @@ function DesktopNav({ children }) {
           >
             <GiHamburgerMenu />
           </button>
-          <Link to="/" className="text-white font-bold text-xl">
+          <Link
+            to={`/vms/${id}/dashboard`}
+            className="text-white font-bold text-xl"
+          >
             <img
               src={logo}
               alt="Sovereignhouse"
@@ -70,7 +73,11 @@ function DesktopNav({ children }) {
           </Link>
         </ul>
         <ul className="flex gap-x-3">
-          <DesktopTopNavItem text="my profile" path="/" icon={<FaRegUser />} />
+          <DesktopTopNavItem
+            text="my profile"
+            path={`/vms/${id}/profile`}
+            icon={<FaRegUser />}
+          />
           <DesktopTopNavItem
             text="notification"
             path="/n"
@@ -131,7 +138,7 @@ function DesktopNav({ children }) {
           </p>
           <NavItem
             text={"dashboard"}
-            path={`/admin/${id}/dashboard`}
+            path={`/vms/${id}/dashboard`}
             icon={<GoDashboard />}
           />
           <NavItem

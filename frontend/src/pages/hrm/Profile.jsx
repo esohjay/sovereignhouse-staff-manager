@@ -1,9 +1,11 @@
 import React, { useEffect } from "react";
-
+import Cookies from "js-cookie";
 import {
   useGetStaffQuery,
   useDeleteStaffMutation,
   useResetPasswordMutation,
+  useUpdateUserDetailsMutation,
+  useChangeStatusMutation,
 } from "../../api/staff/staffApi";
 import {
   changeEmail,
@@ -25,6 +27,9 @@ import localizedFormat from "dayjs/plugin/localizedFormat";
 dayjs.extend(localizedFormat);
 
 function Profile() {
+  const isAdmin = Cookies.get("isAdmin")
+    ? JSON.parse(Cookies.get("isAdmin"))
+    : null;
   const statusText = useSelector(selectStatusMsg);
   const dispatch = useDispatch();
   const { id, userId } = useParams();
@@ -35,6 +40,8 @@ function Profile() {
     useDeleteStaffMutation();
   const [resetPassword, { error: resetError, status: resetStatus }] =
     useResetPasswordMutation();
+  const [changeStatus] = useChangeStatusMutation();
+  const [updateUserEmail] = useUpdateUserDetailsMutation();
   const {
     register,
     handleSubmit,
@@ -56,8 +63,7 @@ function Profile() {
       userId: currentData?.id,
     });
   };
-  console.log(statusText);
-  console.log(resetError);
+
   const {
     register: registerEmail,
     handleSubmit: handleSubmitEmail,
@@ -71,9 +77,10 @@ function Profile() {
       setEmailError("email", { type: "required" });
       return;
     }
-    dispatch(
-      changeEmail({ email: getEmailValue("email"), id: currentData?.id })
-    );
+    updateUserEmail({ email: getEmailValue("email"), id: currentData?.id });
+    // dispatch(
+    //   changeEmail({ email: getEmailValue("email"), id: currentData?.id })
+    // );
   };
   const updateClientPassword = () => {
     if (!getValues("password")) {
@@ -81,6 +88,16 @@ function Profile() {
       return;
     }
     dispatch(changePassword({ password: getValues("password") }));
+  };
+  const handleChangeStatus = () => {
+    if (!getValues("status")) {
+      setError("status", { type: "required" });
+      return;
+    }
+    changeStatus({
+      status: getValues("status"),
+      userId: currentData?.id,
+    });
   };
 
   return (
@@ -167,68 +184,68 @@ function Profile() {
           </div>
         </article>
       </article>
-      <article className="items-center lg:flex-row flex-col gap-3 flex">
-        <form
-          onSubmit={handleSubmit(onSubmit)}
-          className="h-full p-3 flex flex-col justify-center cursor-pointer"
-        >
-          <div className="flex w-full gap-x-1 px-3 border border-mainColor rounded-full ">
-            <select
-              {...register("status", {
-                required: true,
-                value: currentData?.status,
-              })}
-              className="w-full  rounded-full focus:outline-none"
-            >
-              <option value="">Change status</option>
-              <option value="active">Active</option>
-              <option value="inactive">Inactive</option>
-            </select>
-            <button className="block p-3  text-mainColor text-lg">
-              <MdOutlinePersonAddAlt />
-            </button>
-          </div>
-        </form>
-        <div className="h-full flex gap-2 items-center justify-items-center">
-          <button
-            type="button"
-            onClick={() =>
-              navigate(`/vms/${id}/admin/staff/${currentData.id}/edit`)
-            }
-            className="inline-block rounded bg-warning px-6 pt-2.5 pb-2 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#e4a11b] transition duration-150 ease-in-out hover:bg-warning-600 hover:shadow-[0_8px_9px_-4px_rgba(228,161,27,0.3),0_4px_18px_0_rgba(228,161,27,0.2)] focus:bg-warning-600 focus:shadow-[0_8px_9px_-4px_rgba(228,161,27,0.3),0_4px_18px_0_rgba(228,161,27,0.2)] focus:outline-none focus:ring-0 active:bg-warning-700 active:shadow-[0_8px_9px_-4px_rgba(228,161,27,0.3),0_4px_18px_0_rgba(228,161,27,0.2)]"
-          >
-            Edit details
-          </button>
-
+      <article className="items-center lg:flex-row flex-col gap-3 flex justify-center p-3">
+        {/* change status */}
+        {isAdmin && userId && (
           <Modal
-            style="bg-yellow-500 px-6 pt-2.5 pb-2 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#dc4c64] transition duration-150 ease-in-out hover:bg-danger-600 hover:shadow-[0_8px_9px_-4px_rgba(220,76,100,0.3),0_4px_18px_0_rgba(220,76,100,0.2)] focus:bg-danger-600 focus:shadow-[0_8px_9px_-4px_rgba(220,76,100,0.3),0_4px_18px_0_rgba(220,76,100,0.2)] focus:outline-none focus:ring-0 active:bg-danger-700 active:shadow-[0_8px_9px_-4px_rgba(220,76,100,0.3),0_4px_18px_0_rgba(220,76,100,0.2)]"
-            btnText={`Change email`}
-            targetId="changeEmail"
-            modalTitle="Update Email?"
+            style="bg-orange-500 px-6 pt-2.5 pb-2 text-xs font-medium uppercase leading-normal text-white shadow-orange-500 transition duration-150 ease-in-out hover:bg-altColor hover:shadow-altColor focus:bg-altColor focus:shadow-altColor focus:outline-none focus:ring-0 active:bg-altColor active:shadow-altColor"
+            btnText="Update status"
+            targetId="changeStatus"
+            modalTitle={`update status`}
             confirmText="update"
-            action={handleUpdateEmail}
+            action={handleChangeStatus}
             // size="small"
           >
-            <form>
-              {/* email */}
-              <div className="mb-3">
-                <label
-                  htmlFor="email"
-                  className="capitalize font-medium mb-1 block text-sm"
-                >
-                  email
-                </label>
-                <input
-                  type="text"
-                  {...registerEmail("email", { required: true })}
-                  className="p-2 rounded-md mb-2 block bg-white w-full focus:outline-none border border-slate-300"
-                />
-                {errorsEmail.email && (
-                  <span className="text-red-500">email is required</span>
-                )}
-              </div>
-            </form>
+            <div className="w-full">
+              <select
+                data-te-select-init
+                {...register("status", { required: true })}
+                className="w-full p-3 rounded-md border border-mainColor focus:outline-none"
+              >
+                <option value="">Update status</option>
+                <option value="active">Active</option>
+                <option value="inactive">Inactive</option>
+              </select>
+            </div>
           </Modal>
+        )}
+        <button
+          type="button"
+          onClick={() => navigate(`edit`)}
+          className="inline-block rounded bg-warning px-6 pt-2.5 pb-2 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#e4a11b] transition duration-150 ease-in-out hover:bg-warning-600 hover:shadow-[0_8px_9px_-4px_rgba(228,161,27,0.3),0_4px_18px_0_rgba(228,161,27,0.2)] focus:bg-warning-600 focus:shadow-[0_8px_9px_-4px_rgba(228,161,27,0.3),0_4px_18px_0_rgba(228,161,27,0.2)] focus:outline-none focus:ring-0 active:bg-warning-700 active:shadow-[0_8px_9px_-4px_rgba(228,161,27,0.3),0_4px_18px_0_rgba(228,161,27,0.2)]"
+        >
+          Edit details
+        </button>
+        <Modal
+          style="bg-yellow-500 px-6 pt-2.5 pb-2 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#dc4c64] transition duration-150 ease-in-out hover:bg-danger-600 hover:shadow-[0_8px_9px_-4px_rgba(220,76,100,0.3),0_4px_18px_0_rgba(220,76,100,0.2)] focus:bg-danger-600 focus:shadow-[0_8px_9px_-4px_rgba(220,76,100,0.3),0_4px_18px_0_rgba(220,76,100,0.2)] focus:outline-none focus:ring-0 active:bg-danger-700 active:shadow-[0_8px_9px_-4px_rgba(220,76,100,0.3),0_4px_18px_0_rgba(220,76,100,0.2)]"
+          btnText={`Change email`}
+          targetId="changeEmail"
+          modalTitle="Update Email?"
+          confirmText="update"
+          action={handleUpdateEmail}
+          // size="small"
+        >
+          <form>
+            {/* email */}
+            <div className="mb-3">
+              <label
+                htmlFor="email"
+                className="capitalize font-medium mb-1 block text-sm"
+              >
+                email
+              </label>
+              <input
+                type="text"
+                {...registerEmail("email", { required: true })}
+                className="p-2 rounded-md mb-2 block bg-white w-full focus:outline-none border border-slate-300"
+              />
+              {errorsEmail.email && (
+                <span className="text-red-500">email is required</span>
+              )}
+            </div>
+          </form>
+        </Modal>
+        {!userId && (
           <Modal
             style="bg-yellow-500 px-6 pt-2.5 pb-2 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#dc4c64] transition duration-150 ease-in-out hover:bg-danger-600 hover:shadow-[0_8px_9px_-4px_rgba(220,76,100,0.3),0_4px_18px_0_rgba(220,76,100,0.2)] focus:bg-danger-600 focus:shadow-[0_8px_9px_-4px_rgba(220,76,100,0.3),0_4px_18px_0_rgba(220,76,100,0.2)] focus:outline-none focus:ring-0 active:bg-danger-700 active:shadow-[0_8px_9px_-4px_rgba(220,76,100,0.3),0_4px_18px_0_rgba(220,76,100,0.2)]"
             btnText={`Change password`}
@@ -258,6 +275,8 @@ function Profile() {
               </div>
             </form>
           </Modal>
+        )}{" "}
+        {isAdmin && userId && (
           <Modal
             style="bg-danger px-6 pt-2.5 pb-2 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#dc4c64] transition duration-150 ease-in-out hover:bg-danger-600 hover:shadow-[0_8px_9px_-4px_rgba(220,76,100,0.3),0_4px_18px_0_rgba(220,76,100,0.2)] focus:bg-danger-600 focus:shadow-[0_8px_9px_-4px_rgba(220,76,100,0.3),0_4px_18px_0_rgba(220,76,100,0.2)] focus:outline-none focus:ring-0 active:bg-danger-700 active:shadow-[0_8px_9px_-4px_rgba(220,76,100,0.3),0_4px_18px_0_rgba(220,76,100,0.2)]"
             btnText={`Remove ${currentData?.firstName}`}
@@ -269,6 +288,8 @@ function Profile() {
           >
             <p>{currentData?.firstName} will be deleted permanently</p>
           </Modal>
+        )}
+        {isAdmin && userId && (
           <Modal
             style="bg-danger px-6 pt-2.5 pb-2 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#dc4c64] transition duration-150 ease-in-out hover:bg-danger-600 hover:shadow-[0_8px_9px_-4px_rgba(220,76,100,0.3),0_4px_18px_0_rgba(220,76,100,0.2)] focus:bg-danger-600 focus:shadow-[0_8px_9px_-4px_rgba(220,76,100,0.3),0_4px_18px_0_rgba(220,76,100,0.2)] focus:outline-none focus:ring-0 active:bg-danger-700 active:shadow-[0_8px_9px_-4px_rgba(220,76,100,0.3),0_4px_18px_0_rgba(220,76,100,0.2)]"
             btnText={`Reset password`}
@@ -280,8 +301,8 @@ function Profile() {
           >
             <p>{currentData?.firstName}'s password will reset</p>
           </Modal>
-          {/* <Btn text={"reset password"} onClick={handleResetPassword} /> */}
-        </div>
+        )}
+        {/* <Btn text={"reset password"} onClick={handleResetPassword} /> */}
       </article>
     </article>
   );

@@ -1,6 +1,7 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import logo from "../assets/logo.png";
+import Cookies from "js-cookie";
 
 //redux
 import {
@@ -10,6 +11,7 @@ import {
   selectDropdownState,
 } from "../features/appSlice";
 import { useSelector, useDispatch } from "react-redux";
+import { useGetStaffQuery } from "../api/staff/staffApi";
 
 //components
 import NavItem from "./NavItem";
@@ -21,7 +23,12 @@ import { GiHamburgerMenu } from "react-icons/gi";
 import { GoDashboard } from "react-icons/go";
 import { VscTasklist } from "react-icons/vsc";
 import { IoReceiptOutline } from "react-icons/io5";
-import { MdTimer, MdOutlineSettingsSuggest, MdLogout } from "react-icons/md";
+import {
+  MdTimer,
+  MdOutlineSettingsSuggest,
+  MdLogout,
+  MdOutlineEventBusy,
+} from "react-icons/md";
 import { SlOptionsVertical } from "react-icons/sl";
 import { FaRegBell, FaRegUser, FaEnvelope, FaUserCog } from "react-icons/fa";
 
@@ -29,6 +36,11 @@ function MobileNav() {
   const dispatch = useDispatch();
   const isSidebarOpen = useSelector(selectSidebarState);
   const isDropdownOpen = useSelector(selectDropdownState);
+  const { id } = useParams();
+  const isAdmin = Cookies.get("isAdmin")
+    ? JSON.parse(Cookies.get("isAdmin"))
+    : null;
+  const { currentData } = useGetStaffQuery(id);
   return (
     <nav className="bg-mainColor px-5 lg:px-9 flex items-center justify-between h-16 relative md:hidden">
       <ul className="flex gap-x-3">
@@ -39,7 +51,10 @@ function MobileNav() {
         >
           <GiHamburgerMenu />
         </button>
-        <Link to="/" className="text-white font-bold text-xl">
+        <Link
+          to={`/vms/${id}/dashboard`}
+          className="text-white font-bold text-xl"
+        >
           <img src={logo} alt="Sovereignhouse" className="max-h-full h-full" />
         </Link>
       </ul>
@@ -62,9 +77,21 @@ function MobileNav() {
         } transition-all duration-500 overflow-hidden`}
       >
         <nav className="grid grid-cols-2 p-5 place-items-center gap-3 h-full w-full ">
-          <NavBtn icon={<FaRegUser />} text="my profile" path="/profile" />
-          <NavBtn icon={<FaUserCog />} text="edit profile" path="/" />
-          <NavBtn icon={<MdTimer />} text="timesheets" path="/" />
+          <NavBtn
+            icon={<FaRegUser />}
+            text="my profile"
+            path={`/vms/${id}/profile`}
+          />
+          <NavBtn
+            icon={<FaUserCog />}
+            text="edit profile"
+            path={`/vms/${id}/profile/edit`}
+          />
+          <NavBtn
+            icon={<MdTimer />}
+            text="timesheets"
+            path={`/vms/${id}/timesheet`}
+          />
           <NavBtn icon={<MdLogout />} text="logout" path="/logout" />
         </nav>
       </div>
@@ -78,7 +105,7 @@ function MobileNav() {
       >
         <div className="flex justify-between w-full mb-5">
           <p className="capitalize text-mainColor text-lg font-bold">
-            olusoji daramola
+            {currentData?.fullName}
           </p>
           <button
             className="text-red-500 border-none text-xl "
@@ -88,14 +115,35 @@ function MobileNav() {
           </button>
         </div>
         <nav className="w-full">
-          <NavItem text={"dashboard"} path="/" icon={<GoDashboard />} />
-          <NavItem text={"mailbox"} path="/mailbox" icon={<FaEnvelope />} />
           <NavItem
-            text={"timesheet & leave"}
-            path="/timesheet"
+            text={"dashboard"}
+            path={`/vms/${id}/dashboard`}
+            icon={<GoDashboard />}
+          />
+          <NavItem
+            text={"mailbox"}
+            path={`/vms/${id}/dashboard`}
+            icon={<FaEnvelope />}
+          />
+          <NavItem
+            text={"timesheet"}
+            path={
+              isAdmin
+                ? `/vms/${id}/admin/all-staff-timesheets`
+                : `/vms/${id}/timesheet`
+            }
             icon={<MdTimer />}
           />
-          <NavItem text={"tasks"} path="/tasks" icon={<VscTasklist />} />
+          <NavItem
+            text={"leave"}
+            path={isAdmin ? `/vms/${id}/admin/leave` : `/vms/${id}/leave`}
+            icon={<MdOutlineEventBusy />}
+          />
+          <NavItem
+            text={"tasks"}
+            path={`/vms/${id}/task`}
+            icon={<VscTasklist />}
+          />
           <NavItem
             text={"expenses"}
             path="/expenses"

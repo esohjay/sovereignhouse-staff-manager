@@ -72,6 +72,7 @@ module.exports.resetPassword = async (req, res) => {
     req.body.email,
     req.body.password
   );
+  console.log(req.body.email);
   const mailSent = sendMail(
     req.body.email,
     // emailAuth,
@@ -87,6 +88,41 @@ module.exports.resetPassword = async (req, res) => {
       .json({ message: "Password has been reset but can't send email" });
   }
 };
+module.exports.changeStatus = async (req, res) => {
+  const { status, userId } = req.body;
+  try {
+    await admin.auth().updateUser(req.body.userId, {
+      disabled: status === "active" ? false : true,
+    });
+  } catch (error) {
+    return res.status(400).json(error);
+  }
+  const user = await User.update(req.body, { where: { id: userId } });
+  res.status(201).json({
+    message: `${user.firstName} status has been updated successfully`,
+  });
+  //send email
+  // const message = welcomeMessage(
+  //   req.body.firstName,
+  //   `${process.env.FRONTEND_URL}/login`,
+  //   req.body.email,
+  //   req.body.password
+  // );
+  // const mailSent = sendMail(
+  //   req.body.email,
+  //   // emailAuth,
+  //   `Your password has been reset`,
+  //   message
+  // );
+
+  // if (mailSent) {
+  //   res.status(201).json({ message: "Password reset successfully" });
+  // } else {
+  //   res
+  //     .status(400)
+  //     .json({ message: "Password has been reset but can't send email" });
+  // }
+};
 module.exports.login = async (req, res) => {
   const [user, created] = await User.findOrCreate({
     where: { id: req.user.uid },
@@ -101,12 +137,20 @@ module.exports.login = async (req, res) => {
 };
 module.exports.updateUser = async (req, res) => {
   const { id } = req.params;
+  const { email } = req.body;
   const user = await User.update(req.body, { where: { id: id } });
   if (user) {
     try {
-      await admin.auth().updateUser(id, {
-        displayName: `${user.firstName} ${user.lastName}`,
-      });
+      if (email) {
+        await admin.auth().updateUser(id, {
+          displayName: `${user.firstName} ${user.lastName}`,
+          email,
+        });
+      } else {
+        await admin.auth().updateUser(id, {
+          displayName: `${user.firstName} ${user.lastName}`,
+        });
+      }
     } catch (err) {
       console.log(err);
     }

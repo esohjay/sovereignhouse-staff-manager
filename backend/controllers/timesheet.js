@@ -21,6 +21,7 @@ module.exports.getUserTimesheets = async (req, res) => {
     where: { userId: id },
     include: ["shift"],
     order: [["createdAt", "DESC"]],
+    limit: 10,
   });
   res.status(200).json(timesheets);
 };
