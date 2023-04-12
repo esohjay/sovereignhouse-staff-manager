@@ -7,12 +7,15 @@ const {
   getApplicant,
   deleteApplicant,
   getCampaignApplicants,
+  uploadFile,
 } = require("../controllers/applicant");
 const { verifyAdmin } = require("../middlewares/auth");
+const { upload } = require("../utils/multerConfig");
 
 const router = express.Router();
 router.post("/", catchAsync(createApplicant));
 router.put("/:id", verifyAdmin, catchAsync(updateApplicant));
+router.post("/upload", upload.single("file"), catchAsync(uploadFile));
 router.get("/", verifyAdmin, catchAsync(getAllApplicants));
 router.get("/:id", verifyAdmin, catchAsync(getApplicant));
 router.get("/:id/campaign", verifyAdmin, catchAsync(getCampaignApplicants));

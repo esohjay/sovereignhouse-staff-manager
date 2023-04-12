@@ -20,9 +20,14 @@ const Applicant = sequelize.define("Applicant", {
     type: DataTypes.STRING,
     // schema: Joi.string().trim().required().email(),
   },
-  address: { type: DataTypes.STRING, schema: Joi.string().trim().required() },
+  address: {
+    type: DataTypes.STRING,
+    defaultValue: "pending",
+    schema: Joi.string().trim().required(),
+  },
   gender: { type: DataTypes.STRING, schema: Joi.string().trim().required() },
-  phone: { type: DataTypes.INTEGER, schema: Joi.number().required() },
+  phone: { type: DataTypes.STRING, schema: Joi.string().required() },
+  fileSrc: { type: DataTypes.STRING, schema: Joi.string().required() },
 });
 
 // Applicant.sync().then(() => {

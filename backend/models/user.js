@@ -3,6 +3,7 @@ const sequelize = require("../config/db");
 const { sequelizeJoi, Joi } = require("sequelize-joi");
 sequelizeJoi(sequelize);
 const Leave = require("./leave");
+const Notification = require("./notification");
 
 const User = sequelize.define("user", {
   id: {
@@ -65,6 +66,8 @@ const User = sequelize.define("user", {
 
 User.hasMany(Leave);
 Leave.belongsTo(User, { as: "user" });
+User.hasMany(Notification);
+Notification.belongsTo(User, { as: "user" });
 
 sequelize.sync().then(() => {
   console.log("user table and others created");

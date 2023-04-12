@@ -5,11 +5,13 @@ const Applicant = require("./applicant");
 const Campaign = sequelize.define("Campaign", {
   numberOfCandidates: DataTypes.INTEGER,
   title: DataTypes.STRING,
-  description: DataTypes.STRING,
+  description: DataTypes.TEXT("medium"),
   position: DataTypes.STRING,
   workplace: DataTypes.STRING,
   contractType: DataTypes.STRING,
   startDate: DataTypes.DATE,
+  skillRequired: DataTypes.TEXT,
+  benefits: DataTypes.TEXT,
   endDate: DataTypes.DATE,
   status: DataTypes.STRING,
 });
