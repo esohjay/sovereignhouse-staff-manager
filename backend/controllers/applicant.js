@@ -1,4 +1,5 @@
 const Applicant = require("../models/applicant");
+const Campaign = require("../models/campaign");
 const Notification = require("../models/notification");
 const {
   applicationMessage,
@@ -49,7 +50,7 @@ module.exports.updateApplicant = async (req, res) => {
   res.status(201).json(applicant);
 };
 module.exports.getAllApplicants = async (req, res) => {
-  const applicants = await Applicant.findAll();
+  const applicants = await Applicant.findAll({ include: Campaign });
   res.status(200).json(applicants);
 };
 module.exports.getApplicant = async (req, res) => {

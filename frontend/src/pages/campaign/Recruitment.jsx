@@ -30,7 +30,7 @@ function Recruitment() {
             add campaign
           </NavLink>
           <NavLink
-            to={`/vms/${id}/admin/recruitment/applicants`}
+            to={`/vms/${id}/admin/recruitment/applicant/all`}
             className={({ isActive }) =>
               isActive
                 ? "inline-block px-5 py-2 text-white bg-mainColor text-center rounded-md shadow-md capitalize hover:bg-lightGreen hover:text-mainColor"

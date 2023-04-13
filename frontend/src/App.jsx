@@ -21,6 +21,8 @@ import UpdateStaff from "./pages/hrm/UpdateStaff";
 import Recruitment from "./pages/campaign/Recruitment";
 import AddCampaign from "./pages/campaign/AddCampaign";
 import Campaigns from "./pages/campaign/Campaigns";
+import Application from "./pages/campaign/Application";
+import ApplicationList from "./pages/campaign/ApplicationList";
 import CampaignDetails from "./pages/campaign/CampaignDetails";
 import EditCampaign from "./pages/campaign/EditCampaign";
 import AddShift from "./pages/shift/AddShift";
@@ -90,6 +92,7 @@ function App() {
               </Route>
               <Route path="recruitment" element={<Recruitment />}>
                 <Route path="add" element={<AddCampaign />} />
+                <Route path="applicant/all" element={<ApplicationList />} />
                 <Route path=":campaignId" element={<CampaignDetails />} />
                 <Route path=":campaignId/edit" element={<EditCampaign />} />
                 <Route index element={<Campaigns />} />
@@ -105,6 +108,7 @@ function App() {
         </Route>
         <Route path="register" element={<Register />} />
         <Route path="login" element={<Login />} />
+        <Route path=":campaign/apply" element={<Application />} />
         <Route path="unauthorized" element={<Unauthorized />} />
       </Route>
     )

@@ -16,6 +16,8 @@ function AddCampaign() {
     workplace: Yup.string().required("workplace is required"),
     contractType: Yup.string().required("contractType is required"),
     status: Yup.string().required("status is required"),
+    benefits: Yup.string().required("benefits is required"),
+    skillRequired: Yup.string().required("skillRequired is required"),
     numberOfCandidates: Yup.number().required(" is required"),
     startDate: Yup.date().required("start date is required"),
     endDate: Yup.date().required("end date is required"),
@@ -192,6 +194,55 @@ function AddCampaign() {
             </select>
             {errors.status && (
               <span className="text-red-500">{errors.status?.message}</span>
+            )}
+          </div>
+        </article>
+        <article className="w-full grid md:grid-cols-2 gap-x-3">
+          {/* benefits*/}
+          <div className="mb-3">
+            <label
+              htmlFor="benefits"
+              className="capitalize font-medium mb-1 block text-sm"
+            >
+              benefits
+            </label>
+            <textarea
+              rows="3"
+              type="text"
+              placeholder="e.g Holidays | Insurace"
+              {...register("benefits", { required: true })}
+              className="p-2 rounded-md mb-2 block bg-white w-full focus:outline-none border border-slate-300 placeholder:text-xs"
+            />
+            <span className="text-xs mb-2">
+              Separate benefits with the | symbol
+            </span>
+            {errors.benefits && (
+              <span className="text-red-500">{errors.benefits?.message}</span>
+            )}
+          </div>
+
+          {/* skill required*/}
+          <div className="mb-3">
+            <label
+              htmlFor="skillRequired"
+              className="capitalize font-medium mb-1 block text-sm"
+            >
+              skills required
+            </label>
+            <textarea
+              type="text"
+              placeholder="e.g Java | Php"
+              rows="3"
+              {...register("skillRequired", { required: true })}
+              className="p-2 rounded-md placeholder:text-xs mb-1 block bg-white w-full focus:outline-none border border-slate-300"
+            />
+            <span className="text-xs mb-2">
+              Separate each skill with the | symbol
+            </span>
+            {errors.skillRequired && (
+              <span className="text-red-500">
+                {errors.skillRequired?.message}
+              </span>
             )}
           </div>
         </article>

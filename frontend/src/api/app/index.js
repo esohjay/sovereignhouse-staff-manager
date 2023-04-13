@@ -14,7 +14,15 @@ export const appApi = createApi({
     },
   }),
   tagTypes: ["Staff", "Campaign, Timesheet, UserTimesheet, Task"],
-  endpoints: (builder) => ({}),
+  endpoints: (builder) => ({
+    upload: builder.mutation({
+      query: (formBody) => ({
+        url: "/applicant/upload",
+        method: "POST",
+        body: formBody,
+      }),
+    }),
+  }),
 });
 
-// export const { useGetAllStaffQuery } = staffApi;
+export const { useUploadMutation } = appApi;

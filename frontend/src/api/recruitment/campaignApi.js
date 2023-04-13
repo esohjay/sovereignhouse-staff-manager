@@ -10,6 +10,13 @@ const campaignApi = appApi.injectEndpoints({
       }),
       invalidatesTags: [{ type: "Campaign", id: "LIST" }],
     }),
+    newApplication: build.mutation({
+      query: (formBody) => ({
+        url: "/applicant",
+        method: "POST",
+        body: formBody,
+      }),
+    }),
     getCampaigns: build.query({
       query: () => "/campaign",
       providesTags: (result) =>
@@ -26,6 +33,18 @@ const campaignApi = appApi.injectEndpoints({
     getCampaign: build.query({
       query: (id) => ({
         url: `/campaign/${id}`,
+      }),
+      providesTags: (result, error, id) => [{ type: "Campaign", id }],
+    }),
+    getApplication: build.query({
+      query: (id) => ({
+        url: `/applicant/${id}`,
+      }),
+      providesTags: (result, error, id) => [{ type: "Campaign", id }],
+    }),
+    getApplications: build.query({
+      query: (id) => ({
+        url: `/applicant`,
       }),
       providesTags: (result, error, id) => [{ type: "Campaign", id }],
     }),
@@ -56,4 +75,7 @@ export const {
   useGetCampaignQuery,
   useDeleteCampaignMutation,
   useUpdateCampaignMutation,
+  useNewApplicationMutation,
+  useGetApplicationQuery,
+  useGetApplicationsQuery,
 } = campaignApi;
