@@ -15,12 +15,12 @@ const Applicant = sequelize.define("Applicant", {
       throw new Error("Do not try to set the `fullName` value!");
     },
   },
-  status: { type: DataTypes.STRING, schema: Joi.string().trim().required() },
+  address: { type: DataTypes.STRING, schema: Joi.string().trim().required() },
   email: {
     type: DataTypes.STRING,
     // schema: Joi.string().trim().required().email(),
   },
-  address: {
+  status: {
     type: DataTypes.STRING,
     defaultValue: "pending",
     schema: Joi.string().trim().required(),

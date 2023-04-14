@@ -46,16 +46,25 @@ module.exports.uploadFile = async (req, res) => {
 };
 module.exports.updateApplicant = async (req, res) => {
   const { id } = req.params;
+  const { status } = req.body;
   const applicant = await Applicant.update(req.body, { where: { id } });
   res.status(201).json(applicant);
 };
+module.exports.scheduleInterview = async (req, res) => {
+  const { id } = req.params;
+  const { status, email, message, link } = req.body;
+
+  const applicant = await Applicant.update(req.body, { where: { id } });
+  res.status(201).json(applicant);
+};
+
 module.exports.getAllApplicants = async (req, res) => {
   const applicants = await Applicant.findAll({ include: Campaign });
   res.status(200).json(applicants);
 };
 module.exports.getApplicant = async (req, res) => {
   const { id } = req.params;
-  const applicant = await Applicant.findByPk(id);
+  const applicant = await Applicant.findByPk(id, { include: Campaign });
   res.status(200).json(applicant);
 };
 module.exports.getCampaignApplicants = async (req, res) => {
