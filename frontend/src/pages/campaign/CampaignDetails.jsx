@@ -3,11 +3,14 @@ import React from "react";
 import Btn from "../../components/Btn";
 import Modal from "../../components/Modal";
 
+import { useForm } from "react-hook-form";
+
 import { useNavigate, useParams } from "react-router-dom";
 
 import {
   useGetCampaignQuery,
   useDeleteCampaignMutation,
+  useUpdateCampaignMutation,
 } from "../../api/recruitment/campaignApi";
 
 import dayjs from "dayjs";
@@ -19,7 +22,26 @@ function CampaignDetails() {
   const { campaignId } = useParams();
   const { currentData, isError, isFetching, isLoading, isSuccess } =
     useGetCampaignQuery(campaignId);
+
+  const {
+    register,
+    getValues,
+    setError,
+    formState: { errors },
+  } = useForm();
   const [deleteCampaign, { status }] = useDeleteCampaignMutation();
+  const [updateCampaign, { status: updateStatus }] =
+    useUpdateCampaignMutation();
+  const updateCampaignStatus = () => {
+    if (!getValues("status")) {
+      setError("status", { type: "required" });
+      return;
+    }
+    updateCampaign({
+      id: currentData?.id,
+      status: getValues("status"),
+    });
+  };
   return (
     <article className="p-2 lg:px-5 lg:py-10 space-y-3">
       <Btn text={"back"} onClick={() => navigate(-1)} />
@@ -91,13 +113,13 @@ function CampaignDetails() {
               targetId="changeStatus"
               modalTitle={`Change request status`}
               confirmText="update"
-              //   action={updateLeaveStatus}
+              action={updateCampaignStatus}
               // size="small"
             >
               <div className="w-full">
                 <select
                   data-te-select-init
-                  //   {...register("status", { required: true })}
+                  {...register("status", { required: true })}
                   className="w-full p-3 rounded-md border border-mainColor focus:outline-none"
                 >
                   <option value="">Update status</option>

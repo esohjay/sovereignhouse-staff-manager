@@ -1,5 +1,9 @@
-import React from "react";
-import { useGetCampaignsQuery } from "../../api/recruitment/campaignApi";
+import React, { useState } from "react";
+import {
+  useGetCampaignsQuery,
+  useDeleteCampaignMutation,
+  useUpdateCampaignMutation,
+} from "../../api/recruitment/campaignApi";
 import { Link, useNavigate } from "react-router-dom";
 import { FaCogs, FaEdit, FaTrashAlt } from "react-icons/fa";
 import { MdOutlineOpenInFull } from "react-icons/md";
@@ -11,8 +15,14 @@ import Modal from "../../components/Modal";
 
 function Campaigns() {
   const navigate = useNavigate();
+  const [isCopied, setIsCopied] = useState(false);
+  const [copiedCampaign, setCopiedCampaign] = useState("");
   const { currentData, isError, isFetching, isLoading, isSuccess } =
     useGetCampaignsQuery();
+  const [deleteCampaign, { status }] = useDeleteCampaignMutation();
+  const [updateCampaign, { status: updateStatus }] =
+    useUpdateCampaignMutation();
+
   const {
     register,
     handleSubmit,
@@ -21,6 +31,41 @@ function Campaigns() {
     formState: { errors },
     reset,
   } = useForm();
+  const updateCampaignStatus = () => {
+    if (!getValues("status")) {
+      setError("status", { type: "required" });
+      return;
+    }
+    updateCampaign({
+      id: currentData?.id,
+      status: getValues("status"),
+    });
+  };
+
+  //copy link to clipboard
+  async function copyTextToClipboard(text) {
+    if ("clipboard" in navigator) {
+      return await navigator.clipboard.writeText(text);
+    } else {
+      return document.execCommand("copy", true, text);
+    }
+  }
+  const handleCopyClick = (id) => {
+    // Asynchronously call copyTextToClipboard
+    setCopiedCampaign(id);
+    copyTextToClipboard(`${import.meta.env.VITE_FRONTEND_URL}/${id}/apply`)
+      .then(() => {
+        // If successful, update the isCopied state value
+        setIsCopied(true);
+
+        setTimeout(() => {
+          setIsCopied(false);
+        }, 1500);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
   return (
     <article className="w-full  rounded-md p-3">
       <div className="flex flex-col">
@@ -32,9 +77,6 @@ function Campaigns() {
                   <tr>
                     <th scope="col" className="px-6 py-4">
                       s/n
-                    </th>
-                    <th scope="col" className="px-6 py-4">
-                      Title
                     </th>
                     <th scope="col" className="px-6 py-4">
                       Position
@@ -67,12 +109,10 @@ function Campaigns() {
                           onClick={() => navigate(`${campaign.id}`)}
                           className="cursor-pointer"
                         >
-                          {campaign.title}
+                          {campaign.position}
                         </p>
                       </td>
-                      <td className="whitespace-nowrap px-6 py-4 first-letter:uppercase">
-                        {campaign.position}
-                      </td>
+
                       <td className="whitespace-nowrap px-6 py-4 first-letter:uppercase">
                         {campaign.contractType}
                       </td>
@@ -83,17 +123,28 @@ function Campaigns() {
                         {campaign.Applicants?.length}
                       </td>
                       <td className="whitespace-nowrap px-6 py-4 first-letter:uppercase flex gap-x-2 items-center">
-                        <Link className="" to={`${campaign.id}/edit`}>
-                          <FaEdit />
-                        </Link>
-                        <Modal
+                        <button
+                          type="button"
+                          onClick={() => navigate(`${campaign.id}`)}
+                          className="inline-block rounded bg-mainColor px-3 pt-1.5 pb-1 text-[9px] font-medium uppercase leading-normal text-white shadow-mainColor transition duration-150 ease-in-out hover:bg-altColor hover:shadow-altColor focus:bg-altColor focus:shadow-altColor focus:outline-none focus:ring-0 active:bg-green-500 active:shadow-green-500"
+                        >
+                          view
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => navigate(`${campaign.id}/edit`)}
+                          className="inline-block rounded bg-warning px-3 pt-1.5 pb-1 text-[9px] font-medium uppercase leading-normal text-white shadow-mainColor transition duration-150 ease-in-out hover:bg-altColor hover:shadow-altColor focus:bg-altColor focus:shadow-altColor focus:outline-none focus:ring-0 active:bg-green-500 active:shadow-green-500"
+                        >
+                          edit
+                        </button>
+
+                        {/* <Modal
                           style="whitespace-nowrap bg-transparent text-sm font-normal text-black hover:bg-neutral-100 active:text-neutral-800 active:no-underline disabled:pointer-events-none disabled:bg-transparent disabled:text-neutral-400 dark:text-neutral-200 dark:hover:bg-neutral-600"
-                          cta={<HiOutlineStatusOnline />}
-                          targetId="changeStatus"
+                          targetId="changeCampaignStatus"
                           modalTitle={`Change campaign status`}
                           confirmText="update"
-                          btn={false}
-                          // action={updateLeaveStatus}
+                          btnText={`copy`}
+                          action={updateCampaignStatus}
                           // size="small"
                         >
                           <div className="w-full">
@@ -116,94 +167,35 @@ function Campaigns() {
                               <option value="inactive">Inactive</option>
                             </select>
                           </div>
-                        </Modal>
+                        </Modal> */}
                         <Modal
-                          style="whitespace-nowrap bg-transparent  text-sm font-normal text-black hover:bg-neutral-100 active:text-neutral-800 active:no-underline disabled:pointer-events-none disabled:bg-transparent disabled:text-neutral-400 dark:text-neutral-200 dark:hover:bg-neutral-600"
-                          cta={<FaTrashAlt />}
-                          targetId="deleteCampaign"
-                          modalTitle={`Delete ${campaign?.title}?`}
-                          confirmText="delete"
-                          btn={false}
-                          // action={updateLeaveStatus}
+                          style="bg-mainColor px-3 pt-1.5 pb-1 text-[9px] font-medium uppercase leading-normal text-white shadow-mainColor transition duration-150 ease-in-out hover:bg-altColor hover:shadow-altColor focus:bg-altColor focus:shadow-altColor focus:outline-none focus:ring-0 active:bg-altColor active:shadow-altColor"
+                          btnText={
+                            isCopied && copiedCampaign === campaign.id
+                              ? "copied"
+                              : "copy"
+                          }
+                          targetId="copyLink"
+                          modalTitle="Copy campaign link"
+                          confirmText="copy"
+                          action={() => handleCopyClick(campaign.id)}
                           // size="small"
                         >
-                          <p className="first-letter:uppercase">
-                            {campaign?.title} will be deleted permanently
-                          </p>
+                          <div
+                            className="w-full"
+                            onDoubleClick={() => handleCopyClick(campaign.id)}
+                          >
+                            <input
+                              data-te-select-init
+                              disabled
+                              {...register("campaignLink", {})}
+                              value={`${import.meta.env.VITE_FRONTEND_URL}/${
+                                campaign.id
+                              }/apply`}
+                              className="w-full p-3 rounded-md border border-mainColor focus:outline-none"
+                            />
+                          </div>
                         </Modal>
-                        {/* <Btn
-                          text={<FaCogs />}
-                          id="actionOptions"
-                          data-te-dropdown-toggle-ref
-                          aria-expanded="false"
-                          data-te-ripple-init
-                          data-te-ripple-color="light"
-                        />
-                        <ul
-                          className="absolute z-[1000] float-left m-0 hidden min-w-max list-none overflow-hidden rounded-lg border-none bg-white bg-clip-padding text-left text-base shadow-lg dark:bg-neutral-700 [&[data-te-dropdown-show]]:grid grid-cols-3 place-items-center"
-                          aria-labelledby="actionOptions"
-                          data-te-dropdown-menu-ref
-                        >
-                          <li>
-                            <Link
-                              className="block w-full whitespace-nowrap bg-transparent py-2 px-4 text-sm font-normal text-neutral-700 hover:bg-neutral-100 active:text-neutral-800 active:no-underline disabled:pointer-events-none disabled:bg-transparent disabled:text-neutral-400 dark:text-neutral-200 dark:hover:bg-neutral-600"
-                              to={`${campaign.id}`}
-                              data-te-dropdown-item-ref
-                            >
-                              <MdOutlineOpenInFull />
-                            </Link>
-                          </li>
-                          <li>
-                           
-                          </li>
-                          <li>
-                            <a
-                              className="block w-full whitespace-nowrap bg-transparent py-2 px-4 text-sm font-normal text-warning hover:bg-neutral-100 active:text-neutral-800 active:no-underline disabled:pointer-events-none disabled:bg-transparent disabled:text-neutral-400 dark:text-neutral-200 dark:hover:bg-neutral-600"
-                              href="#"
-                              data-te-dropdown-item-ref
-                            >
-                              <Modal
-                                style="whitespace-nowrap bg-transparent py-2 px-4 text-sm font-normal text-black hover:bg-neutral-100 active:text-neutral-800 active:no-underline disabled:pointer-events-none disabled:bg-transparent disabled:text-neutral-400 dark:text-neutral-200 dark:hover:bg-neutral-600"
-                                cta={<HiOutlineStatusOnline />}
-                                targetId="changeStatus"
-                                modalTitle={`Change campaign status`}
-                                confirmText="update"
-                                // action={updateLeaveStatus}
-                                // size="small"
-                              >
-                                <div className="w-full">
-                                  <input
-                                    type="text"
-                                    {...register("id", {
-                                      required: true,
-                                      value: campaign.id,
-                                    })}
-                                    hidden
-                                  />
-                                  <select
-                                    data-te-select-init
-                                    {...register("status", { required: true })}
-                                    className="w-full p-3 rounded-md border border-mainColor focus:outline-none"
-                                  >
-                                    <option value="">Update status</option>
-                                    <option value="pending">Pending</option>
-                                    <option value="approved">Active</option>
-                                    <option value="unapproved">Inactive</option>
-                                  </select>
-                                </div>
-                              </Modal>
-                            </a>
-                          </li>
-                          <li>
-                            <a
-                              className="block w-full whitespace-nowrap bg-transparent py-2 px-4 text-sm font-normal text-danger hover:bg-neutral-100 active:text-neutral-800 active:no-underline disabled:pointer-events-none disabled:bg-transparent disabled:text-neutral-400 dark:text-neutral-200 dark:hover:bg-neutral-600"
-                              href="#"
-                              data-te-dropdown-item-ref
-                            >
-                             
-                            </a>
-                          </li>
-                        </ul> */}
                       </td>
                     </tr>
                   ))}
@@ -213,61 +205,6 @@ function Campaigns() {
           </div>
         </div>
       </div>
-      {/* <table className="w-full">
-        <thead className="">
-          <tr className="bg-gray">
-            <th className="capitalize p-4 text-left font-semibold w-1">s/n</th>
-            <th className="capitalize px-2 py-4 text-left font-semibold w-[280px">
-              title
-            </th>
-            <th className="capitalize px-2 py-4 text-left font-semibold w-[180px">
-              position
-            </th>
-            <th className="capitalize px-2 py-4 text-left font-semibold w-[180px">
-              contract type
-            </th>
-            <th className="capitalize px-2 py-4 font-semibold w-[280px text-left">
-              status
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          {currentData?.map((campaign, i) => (
-            <tr
-              key={campaign.id}
-              className="hover:bg-lightGreen p-3 cursor-pointer group"
-            >
-              <td className="w-ful text-left p-4 -14">{i + 1}</td>
-              <td className="w-ful text-left px-2 py-3 w-[280px">
-                <p className="mb-1">{campaign.title}</p>
-                <div className="hidden group-hover:flex group-hover:gap-2 w-full">
-                  <Link
-                    to={`/admin/recruitment/${campaign.id}`}
-                    className="text-mainColor p-1 text-xs inline-block rounded-md border border-mainColor fornt-medium capitalize"
-                  >
-                    view
-                  </Link>
-                  <Link
-                    to={`/admin/recruitment/${campaign.id}/edit`}
-                    className="text-mainColor p-1 text-xs inline-block rounded-md border border-yellow-500 fornt-medium capitalize"
-                  >
-                    edit
-                  </Link>
-                </div>
-              </td>
-              <td className="w-ful text-left px-2 py-3 w-[180px">
-                {campaign.position}
-              </td>
-              <td className="w-ful text-left px-2 py-3 w-[180px">
-                {campaign.contractType}
-              </td>
-              <td className="w-ful text-left px-2 py-3 w-[280px">
-                {campaign.status}
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table> */}
     </article>
   );
 }

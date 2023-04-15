@@ -77,9 +77,6 @@ function ApplicationList() {
                       </td>
 
                       <td className="whitespace-nowrap px-6 py-4 first-letter:uppercase flex gap-x-2 items-center">
-                        <Link className="" to={`${applicant.id}/edit`}>
-                          <FaEdit />
-                        </Link>
                         <Modal
                           style="whitespace-nowrap bg-transparent text-sm font-normal text-black hover:bg-neutral-100 active:text-neutral-800 active:no-underline disabled:pointer-events-none disabled:bg-transparent disabled:text-neutral-400 dark:text-neutral-200 dark:hover:bg-neutral-600"
                           cta={<HiOutlineStatusOnline />}

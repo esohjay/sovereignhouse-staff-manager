@@ -75,7 +75,7 @@ function Application() {
         <img src={logo} alt="logo" />
       </figure>
       <article className="w-full bg-gray rounded-lg shadow-md max-w-md lg:max-w-lg p-5">
-        <h3 className="uppercase text-center font-medium">
+        <h3 className="uppercase text-center font-medium mb-5">
           {currentData?.title} role
         </h3>
         {submissionStatus !== "fulfilled" ? (
