@@ -6,7 +6,7 @@ const {
   getAllExpenses,
   getExpense,
   deleteExpense,
-} = require("../controllers/Expenses");
+} = require("../controllers/expenses");
 
 const router = express.Router();
 router.post("/", catchAsync(createExpense));
