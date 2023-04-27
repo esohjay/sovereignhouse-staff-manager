@@ -7,7 +7,7 @@ module.exports = new Sequelize(
   {
     host: process.env.HOST,
     dialect: "mysql",
-
+     dialectOptions: { ssl: {} },
     pool: {
       max: 5,
       min: 0,
