@@ -35,7 +35,7 @@ function Dashboard() {
   return (
     <section className="p-5 grid grid-cols-2 gap-3">
       {/* User */}
-      <article className="w-60 h-40 bg-white rounded-md shadow-md p-3 mb-3">
+      <article className="w-full h-40 bg-white rounded-md shadow-md p-3 mb-3">
         <button className="text-white bg-mainColor font-semibold p-2 text-lg rounded-md mb-3">
           <HiUserGroup />
         </button>
@@ -66,7 +66,7 @@ function Dashboard() {
         </div>
       </article>
       {/* Leave requests */}
-      <article className="w-60 h-40 bg-white rounded-md shadow-md p-3 mb-3">
+      <article className="w-full h-40 bg-white rounded-md shadow-md p-3 mb-3">
         <button className="text-white bg-mainColor font-semibold p-2 text-lg rounded-md mb-3">
           <MdOutlineEventBusy />
         </button>
@@ -85,7 +85,7 @@ function Dashboard() {
         </div>
       </article>
       {/* SHifts */}
-      <article className="w-60 h-40 bg-white rounded-md shadow-md p-3 mb-3">
+      <article className="w-full h-40 bg-white rounded-md shadow-md p-3 mb-3">
         <button className="text-white bg-mainColor font-semibold p-2 text-lg rounded-md mb-3">
           <MdPendingActions />
         </button>
@@ -93,7 +93,7 @@ function Dashboard() {
           {currentData?.length}
         </p>
         <p className="text-base text-altColor mb-3">
-          Shift {currentData?.length > 0 ? "members" : "member"}
+          Available {currentData?.length > 1 ? "shifts" : "shift"}
         </p>
         <div className="flex items-center gap-x-2">
           <div className="flex gap-x-1 items-baseline">
@@ -116,7 +116,7 @@ function Dashboard() {
         </div>
       </article>
       {/* Applications */}
-      <article className="w-60 h-40 bg-white rounded-md shadow-md p-3 mb-3">
+      <article className="w-full h-40 bg-white rounded-md shadow-md p-3 mb-3">
         <button className="text-white bg-mainColor font-semibold p-2 text-lg rounded-md mb-3">
           <HiUserGroup />
         </button>
@@ -124,7 +124,7 @@ function Dashboard() {
           {currentData?.length}
         </p>
         <p className="text-base text-altColor mb-3">
-          Staff {currentData?.length > 0 ? "members" : "member"}
+          {currentData?.length > 1 ? "Applications" : "Application"}
         </p>
         <div className="flex items-center gap-x-2">
           <div className="flex gap-x-1 items-baseline">
@@ -147,7 +147,7 @@ function Dashboard() {
         </div>
       </article>
       {/* Tasks */}
-      <article className="w-60 h-40 bg-white rounded-md shadow-md p-3 mb-3">
+      <article className="w-full h-40 bg-white rounded-md shadow-md p-3 mb-3">
         <button className="text-white bg-mainColor font-semibold p-2 text-lg rounded-md mb-3">
           <HiUserGroup />
         </button>
@@ -155,7 +155,7 @@ function Dashboard() {
           {currentData?.length}
         </p>
         <p className="text-base text-altColor mb-3">
-          Staff {currentData?.length > 0 ? "members" : "member"}
+          {currentData?.length > 0 ? "Tasks" : "Task"}
         </p>
         <div className="flex items-center gap-x-2">
           <div className="flex gap-x-1 items-baseline">

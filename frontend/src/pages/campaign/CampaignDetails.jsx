@@ -48,14 +48,14 @@ function CampaignDetails() {
       <article className="border rounded-md border-mainColor mb-5">
         <div className="p-3 border-b border-b-mainColor">
           <h3 className="text-center font-semibold text-mainColor capitalize p-3">
-            {currentData?.title}
+            {currentData?.position}
           </h3>
         </div>
         {/* Single row */}
         <article className="flex flex-col lg:flex-row justify-evenly items-center">
           <div className="flex gap-x-2  w-full lg:justify-center  p-3 border-b lg:border-r lg:border-r-mainColor border-b-mainColor">
-            <p className="capitalize font-medium">position:</p>
-            <p className="first-letter:uppercase">{currentData?.position}</p>
+            <p className="capitalize font-medium">department:</p>
+            <p className="first-letter:uppercase">{currentData?.department}</p>
           </div>
           <div className="flex gap-x-2 w-full  lg:justify-center p-3 border-b border-b-mainColor">
             <p className="capitalize font-medium">workplace:</p>

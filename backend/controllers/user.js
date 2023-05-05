@@ -50,9 +50,9 @@ module.exports.createUser = async (req, res) => {
   }
 };
 module.exports.makeAdmin = async (req, res) => {
-  const newAmin = await admin
-    .auth()
-    .setCustomUserClaims(req.user.uid, { admin: true });
+  const { id } = req.body;
+  const newAmin = await admin.auth().setCustomUserClaims(id, { admin: true });
+  // req.user.uid
   console.log("success");
   console.log(newAmin);
   res.status(200).json("done");

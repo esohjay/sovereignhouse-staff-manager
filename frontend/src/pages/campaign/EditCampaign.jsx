@@ -26,7 +26,7 @@ function EditCampaign() {
   const [editCampaign, result] = useUpdateCampaignMutation();
   // form validation rules
   const validationSchema = Yup.object().shape({
-    title: Yup.string().required("title is required"),
+    department: Yup.string().required("department is required"),
     description: Yup.string().required("description is required"),
     position: Yup.string().required("position is required"),
     workplace: Yup.string().required("workplace is required"),
@@ -45,7 +45,7 @@ function EditCampaign() {
   const onSubmit = (data) => {
     // const password = generateRandomString();
     // dispatch(signUpWithEmailAndPassword({ ...data, password }));
-    console.log("submit");
+
     editCampaign({ ...data, id: currentData?.id });
   };
 
@@ -60,26 +60,6 @@ function EditCampaign() {
 
           <form onSubmit={handleSubmit(onSubmit)}>
             <article className="w-full grid md:grid-cols-2 gap-x-3">
-              {/* job title */}
-              <div className="mb-3">
-                <label
-                  htmlFor="title"
-                  className="capitalize font-medium mb-1 block text-sm"
-                >
-                  job title
-                </label>
-                <input
-                  type="text"
-                  {...register("title", {
-                    required: true,
-                    value: `${currentData?.title}`,
-                  })}
-                  className="p-2 rounded-md mb-2 block bg-white w-full focus:outline-none border border-slate-300"
-                />
-                {errors.title && (
-                  <span className="text-red-500 ">{errors.title?.message}</span>
-                )}
-              </div>
               {/* job position */}
               <div className="mb-3">
                 <label
@@ -102,6 +82,38 @@ function EditCampaign() {
                   </span>
                 )}
               </div>
+              <div className="mb-3 w-full">
+                <label
+                  htmlFor="department"
+                  className="capitalize font-medium mb-1 block text-sm"
+                >
+                  department
+                </label>
+                <select
+                  {...register("department", {
+                    required: true,
+                    value: `${currentData?.department}`,
+                  })}
+                  className="p-2  rounded-md mb-2 block bg-white w-full focus:outline-none border border-slate-300"
+                >
+                  <option value={`${currentData?.department}`}>
+                    {currentData?.department}
+                  </option>
+                  <option value="">Select type</option>
+                  <option value="administrative">Administrative</option>
+                  <option value="IT">IT</option>
+                  <option value="accounting">Accounting</option>
+                  <option value="marketing">Marketing</option>
+                  <option value="social media">Social Media</option>
+                  <option value="teacher">Teaching</option>
+                  <option value="other">Other</option>
+                </select>
+                {errors.department && (
+                  <span className="text-red-500">
+                    {errors.department?.message}
+                  </span>
+                )}
+              </div>
             </article>
             <article className="w-full grid md:grid-cols-2 gap-x-3">
               {/* contract type */}
@@ -119,8 +131,8 @@ function EditCampaign() {
                   })}
                   className="p-2  rounded-md mb-2 block bg-white w-full focus:outline-none border border-slate-300"
                 >
-                  <option value={`${currentData?.title}`}>
-                    {currentData?.title}
+                  <option value={`${currentData?.contractType}`}>
+                    {currentData?.contractType}
                   </option>
                   <option value="employee">Employee</option>
                   <option value="volunteer">Volunteer</option>

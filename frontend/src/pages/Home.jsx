@@ -1,21 +1,11 @@
-import { useState, useEffect } from "react";
 import MobileNav from "../components/MobileNav";
-import { Outlet, useLocation, useNavigate } from "react-router-dom";
+import { Outlet } from "react-router-dom";
 import DesktopNav from "../components/DesktopNav";
 import { useSelector } from "react-redux";
 import { selectSidebarState } from "../features/appSlice";
-import useAuth from "../hooks/useAuth";
 
 function Home() {
   const isSidebarOpen = useSelector(selectSidebarState);
-  const { user } = useAuth();
-  const location = useLocation();
-  const navigate = useNavigate();
-  // useEffect(() => {
-  //   if (!user) {
-  //     navigate(`/login`);
-  //   }
-  // }, []);
   return (
     <>
       <MobileNav />

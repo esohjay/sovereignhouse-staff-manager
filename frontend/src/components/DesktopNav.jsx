@@ -1,5 +1,5 @@
-import React from "react";
-import { Link, useParams } from "react-router-dom";
+import React, { useEffect } from "react";
+import { Link, useParams, useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
 
 import logo from "../assets/logo.png";
@@ -8,6 +8,7 @@ import avater from "../assets/User-avatar.png";
 //redux
 import { selectSidebarState, toggleSidebar } from "../features/appSlice";
 import { useSelector, useDispatch } from "react-redux";
+import { selectAuthStatus } from "../features/authSlice";
 
 //components
 import NavItem from "./NavItem";
@@ -41,12 +42,20 @@ import { selectCurrentUser, logOut } from "../features/authSlice";
 function DesktopNav({ children }) {
   const dispatch = useDispatch();
   const isSidebarOpen = useSelector(selectSidebarState);
+  const signedOut = useSelector(selectAuthStatus);
+  const navigate = useNavigate();
   const user = useSelector(selectCurrentUser);
   const { id } = useParams();
   const isAdmin = Cookies.get("isAdmin")
     ? JSON.parse(Cookies.get("isAdmin"))
     : null;
-
+  useEffect(() => {
+    if (signedOut) {
+      navigate("/login");
+      console.log("yass");
+    }
+  }, [signedOut]);
+  console.log(signedOut);
   return (
     <>
       <nav
@@ -141,11 +150,11 @@ function DesktopNav({ children }) {
             path={`/vms/${id}/dashboard`}
             icon={<GoDashboard />}
           />
-          <NavItem
+          {/* <NavItem
             text={"mailbox"}
             path={`/vms/${id}/mailbox`}
             icon={<FaEnvelope />}
-          />
+          /> */}
           <NavItem
             text={"timesheet"}
             path={
@@ -160,19 +169,24 @@ function DesktopNav({ children }) {
             path={isAdmin ? `/vms/${id}/admin/leave` : `/vms/${id}/leave`}
             icon={<MdOutlineEventBusy />}
           />
-          <NavItem
-            text={"HRM"}
-            path={`/vms/${id}/admin/staff`}
-            icon={<FaRegUser />}
-          />
-          <NavItem
-            text={"Recruitment"}
-            path={`/vms/${id}/admin/recruitment`}
-            icon={<MdOutlineWorkspaces />}
-          />
+          {isAdmin && (
+            <>
+              {" "}
+              <NavItem
+                text={"HRM"}
+                path={`/vms/${id}/admin/staff`}
+                icon={<FaRegUser />}
+              />
+              <NavItem
+                text={"Recruitment"}
+                path={`/vms/${id}/admin/recruitment`}
+                icon={<MdOutlineWorkspaces />}
+              />
+            </>
+          )}
           <NavItem
             text={"shifts"}
-            path={`/vms/${id}/admin/shift`}
+            path={isAdmin ? `/vms/${id}/admin/shift` : `/vms/${id}/shift`}
             icon={<MdPendingActions />}
           />
           <NavItem
@@ -181,6 +195,11 @@ function DesktopNav({ children }) {
             icon={<VscTasklist />}
           />
           <NavItem
+            text={"knowledge base"}
+            path={`/vms/${id}/knowledge-base`}
+            icon={<VscTasklist />}
+          />
+          {/* <NavItem
             text={"expenses"}
             path={`/vms/${id}/expense`}
             icon={<IoReceiptOutline />}
@@ -189,7 +208,7 @@ function DesktopNav({ children }) {
             text={"settings"}
             path="/settings"
             icon={<MdOutlineSettingsSuggest />}
-          />
+          /> */}
         </nav>
         {/* <section
           className={`w-full  mt-[70px] bg-black h-screen ${

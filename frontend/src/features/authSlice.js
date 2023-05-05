@@ -48,7 +48,7 @@ export const signUpWithEmailAndPassword = createAsyncThunk(
 //Email and password sign in
 export const logInWithEmailAndPassword = createAsyncThunk(
   "auth/logInWithEmailAndPassword",
-  async (info) => {
+  async (info, { dispatch }) => {
     //login
     const user = await signInWithEmailAndPassword(
       auth,
@@ -68,10 +68,18 @@ export const logInWithEmailAndPassword = createAsyncThunk(
         },
       }
     );
+
+    Cookies.set("token", `Bearer ${token}`, { expires: 1 });
+
     if (data) {
-      Cookies.set("user", JSON.stringify({ user: data.fullName }), {
-        expires: 1,
-      });
+      Cookies.set(
+        "user",
+        JSON.stringify({ user: data.fullName, userId: data.id }),
+        {
+          expires: 1,
+        }
+      );
+
       auth.currentUser.getIdTokenResult().then((token) => {
         if (!!token.claims.admin) {
           Cookies.set("isAdmin", JSON.stringify(true), {
@@ -83,6 +91,7 @@ export const logInWithEmailAndPassword = createAsyncThunk(
           });
         }
       });
+      dispatch(setAuthStatus(false));
     }
     return data;
   }
@@ -140,13 +149,17 @@ export const changePassword = createAsyncThunk(
 );
 
 //Logout
-export const logOut = createAsyncThunk("auth/logout", async () => {
-  await signOut(auth);
-  Cookies.remove("user");
-  Cookies.remove("isAdmin");
-
-  return null;
-});
+export const logOut = createAsyncThunk(
+  "auth/logout",
+  async (_, { dispatch }) => {
+    await signOut(auth);
+    Cookies.remove("user");
+    Cookies.remove("isAdmin");
+    dispatch(setAuthStatus(true));
+    dispatch(setUser(null));
+    return null;
+  }
+);
 
 //get user id token
 export const getUserIdToken = createAsyncThunk(
@@ -183,6 +196,8 @@ const initialState = {
   isAdmin: false,
   changedPassword: false,
   statusMsg: null,
+  signedOut: false,
+  error: null,
 };
 
 export const authSlice = createSlice({
@@ -203,6 +218,12 @@ export const authSlice = createSlice({
     },
     resetRegistedUser: (state) => {
       state.registeredUser = null;
+    },
+    setAuthStatus: (state, action) => {
+      state.signedOut = action.payload;
+    },
+    setUser: (state, action) => {
+      state.user = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -269,7 +290,7 @@ export const authSlice = createSlice({
     //logout
     builder.addCase(logOut.fulfilled, (state, action) => {
       state.currentUser = action.payload;
-      state.user = action.payload;
+      state.user = null;
       state.status = "success";
     });
     builder.addCase(logOut.rejected, (state, action) => {
@@ -289,14 +310,18 @@ export const {
   setAdminStatus,
   setStatusMsg,
   resetRegistedUser,
+  setAuthStatus,
+  setUser,
 } = authSlice.actions;
 
 export const selectUserForm = (state) => state.auth.userForm;
 export const selectUser = (state) => state.auth.user;
+export const selectError = (state) => state.auth.error;
 export const selectRegisteredUser = (state) => state.auth.registeredUser;
 export const selectStatusMsg = (state) => state.auth.statusMsg;
 export const selectCurrentUser = (state) => state.auth.currentUser;
 export const selectToken = (state) => state.auth.token;
+export const selectAuthStatus = (state) => state.auth.signedOut;
 export const selectAdminStatus = (state) => state.auth.isAdmin;
 
 export default authSlice.reducer;

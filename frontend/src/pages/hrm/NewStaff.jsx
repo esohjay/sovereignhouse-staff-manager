@@ -113,7 +113,6 @@ function NewStaff() {
               <option value="">Select gender</option>
               <option value="female">Female</option>
               <option value="male">Male</option>
-              <option value="other">Other</option>
             </select>
             {errors.gender && (
               <span className="text-red-500">{errors.gender?.message}</span>
@@ -201,8 +200,6 @@ function NewStaff() {
               <option value="">Select status</option>
               <option value="single">Single</option>
               <option value="married">Married</option>
-              <option value="divorced">Divorced</option>
-              <option value="separated">Separated</option>
               <option value="other">Other</option>
             </select>
             {errors.maritalStatus && (

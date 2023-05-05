@@ -12,6 +12,7 @@ import Cookies from "js-cookie";
 import {
   logInWithEmailAndPassword,
   selectUser,
+  selectError,
   selectCurrentUser,
 } from "../features/authSlice";
 import { useDispatch, useSelector } from "react-redux";
@@ -20,14 +21,12 @@ import useAuth from "../hooks/useAuth";
 function Login() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const error = useSelector(selectError);
   // const user = useSelector(selectCurrentUser);
   const user = useSelector(selectUser);
   const storedUser = Cookies.get("user")
     ? JSON.parse(Cookies.get("user"))
     : null;
-
-  //   const { user } = useAuth();
-  // form validation rules
   const validationSchema = Yup.object().shape({
     email: Yup.string().email().required("email is required"),
     password: Yup.string()
@@ -48,22 +47,9 @@ function Login() {
       navigate(`/vms/${user?.id}/dashboard`);
     }
   }, [user]);
-  //   useEffect(() => {
-  //     if (formData) {
-  //       dispatch(
-  //         logInWithEmailAndPassword({
-  //           email: formData?.email,
-  //           password: formData?.password,
-  //         })
-  //       );
-  //     }
-  //   }, [formData]);
-  //   useEffect(() => {
-  //     if (user) {
-  //       console.log(user);
-  //       console.log(formData);
-  //     }
-  //   }, [user]);
+  // auth/user-not-found
+  // auth/wrong-password
+  console.log(error);
   return (
     <section className="bg-mainColor px-5 flex flex-col justify-center items-center gap-y-5 py-24 min-h-screen">
       <figure>
@@ -102,6 +88,16 @@ function Login() {
             />
             {errors.password && (
               <span className="text-red-500">{errors.password?.message}</span>
+            )}
+            {error && error.name === "FirebaseError" ? (
+              <span className="text-red-500">
+                {error.code === "auth/user-not-found" ||
+                error.code === "auth/wrong-password"
+                  ? "Username or password is incorrect"
+                  : "Unable to sign you in. Try again later"}
+              </span>
+            ) : (
+              ""
             )}
           </div>
           <button className="bg-mainColor text-white capitalize font-medium rounded-md inline-block py-2 px-6">

@@ -10,7 +10,7 @@ function AddCampaign() {
   const [createCampaign, result] = useCreateCampaignMutation();
   // form validation rules
   const validationSchema = Yup.object().shape({
-    title: Yup.string().required("title is required"),
+    department: Yup.string().required("department is required"),
     description: Yup.string().required("description is required"),
     position: Yup.string().required("position is required"),
     workplace: Yup.string().required("workplace is required"),
@@ -39,23 +39,6 @@ function AddCampaign() {
     <article className="w-full p-5">
       <form onSubmit={handleSubmit(onSubmit)}>
         <article className="w-full grid md:grid-cols-2 gap-x-3">
-          {/* job title */}
-          <div className="mb-3">
-            <label
-              htmlFor="title"
-              className="capitalize font-medium mb-1 block text-sm"
-            >
-              job title
-            </label>
-            <input
-              type="text"
-              {...register("title", { required: true })}
-              className="p-2 rounded-md mb-2 block bg-white w-full focus:outline-none border border-slate-300"
-            />
-            {errors.title && (
-              <span className="text-red-500 ">{errors.title?.message}</span>
-            )}
-          </div>
           {/* job position */}
           <div className="mb-3">
             <label
@@ -71,6 +54,31 @@ function AddCampaign() {
             />
             {errors.position && (
               <span className="text-red-500">{errors.position?.message}</span>
+            )}
+          </div>
+          {/* Department */}
+          <div className="mb-3 w-full">
+            <label
+              htmlFor="department"
+              className="capitalize font-medium mb-1 block text-sm"
+            >
+              department
+            </label>
+            <select
+              {...register("department")}
+              className="p-2  rounded-md mb-2 block bg-white w-full focus:outline-none border border-slate-300"
+            >
+              <option value="">Select type</option>
+              <option value="administrative">Administrative</option>
+              <option value="IT">IT</option>
+              <option value="accounting">Accounting</option>
+              <option value="marketing">Marketing</option>
+              <option value="social media">Social Media</option>
+              <option value="teacher">Teaching</option>
+              <option value="other">Other</option>
+            </select>
+            {errors.department && (
+              <span className="text-red-500">{errors.department?.message}</span>
             )}
           </div>
         </article>

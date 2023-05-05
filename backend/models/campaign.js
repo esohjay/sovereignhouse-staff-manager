@@ -4,7 +4,7 @@ const Applicant = require("./applicant");
 
 const Campaign = sequelize.define("Campaign", {
   numberOfCandidates: DataTypes.INTEGER,
-  title: DataTypes.STRING,
+  department: DataTypes.STRING,
   description: DataTypes.TEXT("medium"),
   position: DataTypes.STRING,
   workplace: DataTypes.STRING,

@@ -47,14 +47,18 @@ import TaskDetails from "./pages/task/TaskDeatils";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Unauthorized from "./pages/401";
 import AdminRoute from "./components/AdminRoute";
+import KnowledgeBase from "./pages/knowledge-base/KnowledgeBase";
 
 function App() {
   const router = createBrowserRouter(
     createRoutesFromElements(
       <Route path="/" element={<Landing />}>
+        <Route index path="login" element={<Login />} />
+
         <Route path="vms/:id" element={<Home />}>
           <Route element={<ProtectedRoute />}>
             <Route index path="dashboard" element={<Dashboard />} />
+            <Route path="knowledge-base" element={<KnowledgeBase />} />
             <Route path="timesheet" element={<Timesheet />} />
             <Route path="profile" element={<Profile />} />
             <Route path="profile/edit" element={<UpdateStaff />} />
@@ -111,8 +115,8 @@ function App() {
             </Route>
           </Route>
         </Route>
-        <Route path="register" element={<Register />} />
-        <Route path="login" element={<Login />} />
+        {/* <Route path="register" element={<Register />} /> */}
+
         <Route path=":campaign/apply" element={<Application />} />
         <Route path="unauthorized" element={<Unauthorized />} />
       </Route>
