@@ -69,7 +69,7 @@ export const logInWithEmailAndPassword = createAsyncThunk(
       }
     );
 
-    Cookies.set("token", `Bearer ${token}`, { expires: 1 });
+    // Cookies.set("token", `Bearer ${token}`, { expires: 1 });
 
     if (data) {
       Cookies.set(

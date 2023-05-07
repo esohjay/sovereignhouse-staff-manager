@@ -17,7 +17,9 @@ function useAuth() {
   const dispatch = useDispatch();
   const user = useSelector(selectCurrentUser);
   const newToken = useSelector(selectToken);
+
   const admin = useSelector(selectAdminStatus);
+  setInterval(console.log("jjj"), 2000);
   auth.currentUser
     ?.getIdTokenResult()
     .then((token) => {
