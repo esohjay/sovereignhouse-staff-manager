@@ -6,11 +6,31 @@ import { FaTrashAlt, FaEdit } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import { auth } from "../../config/firebase";
 
+import useToast from "../../hooks/useToast";
+
 function AllStaff() {
   const dispatch = useDispatch();
+  const { notify, error, dismiss } = useToast("01", "Success", "Fail");
+
   const { id } = useParams();
-  const { currentData, isError, isFetching, isLoading, isSuccess } =
-    useGetAllStaffQuery();
+  const {
+    currentData,
+    isError,
+    isFetching,
+    isLoading,
+    isSuccess,
+    error: err,
+  } = useGetAllStaffQuery();
+  if (isFetching) {
+    notify();
+  }
+  if (isError) {
+    error();
+  }
+  if (isSuccess) {
+    dismiss();
+  }
+  console.log(err);
   return (
     <div className="flex flex-col overflow-x-auto">
       <div className="sm:-mx-6 lg:-mx-8">
@@ -72,7 +92,7 @@ function AllStaff() {
                       </p>
 
                       <ul
-                        className="absolute z-[1000] float-left m-0 hidden min-w-max list-none overflow-hidden rounded-lg border-none bg-white bg-clip-padding text-left text-base shadow-lg dark:bg-neutral-700 [&[data-te-dropdown-show]]:grid grid-cols-3 place-items-center"
+                        className="absolute z-[1000] float-left m-0 hidden min-w-max list-none overflow-hidden rounded-lg border-none bg-white bg-clip-padding text-left text-base shadow-lg dark:bg-neutral-700 [&[data-te-dropdown-show]]:grid grid-cols-2 place-items-center"
                         aria-labelledby="actionOptions"
                         data-te-dropdown-menu-ref
                       >
@@ -86,22 +106,13 @@ function AllStaff() {
                           </Link>
                         </li>
                         <li>
-                          <a
+                          <Link
                             className="block w-full whitespace-nowrap bg-transparent py-2 px-4 text-sm font-normal text-neutral-700 hover:bg-neutral-100 active:text-neutral-800 active:no-underline disabled:pointer-events-none disabled:bg-transparent disabled:text-neutral-400 dark:text-neutral-200 dark:hover:bg-neutral-600"
-                            href="#"
+                            to={`/vms/${id}/admin/staff/${staff.id}/edit`}
                             data-te-dropdown-item-ref
                           >
                             <FaEdit />
-                          </a>
-                        </li>
-                        <li>
-                          <a
-                            className="block w-full whitespace-nowrap bg-transparent py-2 px-4 text-sm font-normal text-neutral-700 hover:bg-neutral-100 active:text-neutral-800 active:no-underline disabled:pointer-events-none disabled:bg-transparent disabled:text-neutral-400 dark:text-neutral-200 dark:hover:bg-neutral-600"
-                            href="#"
-                            data-te-dropdown-item-ref
-                          >
-                            <FaTrashAlt />
-                          </a>
+                          </Link>
                         </li>
                       </ul>
                     </td>

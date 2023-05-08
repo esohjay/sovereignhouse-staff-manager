@@ -1,11 +1,24 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { toast } from "react-toastify";
 
-function useToast(id, successMessage, errorMessage) {
+function useToast(
+  id,
+  successMessage,
+  errorMessage,
+  type,
+  isFetching,
+  isSuccess,
+  isError
+) {
   const customId = id;
   const notify = () => {
     toast.loading("Please wait", {
       toastId: customId,
+    });
+  };
+  const alert = () => {
+    toast(successMessage, {
+      autoClose: 3000,
     });
   };
   const dismiss = () => toast.dismiss(customId);
@@ -23,7 +36,21 @@ function useToast(id, successMessage, errorMessage) {
       render: errorMessage,
       isLoading: false,
     });
-
+  useEffect(() => {
+    // Notification
+    if (isFetching) {
+      notify();
+    }
+    if (isSuccess && type === "query") {
+      dismiss();
+    }
+    if (isSuccess && type === "mutation") {
+      success();
+    }
+    if (isError) {
+      error();
+    }
+  }, [isError, isFetching, isSuccess]);
   return {
     notify,
     success,

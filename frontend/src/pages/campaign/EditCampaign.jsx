@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
@@ -19,11 +19,31 @@ import customParseFormat from "dayjs/plugin/customParseFormat";
 dayjs.extend(localizedFormat);
 dayjs.extend(customParseFormat);
 
+import useToast from "../../hooks/useToast";
 function EditCampaign() {
   const navigate = useNavigate();
   const { campaignId } = useParams();
   const { currentData } = useGetCampaignQuery(campaignId);
-  const [editCampaign, result] = useUpdateCampaignMutation();
+  const [
+    editCampaign,
+    {
+      isError: updatingError,
+      isLoading: updating,
+      error: updateError,
+      isSuccess: updated,
+    },
+  ] = useUpdateCampaignMutation();
+  // Update content notification
+  const {} = useToast(
+    "update-single-campaign-main",
+    "Campaign updated successfully",
+    `${updateError?.data?.message}`,
+    "mutation",
+    updating,
+    updated,
+    updatingError
+  );
+
   // form validation rules
   const validationSchema = Yup.object().shape({
     department: Yup.string().required("department is required"),
@@ -274,7 +294,7 @@ function EditCampaign() {
                 type="text"
                 {...register("description", {
                   required: true,
-                  value: `${currentData?.title}`,
+                  value: `${currentData?.description}`,
                 })}
                 rows="7"
                 className="p-2 rounded-md mb-2 block bg-white w-full focus:outline-none border border-slate-300"

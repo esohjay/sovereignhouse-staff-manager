@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 import Btn from "../../components/Btn";
 import Modal from "../../components/Modal";
@@ -12,6 +12,7 @@ import {
   useDeleteCampaignMutation,
   useUpdateCampaignMutation,
 } from "../../api/recruitment/campaignApi";
+import useToast from "../../hooks/useToast";
 
 import dayjs from "dayjs";
 import localizedFormat from "dayjs/plugin/localizedFormat";
@@ -20,7 +21,7 @@ dayjs.extend(localizedFormat);
 function CampaignDetails() {
   const navigate = useNavigate();
   const { campaignId } = useParams();
-  const { currentData, isError, isFetching, isLoading, isSuccess } =
+  const { currentData, isError, isFetching, error, isSuccess } =
     useGetCampaignQuery(campaignId);
 
   const {
@@ -29,9 +30,24 @@ function CampaignDetails() {
     setError,
     formState: { errors },
   } = useForm();
-  const [deleteCampaign, { status }] = useDeleteCampaignMutation();
-  const [updateCampaign, { status: updateStatus }] =
-    useUpdateCampaignMutation();
+  const [
+    deleteCampaign,
+    {
+      isError: deletingError,
+      isLoading: deleting,
+      error: deleteError,
+      isSuccess: deleted,
+    },
+  ] = useDeleteCampaignMutation();
+  const [
+    updateCampaign,
+    {
+      isError: updatingError,
+      isLoading: updating,
+      error: updateError,
+      isSuccess: updated,
+    },
+  ] = useUpdateCampaignMutation();
   const updateCampaignStatus = () => {
     if (!getValues("status")) {
       setError("status", { type: "required" });
@@ -42,6 +58,43 @@ function CampaignDetails() {
       status: getValues("status"),
     });
   };
+
+  // Load content notification
+  const {} = useToast(
+    "get-single-campaign",
+    "",
+    `${error?.data?.message}`,
+    "query",
+    isFetching,
+    isSuccess,
+    isError
+  );
+
+  // Update content notification
+  const {} = useToast(
+    "update-single-campaign",
+    "Campaign updated successfully",
+    `${updateError?.data?.message}`,
+    "mutation",
+    updating,
+    updated,
+    updatingError
+  );
+  // delete content notification
+  const {} = useToast(
+    "delete-single-campaign",
+    "Campaign deleted successfully",
+    `${deleteError?.data?.message}`,
+    "mutation",
+    deleting,
+    deleted,
+    deletingError
+  );
+  useEffect(() => {
+    if (deleted) {
+      navigate(-1);
+    }
+  }, [deleted]);
   return (
     <article className="p-2 lg:px-5 lg:py-10 space-y-3">
       <Btn text={"back"} onClick={() => navigate(-1)} />

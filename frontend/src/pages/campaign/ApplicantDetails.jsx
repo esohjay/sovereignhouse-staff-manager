@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 import Btn from "../../components/Btn";
 import Modal from "../../components/Modal";
@@ -18,16 +18,40 @@ import localizedFormat from "dayjs/plugin/localizedFormat";
 dayjs.extend(localizedFormat);
 
 import { useForm } from "react-hook-form";
+import useToast from "../../hooks/useToast";
 
 function ApplicantDetails() {
   const navigate = useNavigate();
   const { applicantId } = useParams();
-  const { currentData, isError, isFetching, isLoading, isSuccess } =
+  const { currentData, isError, isFetching, error, isSuccess } =
     useGetApplicationQuery(applicantId);
-  const [deleteApplicant, { status }] = useDeleteApplicantMutation();
-  const [updateApplication, { status: applicationStatus }] =
-    useUpdateApplicationMutation();
-  const [registerStaff, { status: registerStatus }] = useCreateStaffMutation();
+  const [
+    deleteApplicant,
+    {
+      isError: deleteError,
+      isLoading: deleting,
+      isSuccess: deleted,
+      error: deleteErrorMessage,
+    },
+  ] = useDeleteApplicantMutation();
+  const [
+    updateApplication,
+    {
+      isError: errorUpdating,
+      isLoading: updating,
+      isSuccess: updated,
+      error: updateError,
+    },
+  ] = useUpdateApplicationMutation();
+  const [
+    registerStaff,
+    {
+      isError: errorAddingStaff,
+      isLoading: addingStaff,
+      isSuccess: staffAdded,
+      error: addStaffError,
+    },
+  ] = useCreateStaffMutation();
 
   const {
     register,
@@ -77,9 +101,56 @@ function ApplicantDetails() {
       link: getValues("link"),
       message: getValues("message"),
       email: currentData?.email,
-      status: getValues("status"),
+      status: "interviewing",
     });
   };
+
+  // Load content notification
+  const {} = useToast(
+    "get-single-applicant",
+    "Successfully loaded",
+    `${error?.data?.message}`,
+    "query",
+    isFetching,
+    isSuccess,
+    isError
+  );
+
+  // Delete content notification
+  const {} = useToast(
+    "delete-single-application",
+    `${currentData?.firstName}'s application deleted`,
+    `${deleteErrorMessage?.data?.message}`,
+    "mutation",
+    deleting,
+    deleted,
+    deleteError
+  );
+  // Update content notification
+  const {} = useToast(
+    "update-single-application",
+    `Application updated`,
+    `${updateError?.data?.message}`,
+    "mutation",
+    updating,
+    updated,
+    errorUpdating
+  );
+  //Add as staff notification
+  const {} = useToast(
+    "add-as-staff",
+    `Applicant has been added as staff`,
+    `${addStaffError?.data?.message}`,
+    "mutation",
+    addingStaff,
+    staffAdded,
+    errorAddingStaff
+  );
+  useEffect(() => {
+    if (deleted) {
+      navigate(-1);
+    }
+  }, [deleted, updated]);
   return (
     <article className="p-2 lg:px-5 lg:py-10 space-y-3">
       <Btn text={"back"} onClick={() => navigate(-1)} />

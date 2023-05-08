@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useGetStaffQuery } from "../../api/staff/staffApi";
+import useAuth from "../../hooks/useAuth";
 import {
   useRecordClockInMutation,
   useGetUserTimesheetQuery,
@@ -15,6 +16,7 @@ dayjs.extend(localizedFormat);
 
 function Timesheet() {
   const { id, userId } = useParams();
+  const {} = useAuth();
   const navigate = useNavigate();
   const reqParam = userId ? userId : id;
   const [clockIn, result] = useRecordClockInMutation();
@@ -61,6 +63,7 @@ function Timesheet() {
     });
   };
   console.log(clockInError);
+  setInterval(console.log("jjj"), 2000);
   return (
     <article className="p-5 md:p-20">
       <article className="space-y-3">

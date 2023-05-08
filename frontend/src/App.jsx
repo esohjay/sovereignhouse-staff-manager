@@ -6,6 +6,10 @@ import {
   Route,
 } from "react-router-dom";
 
+import { ToastContainer } from "react-toastify";
+
+import "react-toastify/dist/ReactToastify.css";
+
 import Landing from "./pages/Landing";
 import Dashboard from "./pages/Dashboard";
 import Home from "./pages/Home";
@@ -123,10 +127,10 @@ function App() {
     )
   );
   return (
-    // <main>
-    //   <Outlet />
-    // </main>
-    <RouterProvider router={router} />
+    <>
+      <ToastContainer />
+      <RouterProvider router={router} />
+    </>
   );
 }
 

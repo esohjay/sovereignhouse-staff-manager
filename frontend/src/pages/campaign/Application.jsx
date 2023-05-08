@@ -15,7 +15,7 @@ import {
 import { useUploadMutation } from "../../api/app";
 function Application() {
   const { campaign } = useParams();
-  const [submitApplication, { status: submissionStatus }] =
+  const [submitApplication, { status: submissionStatus, isError, error }] =
     useNewApplicationMutation();
   const [uploadResume, { data: cv, status }] = useUploadMutation();
   const { currentData } = useGetCampaignQuery(campaign);
@@ -219,6 +219,9 @@ function Application() {
             <button className="bg-mainColor text-white capitalize font-medium rounded-md inline-block py-2 px-6">
               submit
             </button>
+            {isError && (
+              <span className="text-red-500 ">{error?.data?.message}</span>
+            )}
           </form>
         ) : (
           <div className="grid place-items-center">

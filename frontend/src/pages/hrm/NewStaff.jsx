@@ -15,12 +15,27 @@ import {
   resetRegistedUser,
 } from "../../features/authSlice";
 import { useDispatch, useSelector } from "react-redux";
+import useToast from "../../hooks/useToast";
 
 function NewStaff() {
   const dispatch = useDispatch();
-  const [registerStaff, { data, status, error }] = useCreateStaffMutation();
+  const [
+    registerStaff,
+    { data, status, error, isLoading, isSuccess, isError },
+  ] = useCreateStaffMutation();
   const user = useSelector(selectRegisteredUser);
   const navigate = useNavigate();
+
+  const {} = useToast(
+    "add-staff",
+    "Staff added successfully",
+    `${error?.data?.message}`,
+    "mutation",
+    isLoading,
+    isSuccess,
+    isError
+  );
+
   // form validation rules
   const validationSchema = Yup.object().shape({
     firstName: Yup.string().required("First name is required"),
@@ -33,7 +48,7 @@ function NewStaff() {
     jobPosition: Yup.string().required("jobPosition is required"),
     contractType: Yup.string().required("contractType is required"),
     status: Yup.string().required("status is required"),
-    phone: Yup.number().required("phone is required"),
+    phone: Yup.string().required("phone is required"),
     placeOfBirth: Yup.string().required("placeOfBirth is required"),
     dateOfBirth: Yup.date().required("date of birth is required"),
     email: Yup.string().email().required("email is required"),
@@ -51,20 +66,13 @@ function NewStaff() {
     registerStaff({ ...data, password });
   };
   useEffect(() => {
-    if (data) {
-      // navigate("/admin");
+    if (isSuccess) {
       reset();
     }
-    return () => {
-      dispatch(resetRegistedUser());
-    };
-  }, [data]);
-  console.log(user);
-  console.log(data, status, error);
-  console.log(error?.data?.message);
+  }, [isSuccess]);
+
   return (
     <article className="w-full p-5">
-      {data && <p className="bg-green-500 p-3 text-white">User added</p>}
       <form onSubmit={handleSubmit(onSubmit)}>
         <article className="w-full grid md:grid-cols-3 gap-x-3">
           <div className="mb-3">
@@ -270,7 +278,7 @@ function NewStaff() {
               phone
             </label>
             <input
-              type="number"
+              type="text"
               {...register("phone", { required: true })}
               className="p-2 rounded-md mb-2 block bg-white w-full focus:outline-none border border-slate-300"
             />

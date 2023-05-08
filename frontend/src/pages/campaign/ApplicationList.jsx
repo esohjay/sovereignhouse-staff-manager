@@ -1,17 +1,50 @@
 import React from "react";
 import Modal from "../../components/Modal";
 
-import { useGetApplicationsQuery } from "../../api/recruitment/campaignApi";
+import {
+  useGetApplicationsQuery,
+  useDeleteApplicantMutation,
+  useUpdateApplicationMutation,
+} from "../../api/recruitment/campaignApi";
+import { useCreateStaffMutation } from "../../api/staff/staffApi";
+
 import { Link, useNavigate } from "react-router-dom";
-import { FaEye, FaEdit, FaTrashAlt } from "react-icons/fa";
-import { MdOutlineOpenInFull } from "react-icons/md";
-import { HiOutlineStatusOnline } from "react-icons/hi";
+import generateRandomString from "../../lib/generatePassword";
+
 import { useForm } from "react-hook-form";
+import useToast from "../../hooks/useToast";
 
 function ApplicationList() {
   const navigate = useNavigate();
-  const { currentData, isError, isFetching, isLoading, isSuccess } =
+  const { currentData, isError, isFetching, isSuccess, error } =
     useGetApplicationsQuery();
+  const [
+    registerStaff,
+    {
+      isError: errorAddingStaff,
+      isLoading: addingStaff,
+      isSuccess: staffAdded,
+      error: addStaffError,
+    },
+  ] = useCreateStaffMutation();
+  const [
+    deleteApplicant,
+    {
+      isError: deleteError,
+      isLoading: deleting,
+      isSuccess: deleted,
+      error: deleteErrorMessage,
+    },
+  ] = useDeleteApplicantMutation();
+  const [
+    updateApplication,
+    {
+      isError: errorUpdating,
+      isLoading: updating,
+      isSuccess: updated,
+      error: updateError,
+    },
+  ] = useUpdateApplicationMutation();
   const {
     register,
     handleSubmit,
@@ -20,6 +53,91 @@ function ApplicationList() {
     formState: { errors },
     reset,
   } = useForm();
+  const updateApplicationStage = (application) => {
+    if (!getValues("status")) {
+      setError("status", { type: "required" });
+      return;
+    }
+    if (
+      getValues("status") === "accepted" &&
+      application?.status !== "accepted"
+    ) {
+      const password = generateRandomString();
+      registerStaff({
+        password,
+        firstName: application?.firstName,
+        lastName: application?.lastName,
+        gender: application?.gender,
+        phone: application?.phone,
+        email: application?.email,
+        address: application?.address,
+        jobPosition: application?.Campaign?.position,
+        contractType: application?.Campaign?.contractType,
+      });
+    }
+    updateApplication({
+      id: application?.id,
+      status: getValues("status"),
+    });
+  };
+  const scheduleInterview = (application) => {
+    if (!getValues("message")) {
+      setError("message", { type: "required" });
+      return;
+    }
+    if (!getValues("link")) {
+      setError("link", { type: "required" });
+      return;
+    }
+    updateApplication({
+      id: application?.id,
+      link: getValues("link"),
+      message: getValues("message"),
+      email: application?.email,
+      status: "interviewing",
+    });
+  };
+  // Load content notification
+  const {} = useToast(
+    "get-single-campaign",
+    "Successfully loaded",
+    `${error?.data?.message}`,
+    "query",
+    isFetching,
+    isSuccess,
+    isError
+  );
+
+  // Delete content notification
+  const {} = useToast(
+    "delete-single-application",
+    `${currentData?.firstName}'s application deleted`,
+    `${deleteErrorMessage?.data?.message}`,
+    "mutation",
+    deleting,
+    deleted,
+    deleteError
+  );
+  // Update content notification
+  const {} = useToast(
+    "update-single-application",
+    `Application updated`,
+    `${updateError?.data?.message}`,
+    "mutation",
+    updating,
+    updated,
+    errorUpdating
+  );
+  //Add as staff notification
+  const {} = useToast(
+    "add-as-staff",
+    `Applicant has been added as staff`,
+    `${addStaffError?.data?.message}`,
+    "mutation",
+    addingStaff,
+    staffAdded,
+    errorAddingStaff
+  );
   return (
     <article className="w-full  rounded-md p-3">
       <div className="flex flex-col">
@@ -78,49 +196,80 @@ function ApplicationList() {
 
                       <td className="whitespace-nowrap px-6 py-4 first-letter:uppercase flex gap-x-2 items-center">
                         <Modal
-                          style="whitespace-nowrap bg-transparent text-sm font-normal text-black hover:bg-neutral-100 active:text-neutral-800 active:no-underline disabled:pointer-events-none disabled:bg-transparent disabled:text-neutral-400 dark:text-neutral-200 dark:hover:bg-neutral-600"
-                          cta={<HiOutlineStatusOnline />}
+                          style="bg-warning px-3 pt-1.5 pb-1 text-[9px] font-medium uppercase leading-normal text-white shadow-warning transition duration-150 ease-in-out hover:bg-altColor hover:shadow-altColor focus:bg-altColor focus:shadow-altColor focus:outline-none focus:ring-0 active:bg-altColor active:shadow-altColor"
+                          btnText={"status"}
                           targetId="changeStatus"
-                          modalTitle={`Change campaign status`}
+                          modalTitle={`Update application stage`}
                           confirmText="update"
-                          btn={false}
-                          // action={updateLeaveStatus}
+                          action={() => updateApplicationStage(applicant)}
                           // size="small"
                         >
                           <div className="w-full">
-                            <input
-                              type="text"
-                              {...register("id", {
-                                required: true,
-                                value: applicant.id,
-                              })}
-                              hidden
-                            />
                             <select
                               data-te-select-init
                               {...register("status", { required: true })}
                               className="w-full p-3 rounded-md border border-mainColor focus:outline-none"
                             >
-                              <option value="">Update status</option>
+                              <option value="">Update stage</option>
                               <option value="pending">Pending</option>
-                              <option value="active">Active</option>
-                              <option value="inactive">Inactive</option>
+                              <option value="interviewing">Interviewing</option>
+                              <option value="documentation">
+                                Documentation
+                              </option>
+                              <option value="accepted">Accepted</option>
+                              <option value="rejected">Rejected</option>
                             </select>
                           </div>
                         </Modal>
                         <Modal
-                          style="whitespace-nowrap bg-transparent  text-sm font-normal text-black hover:bg-neutral-100 active:text-neutral-800 active:no-underline disabled:pointer-events-none disabled:bg-transparent disabled:text-neutral-400 dark:text-neutral-200 dark:hover:bg-neutral-600"
-                          cta={<FaTrashAlt />}
-                          targetId="deleteCampaign"
-                          modalTitle={`Delete ${applicant?.title}?`}
-                          confirmText="delete"
-                          btn={false}
-                          // action={updateLeaveStatus}
+                          style="bg-mainColor px-3 pt-1.5 pb-1 text-[9px] font-medium uppercase leading-normal text-white shadow-warning transition duration-150 ease-in-out hover:bg-altColor hover:shadow-altColor focus:bg-altColor focus:shadow-altColor focus:outline-none focus:ring-0 active:bg-altColor active:shadow-altColor"
+                          btnText={"interview"}
+                          targetId="interview"
+                          modalTitle={`Send invterview message`}
+                          confirmText="send"
+                          action={() => scheduleInterview(applicant)}
                           // size="small"
                         >
-                          <p className="first-letter:uppercase">
-                            {applicant?.title} will be deleted permanently
-                          </p>
+                          <div className="mb-2">
+                            <label
+                              htmlFor="message"
+                              className="capitalize font-medium mb-1 block text-sm"
+                            >
+                              message
+                            </label>
+                            <textarea
+                              {...register("message", {
+                                required: true,
+                              })}
+                              rows="5"
+                              className="w-full p-3 rounded-md border border-mainColor focus:outline-none"
+                            ></textarea>
+                          </div>
+                          <div>
+                            <label
+                              htmlFor="meeting link"
+                              className="capitalize font-medium mb-1 block text-sm"
+                            >
+                              meeting link
+                            </label>
+                            <input
+                              {...register("link", {
+                                required: true,
+                              })}
+                              className="w-full p-3 rounded-md border border-mainColor focus:outline-none"
+                            ></input>
+                          </div>
+                        </Modal>
+                        <Modal
+                          style="bg-danger px-3 pt-1.5 pb-1 text-[9px] font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#dc4c64] transition duration-150 ease-in-out hover:bg-danger-600 hover:shadow-[0_8px_9px_-4px_rgba(220,76,100,0.3),0_4px_18px_0_rgba(220,76,100,0.2)] focus:bg-danger-600 focus:shadow-[0_8px_9px_-4px_rgba(220,76,100,0.3),0_4px_18px_0_rgba(220,76,100,0.2)] focus:outline-none focus:ring-0 active:bg-danger-700 active:shadow-[0_8px_9px_-4px_rgba(220,76,100,0.3),0_4px_18px_0_rgba(220,76,100,0.2)]"
+                          btnText={`Delete`}
+                          targetId="deleteApplicant"
+                          modalTitle="Do you want to delete?"
+                          confirmText="delete"
+                          action={() => deleteApplicant(applicant.id)}
+                          // size="small"
+                        >
+                          <p>This will be deleted permanently</p>
                         </Modal>
                       </td>
                     </tr>

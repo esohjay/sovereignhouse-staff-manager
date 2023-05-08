@@ -4,10 +4,23 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
 import { useForm } from "react-hook-form";
 
+import useToast from "../../hooks/useToast";
+
 import { useCreateCampaignMutation } from "../../api/recruitment/campaignApi";
 
 function AddCampaign() {
-  const [createCampaign, result] = useCreateCampaignMutation();
+  const [createCampaign, { error, isError, isLoading, isSuccess }] =
+    useCreateCampaignMutation();
+  const {} = useToast(
+    "add-campaign",
+    "Campaign added successfully",
+    `${error?.data?.message}`,
+    "mutation",
+    isLoading,
+    isSuccess,
+    isError
+  );
+
   // form validation rules
   const validationSchema = Yup.object().shape({
     department: Yup.string().required("department is required"),
@@ -27,14 +40,17 @@ function AddCampaign() {
     register,
     handleSubmit,
     formState: { errors },
+    reset,
   } = useForm();
   const onSubmit = (data) => {
-    // const password = generateRandomString();
-    // dispatch(signUpWithEmailAndPassword({ ...data, password }));
-    console.log("submit");
     createCampaign(data);
   };
-
+  useEffect(() => {
+    // Notification
+    if (isSuccess) {
+      reset();
+    }
+  }, [isSuccess]);
   return (
     <article className="w-full p-5">
       <form onSubmit={handleSubmit(onSubmit)}>
@@ -274,6 +290,7 @@ function AddCampaign() {
         </div>
         <button
           type="submit"
+          disabled={isLoading}
           // onClick={() => createCampaign({ title: "dev" })}
           className="bg-mainColor text-white capitalize font-medium rounded-md inline-block py-2 px-6"
         >

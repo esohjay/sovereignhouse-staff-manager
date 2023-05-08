@@ -1,10 +1,11 @@
 import React, { useEffect } from "react";
 import Cookies from "js-cookie";
-
+import useAuth from "../../hooks/useAuth";
 import { useNavigate, Outlet, NavLink, useParams } from "react-router-dom";
 
 function LeaveContainer() {
   const navigate = useNavigate();
+  const {} = useAuth();
   const { id } = useParams();
   const isAdmin = Cookies.get("isAdmin")
     ? JSON.parse(Cookies.get("isAdmin"))

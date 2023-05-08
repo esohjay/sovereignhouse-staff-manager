@@ -1,9 +1,10 @@
 import React, { useEffect } from "react";
-
+import useAuth from "../../hooks/useAuth";
 import { useNavigate, useParams, Outlet, NavLink } from "react-router-dom";
 
 function Recruitment() {
   const navigate = useNavigate();
+  const {} = useAuth();
   const { id } = useParams();
   return (
     <section className="p-8">

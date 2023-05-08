@@ -1,9 +1,10 @@
 import React from "react";
-
+import useAuth from "../../hooks/useAuth";
 import { useNavigate, Outlet, NavLink, useParams } from "react-router-dom";
 
 function Shift() {
   const { id } = useParams();
+  const {} = useAuth();
   return (
     <section className="p-8">
       <section className=" ">

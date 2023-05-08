@@ -3,9 +3,11 @@ import { Outlet } from "react-router-dom";
 import DesktopNav from "../components/DesktopNav";
 import { useSelector } from "react-redux";
 import { selectSidebarState } from "../features/appSlice";
+import useAuth from "../hooks/useAuth";
 
 function Home() {
   const isSidebarOpen = useSelector(selectSidebarState);
+  const { user } = useAuth();
   return (
     <>
       <MobileNav />

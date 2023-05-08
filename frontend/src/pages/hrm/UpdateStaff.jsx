@@ -313,7 +313,7 @@ function UpdateStaff() {
                   phone
                 </label>
                 <input
-                  type="number"
+                  type="text"
                   {...register("phone", {
                     required: true,
                     value: `${currentData?.phone}`,

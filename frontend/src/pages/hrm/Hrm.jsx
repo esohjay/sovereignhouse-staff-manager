@@ -1,10 +1,11 @@
 import React, { useEffect } from "react";
-
+import useAuth from "../../hooks/useAuth";
 import { useNavigate, Outlet, NavLink, useParams } from "react-router-dom";
 
 function Hrm() {
   const navigate = useNavigate();
   const { id } = useParams();
+  const {} = useAuth();
   return (
     <section className="p-8">
       <section className=" ">

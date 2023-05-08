@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import useToast from "../../hooks/useToast";
 import {
   useGetCampaignsQuery,
   useDeleteCampaignMutation,
@@ -17,12 +18,18 @@ function Campaigns() {
   const navigate = useNavigate();
   const [isCopied, setIsCopied] = useState(false);
   const [copiedCampaign, setCopiedCampaign] = useState("");
-  const { currentData, isError, isFetching, isLoading, isSuccess } =
+  const { currentData, isError, isFetching, isSuccess, error } =
     useGetCampaignsQuery();
-  const [deleteCampaign, { status }] = useDeleteCampaignMutation();
-  const [updateCampaign, { status: updateStatus }] =
-    useUpdateCampaignMutation();
-
+  // Load content notification
+  const {} = useToast(
+    "get-all-campaigns",
+    "Successfully loaded",
+    `${error?.data?.message}`,
+    "query",
+    isFetching,
+    isSuccess,
+    isError
+  );
   const {
     register,
     handleSubmit,
@@ -31,16 +38,6 @@ function Campaigns() {
     formState: { errors },
     reset,
   } = useForm();
-  const updateCampaignStatus = () => {
-    if (!getValues("status")) {
-      setError("status", { type: "required" });
-      return;
-    }
-    updateCampaign({
-      id: currentData?.id,
-      status: getValues("status"),
-    });
-  };
 
   //copy link to clipboard
   async function copyTextToClipboard(text) {

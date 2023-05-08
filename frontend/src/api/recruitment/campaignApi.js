@@ -54,7 +54,10 @@ const campaignApi = appApi.injectEndpoints({
         method: "PUT",
         body: formBody,
       }),
-      invalidatesTags: [{ type: "Campaign", id: "CAMPAIGNLIST" }],
+      invalidatesTags: (result, error, { id }) => [
+        { type: "Campaign", id: "CAMPAIGNLIST" },
+        { type: "Campaign", id },
+      ],
     }),
     updateApplication: build.mutation({
       query: (formBody) => ({
@@ -62,7 +65,10 @@ const campaignApi = appApi.injectEndpoints({
         method: "PUT",
         body: formBody,
       }),
-      invalidatesTags: [{ type: "Applicants", id: "APPLICANTLIST" }],
+      invalidatesTags: (result, error, { id }) => [
+        { type: "Applicants", id: "APPLICANTLIST" },
+        { type: "Applicants", id },
+      ],
     }),
     deleteCampaign: build.mutation({
       query(id) {

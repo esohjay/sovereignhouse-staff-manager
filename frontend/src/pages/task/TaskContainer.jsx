@@ -1,10 +1,11 @@
 import React from "react";
-
+import useAuth from "../../hooks/useAuth";
 import { useNavigate, Outlet, NavLink, useParams } from "react-router-dom";
 import Btn from "../../components/Btn";
 
 function Task() {
   const { id } = useParams();
+  const {} = useAuth();
   const navigate = useNavigate();
   return (
     <section className="p-8">
