@@ -6,6 +6,7 @@ import {
 } from "../../api/leave/leaveApi";
 import { useParams, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
+import useToast from "../../hooks/useToast";
 
 import dayjs from "dayjs";
 import localizedFormat from "dayjs/plugin/localizedFormat";
@@ -20,7 +21,26 @@ function EditLeave() {
   const { id, leaveId } = useParams();
   const reqParam = leaveId ? leaveId : id;
   const { currentData } = useGetLeaveQuery(reqParam);
-  const [updateLeave, result] = useUpdateLeaveMutation();
+  const [
+    updateLeave,
+    {
+      isError: updatingError,
+      isLoading: updating,
+      error: updateError,
+      isSuccess: updated,
+    },
+  ] = useUpdateLeaveMutation();
+
+  // Update leave notification
+  const {} = useToast(
+    "update-leave-1-request",
+    "Leave request updated successfully",
+    `${updateError?.data?.message}`,
+    "mutation",
+    updating,
+    updated,
+    updatingError
+  );
   console.log(dayjs(currentData?.startDate).format("DD/MM/YYYY"));
   // const validationSchema = Yup.object().shape({
   //     title: Yup.string().required("First name is required"),

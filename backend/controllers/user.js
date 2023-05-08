@@ -89,18 +89,21 @@ module.exports.resetPassword = async (req, res) => {
   }
 };
 module.exports.changeStatus = async (req, res) => {
-  const { status, userId } = req.body;
+  const { status } = req.body;
+  const { id } = req.params;
+
   try {
-    await admin.auth().updateUser(req.body.userId, {
+    const user = await User.update(req.body, { where: { id } });
+    await admin.auth().updateUser(id, {
       disabled: status === "active" ? false : true,
+    });
+    res.status(201).json({
+      message: `${user.firstName} status has been updated successfully`,
     });
   } catch (error) {
     return res.status(400).json(error);
   }
-  const user = await User.update(req.body, { where: { id: userId } });
-  res.status(201).json({
-    message: `${user.firstName} status has been updated successfully`,
-  });
+
   //send email
   // const message = welcomeMessage(
   //   req.body.firstName,
@@ -138,24 +141,22 @@ module.exports.login = async (req, res) => {
 module.exports.updateUser = async (req, res) => {
   const { id } = req.params;
   const { email } = req.body;
-  const user = await User.update(req.body, { where: { id: id } });
-  if (user) {
-    try {
-      if (email) {
-        await admin.auth().updateUser(id, {
-          displayName: `${user.firstName} ${user.lastName}`,
-          email,
-        });
-      } else {
-        await admin.auth().updateUser(id, {
-          displayName: `${user.firstName} ${user.lastName}`,
-        });
-      }
-    } catch (err) {
-      console.log(err);
+  try {
+    const user = await User.update(req.body, { where: { id: id } });
+    if (user && email) {
+      await admin.auth().updateUser(id, {
+        displayName: `${user.firstName} ${user.lastName}`,
+        email,
+      });
+    } else {
+      await admin.auth().updateUser(id, {
+        displayName: `${user.firstName} ${user.lastName}`,
+      });
     }
+    res.status(201).json(user);
+  } catch (error) {
+    return res.status(400).json(error);
   }
-  res.status(201).json(user);
 };
 module.exports.getAllUsers = async (req, res) => {
   const users = await User.findAll();

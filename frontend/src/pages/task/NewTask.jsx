@@ -1,22 +1,41 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 import { useForm } from "react-hook-form";
 
 import { useCreateTaskMutation } from "../../api/task/taskApi";
 import { useNavigate, useParams } from "react-router-dom";
 
+import useToast from "../../hooks/useToast";
+
 function NewTask() {
   const { id } = useParams();
-  const [createTask, { data }] = useCreateTaskMutation();
+  const [createTask, { error, isLoading, isSuccess, isError }] =
+    useCreateTaskMutation();
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm();
   const onSubmit = (data) => {
     createTask({ ...data, userId: id });
   };
-  console.log(data);
+
+  const {} = useToast(
+    "add-task",
+    "Task added successfully",
+    `${error?.data?.message}`,
+    "mutation",
+    isLoading,
+    isSuccess,
+    isError
+  );
+
+  useEffect(() => {
+    if (isSuccess) {
+      reset();
+    }
+  }, [isSuccess]);
   return (
     <article className="w-full p-5">
       <form onSubmit={handleSubmit(onSubmit)}>
@@ -141,6 +160,7 @@ function NewTask() {
         </div>
         <button
           type="submit"
+          disabled={isLoading}
           className="bg-mainColor text-white capitalize font-medium rounded-md inline-block py-2 px-6"
         >
           submit

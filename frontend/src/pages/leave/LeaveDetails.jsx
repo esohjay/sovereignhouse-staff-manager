@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 import {
   useDeleteLeaveMutation,
   useGetLeaveQuery,
   useUpdateLeaveMutation,
 } from "../../api/leave/leaveApi";
+import useToast from "../../hooks/useToast";
 
 import { useParams, useNavigate } from "react-router-dom";
 
@@ -25,8 +26,24 @@ function LeaveDetails() {
   const { id, leaveId } = useParams();
   const reqParam = leaveId ? leaveId : id;
   const { currentData } = useGetLeaveQuery(reqParam);
-  const [deleteLeave, { data, error, status }] = useDeleteLeaveMutation();
-  const [updateLeave, result] = useUpdateLeaveMutation();
+  const [
+    deleteLeave,
+    {
+      isError: deletingError,
+      isLoading: deleting,
+      error: deleteError,
+      isSuccess: deleted,
+    },
+  ] = useDeleteLeaveMutation();
+  const [
+    updateLeave,
+    {
+      isError: updatingStatusError,
+      isLoading: updatingStatus,
+      error: updateStatusError,
+      isSuccess: updatedStatus,
+    },
+  ] = useUpdateLeaveMutation();
   const {
     register,
     getValues,
@@ -51,6 +68,32 @@ function LeaveDetails() {
       id: currentData?.id,
     });
   };
+  // delete user notification
+  const {} = useToast(
+    "delete-leave",
+    "Leave request deleted successfully",
+    `${deleteError?.data?.message}`,
+    "mutation",
+    deleting,
+    deleted,
+    deletingError
+  );
+
+  useEffect(() => {
+    if (deleted) {
+      navigate(-1);
+    }
+  }, [deleted]);
+  // Update user status notification
+  const {} = useToast(
+    "update-leave-request",
+    "Leave request updated successfully",
+    `${updateStatusError?.data?.message}`,
+    "mutation",
+    updatingStatus,
+    updatedStatus,
+    updatingStatusError
+  );
   return (
     <article className="p-2 lg:px-5 lg:py-10 space-y-3">
       <Btn text={"back"} onClick={() => navigate(-1)} />

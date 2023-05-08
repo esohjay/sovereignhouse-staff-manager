@@ -3,10 +3,22 @@ import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 
 import { useRequestLeaveMutation } from "../../api/leave/leaveApi";
+import useToast from "../../hooks/useToast";
 
 function RequestLeave() {
-  const [requestLeave, result] = useRequestLeaveMutation();
+  const [requestLeave, { error, isLoading, isSuccess, isError }] =
+    useRequestLeaveMutation();
 
+  // Notification
+  const {} = useToast(
+    "request-leaf",
+    "Request submitted successfully",
+    `${error?.data?.message}`,
+    "mutation",
+    isLoading,
+    isSuccess,
+    isError
+  );
   const {
     register,
     handleSubmit,
@@ -15,9 +27,12 @@ function RequestLeave() {
   } = useForm();
   const onSubmit = (data) => {
     requestLeave(data);
-    reset();
   };
-
+  useEffect(() => {
+    if (isSuccess) {
+      reset();
+    }
+  }, [isSuccess]);
   return (
     <article className="w-full p-5">
       <form onSubmit={handleSubmit(onSubmit)}>
@@ -52,11 +67,11 @@ function RequestLeave() {
               className="p-2  rounded-md mb-2 block bg-white w-full focus:outline-none border border-slate-300"
             >
               <option value="">Select type</option>
-              <option value="maternity leave">maternity leave</option>
-              <option value="paternity leave">paternity leave</option>
-              <option value="annual leave">annual leave</option>
-              <option value="sick leave">sick leave</option>
-              <option value="educational leave">educational leave</option>
+              <option value="maternity leave">Maternity leave</option>
+              <option value="paternity leave">Paternity leave</option>
+              <option value="annual leave">Annual leave</option>
+              <option value="sick leave">Sick leave</option>
+              <option value="educational leave">Educational leave</option>
               <option value="other">Other</option>
             </select>
             {errors.type && (
@@ -121,7 +136,7 @@ function RequestLeave() {
         </div>
         <button
           type="submit"
-          // onClick={() => createCampaign({ title: "dev" })}
+          disabled={isLoading}
           className="bg-mainColor text-white capitalize font-medium rounded-md inline-block py-2 px-6"
         >
           submit

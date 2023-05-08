@@ -37,6 +37,21 @@ const leaveApi = appApi.injectEndpoints({
       }),
       providesTags: (result, error, id) => [{ type: "Leave", id }],
     }),
+    getUserLeave: build.query({
+      query: (id) => ({
+        url: `/leave/${id}/user-leave-request`,
+      }),
+      providesTags: (result) =>
+        // is result available?
+        result
+          ? // successful query
+            [
+              ...result.map(({ id }) => ({ type: "Leave", id })),
+              { type: "Leave", id: "LEAVELIST" },
+            ]
+          : // an error occurred, but we still want to refetch this query when `{ type: 'Posts', id: 'LEAVELIST' }` is invalidated
+            [{ type: "Leave", id: "LEAVELIST" }],
+    }),
     deleteLeave: build.mutation({
       query(id) {
         return {
@@ -56,4 +71,5 @@ export const {
   useUpdateLeaveMutation,
   useGetLeaveQuery,
   useDeleteLeaveMutation,
+  useGetUserLeaveQuery,
 } = leaveApi;

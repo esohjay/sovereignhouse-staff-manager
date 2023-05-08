@@ -13,6 +13,13 @@ module.exports.getAllLeaves = async (req, res) => {
   const leaves = await Leave.findAll({ include: "user" });
   res.status(200).json(leaves);
 };
+module.exports.getUserLeave = async (req, res) => {
+  const { id } = req.params;
+  const leaveReaquests = await Leave.findAll({
+    where: { userId: id },
+  });
+  res.status(200).json(leaveReaquests);
+};
 module.exports.getLeave = async (req, res) => {
   const { id } = req.params;
   const leave = await Leave.findByPk(id, { include: "user" });

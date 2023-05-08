@@ -19,10 +19,8 @@ import useToast from "../../hooks/useToast";
 
 function NewStaff() {
   const dispatch = useDispatch();
-  const [
-    registerStaff,
-    { data, status, error, isLoading, isSuccess, isError },
-  ] = useCreateStaffMutation();
+  const [registerStaff, { error, isLoading, isSuccess, isError }] =
+    useCreateStaffMutation();
   const user = useSelector(selectRegisteredUser);
   const navigate = useNavigate();
 
@@ -350,7 +348,10 @@ function NewStaff() {
             )}
           </div>
         </article>
-        <button className="bg-mainColor text-white capitalize font-medium rounded-md inline-block py-2 px-6">
+        <button
+          disabled={isLoading}
+          className="bg-mainColor text-white capitalize font-medium rounded-md inline-block py-2 px-6"
+        >
           submit
         </button>
       </form>

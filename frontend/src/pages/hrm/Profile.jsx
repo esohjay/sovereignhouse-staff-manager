@@ -16,12 +16,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { useParams, useNavigate } from "react-router-dom";
 
 import generateRandomString from "../../lib/generatePassword";
-
-import { MdOutlinePersonAddAlt } from "react-icons/md";
-
+import useToast from "../../hooks/useToast";
 import { useForm } from "react-hook-form";
 import Modal from "../../components/Modal";
-import Btn from "../../components/Btn";
 import dayjs from "dayjs";
 import localizedFormat from "dayjs/plugin/localizedFormat";
 dayjs.extend(localizedFormat);
@@ -36,12 +33,93 @@ function Profile() {
   const navigate = useNavigate();
   const reqParam = userId ? userId : id;
   const { currentData } = useGetStaffQuery(reqParam);
-  const [deletStaff, { data, error, status: staffDeleted }] =
-    useDeleteStaffMutation();
-  const [resetPassword, { error: resetError, status: resetStatus }] =
-    useResetPasswordMutation();
-  const [changeStatus] = useChangeStatusMutation();
-  const [updateUserEmail] = useUpdateUserDetailsMutation();
+  const [
+    deletStaff,
+    {
+      isError: deletingError,
+      isLoading: deleting,
+      error: deleteError,
+      isSuccess: deleted,
+    },
+  ] = useDeleteStaffMutation();
+  const [
+    resetPassword,
+    {
+      isError: updatingResetPwError,
+      isLoading: updatingResetPw,
+      error: updateResetPwError,
+      isSuccess: updatedResetPw,
+      status: resetStatus,
+      data,
+    },
+  ] = useResetPasswordMutation();
+  const [
+    changeStatus,
+    {
+      isError: updatingStatusError,
+      isLoading: updatingStatus,
+      error: updateStatusError,
+      isSuccess: updatedStatus,
+    },
+  ] = useChangeStatusMutation();
+
+  const [
+    updateUserEmail,
+    {
+      isError: updatingEmailError,
+      isLoading: updatingEmail,
+      error: updateEmailError,
+      isSuccess: updatedEmail,
+    },
+  ] = useUpdateUserDetailsMutation();
+
+  // Update user status notification
+  const {} = useToast(
+    "update-user-status",
+    "Status updated successfully",
+    `${updateStatusError?.data?.message}`,
+    "mutation",
+    updatingStatus,
+    updatedStatus,
+    updatingStatusError
+  );
+  // Update user email notification
+  const {} = useToast(
+    "update-user-email",
+    "Email updated successfully",
+    `${updateEmailError?.data?.message}`,
+    "mutation",
+    updatingEmail,
+    updatedEmail,
+    updatingEmailError
+  );
+  // reset password notification
+  const {} = useToast(
+    "reset-password",
+    `${data?.message}`,
+    `${updateResetPwError?.data?.message}`,
+    "mutation",
+    updatingResetPw,
+    updatedResetPw,
+    updatingResetPwError
+  );
+
+  // delete user notification
+  const {} = useToast(
+    "delete-user-profile",
+    "User account deleted successfully",
+    `${deleteError?.data?.message}`,
+    "mutation",
+    deleting,
+    deleted,
+    deletingError
+  );
+
+  useEffect(() => {
+    if (deleted) {
+      navigate(-1);
+    }
+  }, [deleted]);
   const {
     register,
     handleSubmit,

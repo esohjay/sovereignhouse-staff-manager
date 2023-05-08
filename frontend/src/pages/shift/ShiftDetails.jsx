@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 import {
   useGetShiftQuery,
@@ -10,6 +10,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { setDay } from "../../lib/setDay";
 
 import Modal from "../../components/Modal";
+import useToast from "../../hooks/useToast";
 
 import { useForm } from "react-hook-form";
 import { MdOutlinePersonAddAlt } from "react-icons/md";
@@ -18,8 +19,24 @@ function ShiftDetails() {
   const { shiftId } = useParams();
   const navigate = useNavigate();
   const { currentData } = useGetShiftQuery(shiftId);
-  const [assignTeacher, result] = useAssignTeacherMutation();
-  const [deleteShift, { data, error, status }] = useDeleteShiftMutation();
+  const [
+    assignTeacher,
+    {
+      isError: assigningError,
+      isLoading: assigning,
+      error: assignError,
+      isSuccess: assigned,
+    },
+  ] = useAssignTeacherMutation();
+  const [
+    deleteShift,
+    {
+      isError: deletingError,
+      isLoading: deleting,
+      error: deleteError,
+      isSuccess: deleted,
+    },
+  ] = useDeleteShiftMutation();
   const { data: teachers } = useGetAllStaffQuery();
 
   const {
@@ -32,7 +49,34 @@ function ShiftDetails() {
     assignTeacher({ ...data, shift: shiftId });
     reset();
   };
-  console.log(result);
+
+  // assign shift notification
+  const {} = useToast(
+    "assign-shift",
+    "Shift assigned successfully",
+    `${assignError?.data?.message}`,
+    "mutation",
+    assigning,
+    assigned,
+    assigningError
+  );
+
+  // delete shift notification
+  const {} = useToast(
+    "delete-shift",
+    "Shift deleted successfully",
+    `${deleteError?.data?.message}`,
+    "mutation",
+    deleting,
+    deleted,
+    deletingError
+  );
+
+  useEffect(() => {
+    if (deleted) {
+      navigate(-1);
+    }
+  }, [deleted]);
   return (
     <article className="p-5">
       <article className="border rounded-md border-mainColor">

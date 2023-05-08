@@ -17,15 +17,32 @@ dayjs.extend(localizedFormat);
 import { FaTrashAlt, FaRegEye } from "react-icons/fa";
 import { BiEditAlt } from "react-icons/bi";
 import { HiOutlineStatusOnline } from "react-icons/hi";
+import useToast from "../../hooks/useToast";
 
 dayjs.extend(localizedFormat);
 function AllUserTasks() {
   const navigate = useNavigate();
   const { id } = useParams();
-  const { currentData, isError, isFetching, isLoading, isSuccess } =
+  const { currentData, isError, isFetching, error, isSuccess } =
     useGetUserTasksQuery(id);
-  const [updateTask, result] = useUpdateTaskMutation();
-  const [deleteTask, { status }] = useDeleteTaskMutation();
+  const [
+    updateTask,
+    {
+      isError: updatingError,
+      isLoading: updating,
+      error: updateError,
+      isSuccess: updated,
+    },
+  ] = useUpdateTaskMutation();
+  const [
+    deleteTask,
+    {
+      isError: deletingError,
+      isLoading: deleting,
+      error: deleteError,
+      isSuccess: deleted,
+    },
+  ] = useDeleteTaskMutation();
   const {
     register,
     handleSubmit,
@@ -42,7 +59,40 @@ function AllUserTasks() {
     }
     updateTask({ status: getValues("status"), id: getValues("id") });
   };
-
+  // delete user notification
+  const {} = useToast(
+    "delete-task",
+    "Task deleted successfully",
+    `${deleteError?.data?.message}`,
+    "mutation",
+    deleting,
+    deleted,
+    deletingError
+  );
+  const {} = useToast(
+    "get-all-leave application",
+    "Successfully loaded",
+    `${error?.data?.message}`,
+    "query",
+    isFetching,
+    isSuccess,
+    isError
+  );
+  // Update shift notification
+  const {} = useToast(
+    "update-task-1-request",
+    "Task updated successfully",
+    `${updateError?.data?.message}`,
+    "mutation",
+    updating,
+    updated,
+    updatingError
+  );
+  useEffect(() => {
+    if (deleted) {
+      navigate(-1);
+    }
+  }, [deleted]);
   return (
     <article className="w-full p-5 md:p-10">
       <article className="w-full p-5 md:p-10">

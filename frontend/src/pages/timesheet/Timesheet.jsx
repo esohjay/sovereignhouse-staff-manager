@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useGetStaffQuery } from "../../api/staff/staffApi";
 import useAuth from "../../hooks/useAuth";
 import {
@@ -9,6 +9,8 @@ import {
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { setDay, formatDate } from "../../lib/setDay";
 import Btn from "../../components/Btn";
+import useToast from "../../hooks/useToast";
+import { toast } from "react-toastify";
 
 import dayjs from "dayjs";
 import localizedFormat from "dayjs/plugin/localizedFormat";
@@ -19,8 +21,24 @@ function Timesheet() {
   const {} = useAuth();
   const navigate = useNavigate();
   const reqParam = userId ? userId : id;
-  const [clockIn, result] = useRecordClockInMutation();
-  const [clockOut, clockResult] = useEndShiftMutation();
+  const [
+    clockIn,
+    {
+      isError: clockingInError,
+      isLoading: clockingIn,
+      error: errorClockingIn,
+      isSuccess: clockedIn,
+    },
+  ] = useRecordClockInMutation();
+  const [
+    clockOut,
+    {
+      isError: clockingOutError,
+      isLoading: clockingOut,
+      error: errorClockingOut,
+      isSuccess: clockedOut,
+    },
+  ] = useEndShiftMutation();
   const [clockInError, setClockInError] = useState("");
   const { currentData } = useGetStaffQuery(reqParam);
   const { currentData: userTimesheet } = useGetUserTimesheetQuery(reqParam);
@@ -62,8 +80,41 @@ function Timesheet() {
       userId: id,
     });
   };
-  console.log(clockInError);
-  setInterval(console.log("jjj"), 2000);
+  // assign shift notification
+  const {} = useToast(
+    "clocking",
+    "Clocked in successfully",
+    `${errorClockingIn?.data?.message}`,
+    "mutation",
+    clockingIn,
+    clockedIn,
+    clockingInError
+  );
+  // assign shift notification
+  const {} = useToast(
+    "clock-out",
+    "Clocked out successfully",
+    `${errorClockingOut?.data?.message}`,
+    "mutation",
+    clockingOut,
+    clockedOut,
+    clockingOutError
+  );
+
+  const otherAlert = () => {
+    toast(clockInError, {
+      toastId: "other-alerts",
+      type: toast.TYPE.ERROR,
+      autoClose: 5000,
+    });
+  };
+
+  useEffect(() => {
+    if (clockInError) {
+      otherAlert();
+    }
+    setClockInError("");
+  }, [clockInError]);
   return (
     <article className="p-5 md:p-20">
       <article className="space-y-3">

@@ -59,7 +59,7 @@ const taskApi = appApi.injectEndpoints({
       },
       // Invalidates all queries that subscribe to this Post `id` only.
       // In this case, `getPost` will be re-run. `getPosts` *might*  rerun, if this id was under its results.
-      invalidatesTags: (result, error, { id }) => [{ type: "Shift", id }],
+      invalidatesTags: (result, error, { id }) => [{ type: "Task", id }],
     }),
     deleteTask: build.mutation({
       query(id) {

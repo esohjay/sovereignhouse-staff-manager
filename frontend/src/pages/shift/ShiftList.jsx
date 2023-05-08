@@ -4,11 +4,21 @@ import { Link, useParams } from "react-router-dom";
 import { setDay, formatDate } from "../../lib/setDay";
 
 import { FaRegEye, FaEdit, FaTrash } from "react-icons/fa";
+import useToast from "../../hooks/useToast";
 
 function ShiftList() {
   const { id } = useParams();
-  const { currentData, isError, isFetching, isLoading, isSuccess } =
+  const { currentData, isError, isFetching, error, isSuccess } =
     useGetAllShiftQuery();
+  const {} = useToast(
+    "get-all-leave application",
+    "Successfully loaded",
+    `${error?.data?.message}`,
+    "query",
+    isFetching,
+    isSuccess,
+    isError
+  );
   return (
     <article className="">
       <div className="flex flex-col overflow-x-auto">

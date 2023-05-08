@@ -40,6 +40,7 @@ import AllStaffTimesheets from "./pages/timesheet/AllStaffTimesheets";
 import RequestLeave from "./pages/leave/RequestLeave";
 import LeaveContainer from "./pages/leave/LeaveContainer";
 import LeaveDetails from "./pages/leave/LeaveDetails";
+import LeavereRequest from "./pages/leave/LeavereRequest";
 import EditLeave from "./pages/leave/EditLeave";
 import AllLeaveRequests from "./pages/leave/AllLeaveRequests";
 import Task from "./pages/task/TaskContainer";
@@ -67,6 +68,7 @@ function App() {
             <Route path="profile" element={<Profile />} />
             <Route path="profile/edit" element={<UpdateStaff />} />
             <Route path="leave" element={<LeaveContainer />}>
+              <Route index element={<LeavereRequest />} />
               <Route path="request" element={<RequestLeave />} />
               <Route path=":leaveId" element={<LeaveDetails />} />
               <Route path=":leaveId/edit" element={<EditLeave />} />

@@ -36,10 +36,11 @@ const staffApi = appApi.injectEndpoints({
     }),
     changeStatus: build.mutation({
       query: (formBody) => ({
-        url: "/user/change-status",
+        url: `/user/${formBody.userId}/change-status`,
         method: "PUT",
         body: formBody,
       }),
+      invalidatesTags: (result, error, { id }) => [{ type: "Staff", id }],
     }),
     updateUserDetails: build.mutation({
       query(data) {
@@ -51,16 +52,7 @@ const staffApi = appApi.injectEndpoints({
       },
       invalidatesTags: (result, error, { id }) => [{ type: "Staff", id }],
     }),
-    updateUserStatus: build.mutation({
-      query(data) {
-        return {
-          url: `/user/${data.id}/status`,
-          method: "PUT",
-          body: data,
-        };
-      },
-      invalidatesTags: (result, error, { id }) => [{ type: "Staff", id }],
-    }),
+
     deleteStaff: build.mutation({
       query(id) {
         return {
@@ -78,7 +70,6 @@ export const {
   useGetAllStaffQuery,
   useGetStaffQuery,
   useUpdateUserDetailsMutation,
-  useUpdateUserStatusMutation,
   useDeleteStaffMutation,
   useCreateStaffMutation,
   useResetPasswordMutation,

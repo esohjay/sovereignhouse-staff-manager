@@ -15,8 +15,10 @@ import {
 import { useUploadMutation } from "../../api/app";
 function Application() {
   const { campaign } = useParams();
-  const [submitApplication, { status: submissionStatus, isError, error }] =
-    useNewApplicationMutation();
+  const [
+    submitApplication,
+    { status: submissionStatus, isError, error, isLoading },
+  ] = useNewApplicationMutation();
   const [uploadResume, { data: cv, status }] = useUploadMutation();
   const { currentData } = useGetCampaignQuery(campaign);
   const validationSchema = Yup.object().shape({
@@ -216,7 +218,10 @@ function Application() {
                 <span className="text-red-500 ">{errors.address?.message}</span>
               )}
             </div>
-            <button className="bg-mainColor text-white capitalize font-medium rounded-md inline-block py-2 px-6">
+            <button
+              disabled={isLoading}
+              className="bg-mainColor text-white capitalize font-medium rounded-md inline-block py-2 px-6"
+            >
               submit
             </button>
             {isError && (

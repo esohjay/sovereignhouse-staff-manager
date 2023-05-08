@@ -12,7 +12,7 @@ const { verifyUser, verifyAdmin } = require("../middlewares/auth");
 
 const router = express.Router();
 router.post("/", verifyUser, catchAsync(createTimesheet));
-router.put("/:id", verifyAdmin, catchAsync(updateTimesheet));
+router.put("/:id", verifyUser, catchAsync(updateTimesheet));
 router.get("/", verifyUser, catchAsync(getAllTimesheets));
 router.get("/:id", verifyUser, catchAsync(getTimesheet));
 router.get("/user/:id", verifyUser, catchAsync(getUserTimesheets));

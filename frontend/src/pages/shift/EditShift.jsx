@@ -5,6 +5,8 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { setDay } from "../../lib/setDay";
 
+import useToast from "../../hooks/useToast";
+
 import {
   useGetShiftQuery,
   useUpdateShiftMutation,
@@ -21,7 +23,25 @@ function EditShift() {
   const { shiftId } = useParams();
   const { currentData } = useGetShiftQuery(shiftId);
 
-  const [updateShift, result] = useUpdateShiftMutation();
+  const [
+    updateShift,
+    {
+      isError: updatingError,
+      isLoading: updating,
+      error: updateError,
+      isSuccess: updated,
+    },
+  ] = useUpdateShiftMutation();
+  // Update shift notification
+  const {} = useToast(
+    "update-shfft-1-request",
+    "Shift updated successfully",
+    `${updateError?.data?.message}`,
+    "mutation",
+    updating,
+    updated,
+    updatingError
+  );
 
   const {
     register,
@@ -231,6 +251,7 @@ function EditShift() {
             </div>
             <button
               type="submit"
+              disabled={updating}
               className="bg-mainColor text-white capitalize font-medium rounded-md inline-block py-2 px-6"
             >
               submit

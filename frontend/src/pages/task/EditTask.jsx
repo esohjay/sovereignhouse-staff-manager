@@ -5,11 +5,21 @@ import { useForm } from "react-hook-form";
 import { useUpdateTaskMutation, useGetTaskQuery } from "../../api/task/taskApi";
 import { useNavigate, useParams } from "react-router-dom";
 
+import useToast from "../../hooks/useToast";
+
 import Btn from "../../components/Btn";
 function EditTask() {
   const { taskId } = useParams();
   const navigate = useNavigate();
-  const [editTask, { data }] = useUpdateTaskMutation();
+  const [
+    editTask,
+    {
+      isError: updatingError,
+      isLoading: updating,
+      error: updateError,
+      isSuccess: updated,
+    },
+  ] = useUpdateTaskMutation();
   const { currentData } = useGetTaskQuery(taskId);
   const {
     register,
@@ -19,6 +29,15 @@ function EditTask() {
   const onSubmit = (data) => {
     editTask({ ...data, id: currentData?.id });
   };
+  const {} = useToast(
+    "update-task-13-request",
+    "Task updated successfully",
+    `${updateError?.data?.message}`,
+    "mutation",
+    updating,
+    updated,
+    updatingError
+  );
   return (
     <>
       {currentData && (
@@ -168,6 +187,7 @@ function EditTask() {
             </div>
             <button
               type="submit"
+              disabled={updating}
               className="bg-mainColor text-white capitalize font-medium rounded-md inline-block py-2 px-6"
             >
               submit

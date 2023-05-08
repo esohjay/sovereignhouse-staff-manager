@@ -307,6 +307,7 @@ function EditCampaign() {
             </div>
             <button
               type="submit"
+              disabled={updating}
               // onClick={() => createCampaign({ title: "dev" })}
               className="bg-mainColor text-white capitalize font-medium rounded-md inline-block py-2 px-6"
             >

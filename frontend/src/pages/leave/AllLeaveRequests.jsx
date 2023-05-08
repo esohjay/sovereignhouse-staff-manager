@@ -5,6 +5,7 @@ import {
 } from "../../api/leave/leaveApi";
 import { useNavigate, useParams } from "react-router-dom";
 import { useForm } from "react-hook-form";
+import useToast from "../../hooks/useToast";
 
 import { FaRegCommentDots } from "react-icons/fa";
 import { BiEditAlt } from "react-icons/bi";
@@ -17,10 +18,18 @@ dayjs.extend(localizedFormat);
 
 function AllLeaveRequests() {
   const navigate = useNavigate();
-  const { id } = useParams();
-  const { currentData, isError, isFetching, isLoading, isSuccess } =
+
+  const { currentData, isError, isFetching, error, isSuccess } =
     useGetLeaveRequestsQuery();
-  const [updateLeave, result] = useUpdateLeaveMutation();
+  const [
+    updateLeave,
+    {
+      isError: updatingError,
+      isLoading: updating,
+      error: updateError,
+      isSuccess: updated,
+    },
+  ] = useUpdateLeaveMutation();
   const {
     register,
     handleSubmit,
@@ -53,6 +62,26 @@ function AllLeaveRequests() {
       id: getValues("id"),
     });
   };
+
+  const {} = useToast(
+    "get-all-leave application",
+    "Successfully loaded",
+    `${error?.data?.message}`,
+    "query",
+    isFetching,
+    isSuccess,
+    isError
+  );
+  // Update leave notification
+  const {} = useToast(
+    "update-leave-3-request",
+    "Leave request updated successfully",
+    `${updateError?.data?.message}`,
+    "mutation",
+    updating,
+    updated,
+    updatingError
+  );
   return (
     <article className="w-full p-5 md:p-10">
       <article className="w-full bg-white  rounded-md shadow-">

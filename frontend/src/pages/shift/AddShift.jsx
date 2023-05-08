@@ -1,33 +1,41 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
 import { useForm } from "react-hook-form";
 
+import useToast from "../../hooks/useToast";
+
 import { useCreateShiftMutation } from "../../api/shift/shiftApi";
 
 function AddShift() {
-  const [createShift, { data }] = useCreateShiftMutation();
-  //   const validationSchema = Yup.object().shape({
-  //     title: Yup.string().required("title is required"),
-  //     venue: Yup.string().required("venue is required"),
-  //     dayOfTheWeek: Yup.string().required("this field is required"),
-  //     shiftLength: Yup.string().required("shift length is required"),
-  //     studentCategory: Yup.string().required("student category is required"),
-  //     description: Yup.string().required("description is required"),
-  //     startTime: Yup.string().required("start time is required"),
-  //     endTime: Yup.date().required("end time is required"),
-  //   });
-  //   const formOptions = { resolver: yupResolver(validationSchema) };
+  const [createShift, { error, isLoading, isSuccess, isError }] =
+    useCreateShiftMutation();
+
+  const {} = useToast(
+    "add-shift",
+    "Shift added successfully",
+    `${error?.data?.message}`,
+    "mutation",
+    isLoading,
+    isSuccess,
+    isError
+  );
+
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm();
   const onSubmit = (data) => {
     createShift({ ...data, dayOfTheWeek: parseInt(data.dayOfTheWeek) });
   };
-
+  useEffect(() => {
+    if (isSuccess) {
+      reset();
+    }
+  }, [isSuccess]);
   return (
     <article className="w-full p-5">
       <form onSubmit={handleSubmit(onSubmit)}>
@@ -187,6 +195,7 @@ function AddShift() {
         </div>
         <button
           type="submit"
+          disabled={isLoading}
           className="bg-mainColor text-white capitalize font-medium rounded-md inline-block py-2 px-6"
         >
           submit

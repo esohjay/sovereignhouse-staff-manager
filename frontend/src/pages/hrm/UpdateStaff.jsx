@@ -5,6 +5,7 @@ import {
   useGetStaffQuery,
   useUpdateUserDetailsMutation,
 } from "../../api/staff/staffApi";
+import useToast from "../../hooks/useToast";
 
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
@@ -23,8 +24,21 @@ function UpdateStaff() {
   const { currentData } = useGetStaffQuery(reqParam);
   const navigate = useNavigate();
 
-  const [updateUserDetails, { status, data, error }] =
-    useUpdateUserDetailsMutation();
+  const [
+    updateUserDetails,
+    { status, data, error, isError, isLoading, isSuccess },
+  ] = useUpdateUserDetailsMutation();
+
+  // Update content notification
+  const {} = useToast(
+    "update-user-record",
+    "Campaign updated successfully",
+    `${error?.data?.message}`,
+    "mutation",
+    isLoading,
+    isSuccess,
+    isError
+  );
   // form validation rules
   const validationSchema = Yup.object().shape({
     firstName: Yup.string().required("First name is required"),
@@ -37,7 +51,7 @@ function UpdateStaff() {
     jobPosition: Yup.string().required("jobPosition is required"),
     contractType: Yup.string().required("contractType is required"),
     status: Yup.string().required("status is required"),
-    phone: Yup.number().required("phone is required"),
+    phone: Yup.string().required("phone is required"),
     placeOfBirth: Yup.string().required("placeOfBirth is required"),
     dateOfBirth: Yup.date().required("date of birth is required"),
     email: Yup.string().email().required("email is required"),
@@ -396,7 +410,10 @@ function UpdateStaff() {
                 )}
               </div>
             </article>
-            <button className="bg-mainColor text-white capitalize font-medium rounded-md inline-block py-2 px-6">
+            <button
+              disabled={isLoading}
+              className="bg-mainColor text-white capitalize font-medium rounded-md inline-block py-2 px-6"
+            >
               update
             </button>
           </form>

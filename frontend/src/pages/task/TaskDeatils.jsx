@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 import {
   useGetTaskQuery,
@@ -8,6 +8,7 @@ import {
 } from "../../api/task/taskApi";
 import { useGetAllStaffQuery } from "../../api/staff/staffApi";
 import { useParams, useNavigate } from "react-router-dom";
+import useToast from "../../hooks/useToast";
 
 import Modal from "../../components/Modal";
 
@@ -22,10 +23,34 @@ function TaskDetails() {
   const navigate = useNavigate();
   const { taskId } = useParams();
   const { currentData } = useGetTaskQuery(taskId);
-  const [assignStaff, result] = useAssignStaffMutation();
+  const [
+    assignStaff,
+    {
+      isError: assigningError,
+      isLoading: assigning,
+      error: assignError,
+      isSuccess: assigned,
+    },
+  ] = useAssignStaffMutation();
   const { data: teachers } = useGetAllStaffQuery();
-  const [updateTask, { status: updateStatus }] = useUpdateTaskMutation();
-  const [deleteTask, { status }] = useDeleteTaskMutation();
+  const [
+    updateTask,
+    {
+      isError: updatingError,
+      isLoading: updating,
+      error: updateError,
+      isSuccess: updated,
+    },
+  ] = useUpdateTaskMutation();
+  const [
+    deleteTask,
+    {
+      isError: deletingError,
+      isLoading: deleting,
+      error: deleteError,
+      isSuccess: deleted,
+    },
+  ] = useDeleteTaskMutation();
 
   const {
     register,
@@ -50,8 +75,42 @@ function TaskDetails() {
       return;
     }
     updateTask({ status: getValues("status"), id: taskId });
-  };
+  }; // Update shift notification
+  const {} = useToast(
+    "update-task-13-request",
+    "Task updated successfully",
+    `${updateError?.data?.message}`,
+    "mutation",
+    updating,
+    updated,
+    updatingError
+  );
+  // assign task notification
+  const {} = useToast(
+    "assign-task",
+    "Task assigned successfully",
+    `${assignError?.data?.message}`,
+    "mutation",
+    assigning,
+    assigned,
+    assigningError
+  );
 
+  // delete user notification
+  const {} = useToast(
+    "delete1-task",
+    "Task deleted successfully",
+    `${deleteError?.data?.message}`,
+    "mutation",
+    deleting,
+    deleted,
+    deletingError
+  );
+  useEffect(() => {
+    if (deleted) {
+      navigate(-1);
+    }
+  }, [deleted]);
   return (
     <article className="p-5">
       <article className="border rounded-md border-mainColor">
