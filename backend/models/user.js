@@ -52,7 +52,7 @@ const User = sequelize.define("user", {
     type: DataTypes.DATEONLY,
     schema: Joi.string().trim().required(),
   },
-  phone: { type: DataTypes.INTEGER, schema: Joi.number().required() },
+  phone: { type: DataTypes.STRING, schema: Joi.string().trim().required() },
   contractType: {
     type: DataTypes.STRING,
     schema: Joi.string().trim().required(),

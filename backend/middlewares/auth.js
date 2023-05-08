@@ -3,7 +3,9 @@ class AuthMiddleware {
   async verifyUser(req, res, next) {
     const token = req.headers.authorization?.split(" ")[1];
     if (!token) {
-      return res.status(401).send("Token error, please check token.");
+      return res
+        .status(401)
+        .send({ message: "Token error, please check token." });
     }
     try {
       const decodedToken = await admin.auth().verifyIdToken(token);
@@ -14,13 +16,15 @@ class AuthMiddleware {
       return next();
     } catch (err) {
       console.log(err);
-      return res.status(401).send("Unauthorized Request");
+      return res.status(401).send(err);
     }
   }
   async verifyAdmin(req, res, next) {
     const token = req.headers.authorization?.split(" ")[1];
     if (!token) {
-      return res.status(401).send("Token error, please check token.");
+      return res
+        .status(401)
+        .send({ message: "Token error, please check token." });
     }
     try {
       const decodedToken = await admin.auth().verifyIdToken(token);
@@ -28,10 +32,10 @@ class AuthMiddleware {
         req.user = decodedToken;
         return next();
       } else {
-        return res.status(401).send("Admin access only.");
+        return res.status(401).send({ message: "Admin access only." });
       }
     } catch (err) {
-      return res.status(401).send("Unauthorized request.");
+      return res.status(401).send(err);
     }
   }
 }
