@@ -42,7 +42,6 @@ function Timesheet() {
   const [clockInError, setClockInError] = useState("");
   const { currentData } = useGetStaffQuery(reqParam);
   const { currentData: userTimesheet } = useGetUserTimesheetQuery(reqParam);
-  console.log(userTimesheet);
   const handleClockIn = (shiftDay, shiftId) => {
     const date = new Date();
     const today = date.getDay();

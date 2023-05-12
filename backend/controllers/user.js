@@ -52,9 +52,6 @@ module.exports.createUser = async (req, res) => {
 module.exports.makeAdmin = async (req, res) => {
   const { id } = req.body;
   const newAmin = await admin.auth().setCustomUserClaims(id, { admin: true });
-  // req.user.uid
-  console.log("success");
-  console.log(newAmin);
   res.status(200).json("done");
 };
 module.exports.resetPassword = async (req, res) => {

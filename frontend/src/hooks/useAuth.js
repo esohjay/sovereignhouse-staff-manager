@@ -19,7 +19,6 @@ function useAuth() {
   const newToken = useSelector(selectToken);
 
   const admin = useSelector(selectAdminStatus);
-  setInterval(console.log("jjj"), 2000);
   auth.currentUser
     ?.getIdTokenResult()
     .then((token) => {
@@ -30,8 +29,6 @@ function useAuth() {
       if (tokenExpired) {
         dispatch(getUserIdToken());
         Cookies.set("token", `Bearer ${newToken}`, { expires: 1 });
-      } else {
-        console.log("not expired");
       }
     })
     .catch((error) => {

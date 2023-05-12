@@ -1,20 +1,29 @@
 import React, { useState, useEffect } from "react";
 
+import { useParams } from "react-router-dom";
 import { useGetAllShiftQuery } from "../api/shift/shiftApi";
-import { useGetAllStaffQuery } from "../api/staff/staffApi";
+import { useGetAllStaffQuery, useGetStaffQuery } from "../api/staff/staffApi";
 import { useGetLeaveRequestsQuery } from "../api/leave/leaveApi";
-import { useGetCampaignsQuery } from "../api/recruitment/campaignApi";
+import { useGetApplicationsQuery } from "../api/recruitment/campaignApi";
 
 import { HiUserGroup } from "react-icons/hi";
+import { FaUserEdit } from "react-icons/fa";
 import { MdOutlineEventBusy, MdPendingActions } from "react-icons/md";
+import { VscTasklist } from "react-icons/vsc";
 
 function Dashboard() {
+  const { id } = useParams();
   const { currentData, isError, isFetching, isLoading, isSuccess } =
     useGetAllStaffQuery();
   const { currentData: leaveData } = useGetLeaveRequestsQuery();
+  const { currentData: applicationData } = useGetApplicationsQuery();
+  const { currentData: shiftData } = useGetAllShiftQuery();
+  const { currentData: userDetails } = useGetStaffQuery(id);
   const [volunteers, setVolunteers] = useState([]);
   const [employee, setEmployee] = useState([]);
   const [interns, setInterns] = useState([]);
+  const [pendingApplication, setPendingApplication] = useState([]);
+  const [interviewingApplication, setInterviewingApplication] = useState([]);
 
   const [leaveApproved, setLeaveApproved] = useState([]);
   const [leavePending, setLeavePending] = useState([]);
@@ -29,7 +38,19 @@ function Dashboard() {
       currentData?.filter((staff) => staff.contractType === "internship")
     );
     setLeaveApproved(leaveData?.filter((leave) => leave.status === "approved"));
-    setLeavePending(leaveData?.filter((leave) => leave.status === "pending"));
+    setLeavePending(
+      leaveData?.filter(
+        (leave) => leave.status === "pending" || leave.status === "Pending"
+      )
+    );
+    setPendingApplication(
+      applicationData?.filter((application) => application.status === "pending")
+    );
+    setInterviewingApplication(
+      applicationData?.filter(
+        (application) => application.status === "interviewing"
+      )
+    );
   }, [currentData, leaveData]);
 
   return (
@@ -89,59 +110,35 @@ function Dashboard() {
         <button className="text-white bg-mainColor font-semibold p-2 text-lg rounded-md mb-3">
           <MdPendingActions />
         </button>
-        <p className="text-4xl font-bold text-mainColor">
-          {currentData?.length}
-        </p>
+        <p className="text-4xl font-bold text-mainColor">{shiftData?.length}</p>
         <p className="text-base text-altColor mb-3">
-          Available {currentData?.length > 1 ? "shifts" : "shift"}
+          Available {shiftData?.length > 1 ? "shifts" : "shift"}
         </p>
-        <div className="flex items-center gap-x-2">
-          <div className="flex gap-x-1 items-baseline">
-            <p className="font-semibold text-xs text-mainColor">
-              {volunteers?.length}
-            </p>
-            <p className="text-xs text-mainColor">
-              {volunteers?.length > 0 ? "Volunteers" : "Volunteer"}
-            </p>
-          </div>
-          <div className="h-3 border-l"></div>
-          <div className="flex gap-x-1">
-            <p className="font-semibold text-xs text-mainColor">
-              {employee?.length}
-            </p>
-            <p className="text-xs text-mainColor">
-              {employee?.length > 0 ? "Employees" : "Employee"}
-            </p>
-          </div>
-        </div>
       </article>
       {/* Applications */}
       <article className="w-full h-40 bg-white rounded-md shadow-md p-3 mb-3">
         <button className="text-white bg-mainColor font-semibold p-2 text-lg rounded-md mb-3">
-          <HiUserGroup />
+          <FaUserEdit />
         </button>
         <p className="text-4xl font-bold text-mainColor">
-          {currentData?.length}
+          {applicationData?.length}
         </p>
         <p className="text-base text-altColor mb-3">
-          {currentData?.length > 1 ? "Applications" : "Application"}
+          {applicationData?.length > 1 ? "Applications" : "Application"}
         </p>
         <div className="flex items-center gap-x-2">
           <div className="flex gap-x-1 items-baseline">
             <p className="font-semibold text-xs text-mainColor">
-              {volunteers?.length}
+              {interviewingApplication?.length}
             </p>
             <p className="text-xs text-mainColor">
-              {volunteers?.length > 0 ? "Volunteers" : "Volunteer"}
+              {interviewingApplication?.length > 1 ? "Interviews" : "Interview"}
             </p>
           </div>
           <div className="h-3 border-l"></div>
           <div className="flex gap-x-1">
             <p className="font-semibold text-xs text-mainColor">
-              {employee?.length}
-            </p>
-            <p className="text-xs text-mainColor">
-              {employee?.length > 0 ? "Employees" : "Employee"}
+              {pendingApplication?.length} Pending
             </p>
           </div>
         </div>
@@ -149,10 +146,10 @@ function Dashboard() {
       {/* Tasks */}
       <article className="w-full h-40 bg-white rounded-md shadow-md p-3 mb-3">
         <button className="text-white bg-mainColor font-semibold p-2 text-lg rounded-md mb-3">
-          <HiUserGroup />
+          <VscTasklist />
         </button>
         <p className="text-4xl font-bold text-mainColor">
-          {currentData?.length}
+          {userDetails?.tasks?.length}
         </p>
         <p className="text-base text-altColor mb-3">
           {currentData?.length > 0 ? "Tasks" : "Task"}
@@ -160,19 +157,13 @@ function Dashboard() {
         <div className="flex items-center gap-x-2">
           <div className="flex gap-x-1 items-baseline">
             <p className="font-semibold text-xs text-mainColor">
-              {volunteers?.length}
-            </p>
-            <p className="text-xs text-mainColor">
-              {volunteers?.length > 0 ? "Volunteers" : "Volunteer"}
+              {volunteers?.length} In progress
             </p>
           </div>
           <div className="h-3 border-l"></div>
           <div className="flex gap-x-1">
             <p className="font-semibold text-xs text-mainColor">
-              {employee?.length}
-            </p>
-            <p className="text-xs text-mainColor">
-              {employee?.length > 0 ? "Employees" : "Employee"}
+              {employee?.length} pending
             </p>
           </div>
         </div>

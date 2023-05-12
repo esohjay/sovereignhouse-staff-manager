@@ -15,7 +15,10 @@ export const appApi = createApi({
       return headers;
     },
   }),
-  tagTypes: ["Staff", "Campaign, Timesheet, UserTimesheet, Task, Aplicants"],
+  tagTypes: [
+    "Staff",
+    "Campaign, Timesheet, UserTimesheet, Task, Aplicants, KB",
+  ],
   endpoints: (builder) => ({
     upload: builder.mutation({
       query: (formBody) => ({

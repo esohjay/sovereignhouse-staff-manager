@@ -1,7 +1,12 @@
-import React from "react";
-import { Link, useParams } from "react-router-dom";
+import React, { useEffect } from "react";
+import { Link, useParams, useNavigate } from "react-router-dom";
 import logo from "../assets/logo.png";
 import Cookies from "js-cookie";
+import {
+  selectCurrentUser,
+  logOut,
+  selectAuthStatus,
+} from "../features/authSlice";
 
 //redux
 import {
@@ -34,13 +39,21 @@ import { FaRegBell, FaRegUser, FaEnvelope, FaUserCog } from "react-icons/fa";
 
 function MobileNav() {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const isSidebarOpen = useSelector(selectSidebarState);
   const isDropdownOpen = useSelector(selectDropdownState);
+  const signedOut = useSelector(selectAuthStatus);
+
   const { id } = useParams();
   const isAdmin = Cookies.get("isAdmin")
     ? JSON.parse(Cookies.get("isAdmin"))
     : null;
   const { currentData } = useGetStaffQuery(id);
+  useEffect(() => {
+    if (signedOut) {
+      navigate("/login");
+    }
+  }, [signedOut]);
   return (
     <nav className="bg-mainColor px-5 lg:px-9 flex items-center justify-between h-16 relative md:hidden">
       <ul className="flex gap-x-3">
@@ -92,7 +105,12 @@ function MobileNav() {
             text="timesheets"
             path={`/vms/${id}/timesheet`}
           />
-          <NavBtn icon={<MdLogout />} text="logout" path="/logout" />
+          <NavBtn
+            icon={<MdLogout />}
+            text="logout"
+            path=""
+            action={() => dispatch(logOut())}
+          />
         </nav>
       </div>
       {/* Sidebar */}
@@ -120,11 +138,11 @@ function MobileNav() {
             path={`/vms/${id}/dashboard`}
             icon={<GoDashboard />}
           />
-          <NavItem
+          {/* <NavItem
             text={"mailbox"}
             path={`/vms/${id}/dashboard`}
             icon={<FaEnvelope />}
-          />
+          /> */}
           <NavItem
             text={"timesheet"}
             path={
@@ -144,7 +162,7 @@ function MobileNav() {
             path={`/vms/${id}/task`}
             icon={<VscTasklist />}
           />
-          <NavItem
+          {/* <NavItem
             text={"expenses"}
             path="/expenses"
             icon={<IoReceiptOutline />}
@@ -153,7 +171,7 @@ function MobileNav() {
             text={"settings"}
             path="/settings"
             icon={<MdOutlineSettingsSuggest />}
-          />
+          /> */}
         </nav>
       </aside>
     </nav>

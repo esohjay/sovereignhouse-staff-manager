@@ -13,6 +13,7 @@ const expensesRoute = require("./routes/expenses");
 const campaignRoute = require("./routes/campaign");
 const applicantRoute = require("./routes/applicant");
 const leaveRoute = require("./routes/leave");
+const knowledgebaseRoute = require("./routes/knowledge-base");
 
 const app = express();
 app.use(cors());
@@ -36,6 +37,7 @@ app.use("/api/v1/expenses", expensesRoute);
 app.use("/api/v1/campaign", campaignRoute);
 app.use("/api/v1/applicant", applicantRoute);
 app.use("/api/v1/leave", leaveRoute);
+app.use("/api/v1/knowledge-base", knowledgebaseRoute);
 app.all("*", (req, res, next) => {
   next(new ExpressError("Page Not Found", 404));
 });

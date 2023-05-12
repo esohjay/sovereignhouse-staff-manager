@@ -6,6 +6,7 @@ import {
   useResetPasswordMutation,
   useUpdateUserDetailsMutation,
   useChangeStatusMutation,
+  useMakeAdminMutation,
 } from "../../api/staff/staffApi";
 import {
   changeEmail,
@@ -62,6 +63,15 @@ function Profile() {
       isSuccess: updatedStatus,
     },
   ] = useChangeStatusMutation();
+  const [
+    makeAdmin,
+    {
+      isError: makingAdminError,
+      isLoading: makingAdmin,
+      error: makeAdminError,
+      isSuccess: madeAdmin,
+    },
+  ] = useMakeAdminMutation();
 
   const [
     updateUserEmail,
@@ -82,6 +92,16 @@ function Profile() {
     updatingStatus,
     updatedStatus,
     updatingStatusError
+  );
+  // Make admin notification
+  const {} = useToast(
+    "makeadmin",
+    "Role updated successfully",
+    `${makeAdminError?.data?.message}`,
+    "mutation",
+    makingAdmin,
+    madeAdmin,
+    makingAdminError
   );
   // Update user email notification
   const {} = useToast(
@@ -378,6 +398,19 @@ function Profile() {
             // size="small"
           >
             <p>{currentData?.firstName}'s password will reset</p>
+          </Modal>
+        )}
+        {isAdmin && userId && (
+          <Modal
+            style="bg-altColor px-6 pt-2.5 pb-2 text-xs font-medium uppercase leading-normal text-white shadow-mainColor transition duration-150 ease-in-out hover:bg-mainColor hover:shadow-mainColor focus:bg-manColor focus:shadow-mainColor focus:outline-none focus:ring-0 active:bg-maninColor active:shadow-mainColor"
+            btnText={`Make admin`}
+            targetId="makeAdmin"
+            modalTitle={`Make an admin`}
+            confirmText="continue"
+            action={() => makeAdmin({ id })}
+            // size="small"
+          >
+            <p>{currentData?.firstName} will become an admin</p>
           </Modal>
         )}
         {/* <Btn text={"reset password"} onClick={handleResetPassword} /> */}

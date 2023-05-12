@@ -29,13 +29,7 @@ import {
   MdOutlineEventBusy,
 } from "react-icons/md";
 import { SlOptionsVertical } from "react-icons/sl";
-import {
-  FaRegBell,
-  FaRegUser,
-  FaHome,
-  FaEnvelope,
-  FaUserCog,
-} from "react-icons/fa";
+import { FaRegBell, FaRegUser, FaBookReader } from "react-icons/fa";
 import useAuth from "../hooks/useAuth";
 import { selectCurrentUser, logOut } from "../features/authSlice";
 
@@ -52,10 +46,9 @@ function DesktopNav({ children }) {
   useEffect(() => {
     if (signedOut) {
       navigate("/login");
-      console.log("yass");
     }
   }, [signedOut]);
-  console.log(signedOut);
+
   return (
     <>
       <nav
@@ -182,13 +175,14 @@ function DesktopNav({ children }) {
                 path={`/vms/${id}/admin/recruitment`}
                 icon={<MdOutlineWorkspaces />}
               />
+              <NavItem
+                text={"shifts"}
+                path={isAdmin ? `/vms/${id}/admin/shift` : `/vms/${id}/shift`}
+                icon={<MdPendingActions />}
+              />
             </>
           )}
-          <NavItem
-            text={"shifts"}
-            path={isAdmin ? `/vms/${id}/admin/shift` : `/vms/${id}/shift`}
-            icon={<MdPendingActions />}
-          />
+
           <NavItem
             text={"tasks"}
             path={`/vms/${id}/task`}
@@ -197,7 +191,7 @@ function DesktopNav({ children }) {
           <NavItem
             text={"knowledge base"}
             path={`/vms/${id}/knowledge-base`}
-            icon={<VscTasklist />}
+            icon={<FaBookReader />}
           />
           {/* <NavItem
             text={"expenses"}

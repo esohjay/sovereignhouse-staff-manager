@@ -62,7 +62,7 @@ function EditLeave() {
     formState: { errors },
   } = useForm();
   const onSubmit = (data) => {
-    updateLeave({ ...data, id: currentData?.id });
+    updateLeave({ ...data, id: currentData?.id, userId: currentData?.userId });
   };
   return (
     <>

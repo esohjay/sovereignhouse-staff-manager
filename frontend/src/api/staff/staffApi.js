@@ -9,6 +9,13 @@ const staffApi = appApi.injectEndpoints({
       }),
       invalidatesTags: [{ type: "Staff", id: "LIST" }],
     }),
+    makeAdmin: build.mutation({
+      query: (formBody) => ({
+        url: "/user/make-admin",
+        method: "POST",
+        body: formBody,
+      }),
+    }),
     getAllStaff: build.query({
       query: () => "/user",
       providesTags: (result) =>
@@ -74,4 +81,5 @@ export const {
   useCreateStaffMutation,
   useResetPasswordMutation,
   useChangeStatusMutation,
+  useMakeAdminMutation,
 } = staffApi;

@@ -80,13 +80,13 @@ function AllStaffTimesheets() {
                               navigate(`/vms/${id}/admin/timesheet/${staff.id}`)
                             }
                           />
-                          <Btn
+                          {/* <Btn
                             text={"leave"}
                             onClick={() =>
-                              navigate(`/vms/${id}/admin/timesheet/${staff.id}`)
+                              navigate(`/vms/${id}/admin/leave/${staff.id}/all`)
                             }
                             color={2}
-                          />
+                          /> */}
                         </div>
                       </td>
                     </tr>

@@ -11,6 +11,7 @@ import { FaRegCommentDots } from "react-icons/fa";
 import { BiEditAlt } from "react-icons/bi";
 
 import Modal from "../../components/Modal";
+import Btn from "../../components/Btn";
 
 import dayjs from "dayjs";
 import localizedFormat from "dayjs/plugin/localizedFormat";
@@ -38,18 +39,13 @@ function AllLeaveRequests() {
     formState: { errors },
     reset,
   } = useForm();
-  const onSubmit = (data) => {
-    if (!getValues("status")) {
-      setError("status", { type: "required" });
-      return;
-    }
-    updateLeave({ status: getValues("status") });
-  };
+
   const updateLeaveStatus = () => {
     if (!getValues("status")) {
       setError("status", { type: "required" });
       return;
     }
+    console.log("kkks");
     updateLeave({ status: getValues("status"), id: getValues("id") });
   };
   const leaveComment = () => {
@@ -85,7 +81,7 @@ function AllLeaveRequests() {
   return (
     <article className="w-full p-5 md:p-10">
       <article className="w-full bg-white  rounded-md shadow-">
-        <div class="flex flex-col">
+        <div className="flex flex-col">
           <div className="overflow-x-auto sm:-mx-6 lg:-mx-8">
             <div className="inline-block min-w-full py-2 sm:px-6 lg:px-8">
               <div className="overflow-hidden">
@@ -172,7 +168,11 @@ function AllLeaveRequests() {
                           {leave.status}
                         </td>
                         <td className="whitespace-nowrap px-6 py-4">
-                          <span className="flex gap-x-2 items-center">
+                          <Btn
+                            text={"view"}
+                            onClick={() => navigate(`${leave.id}`)}
+                          />
+                          {/* <span className="flex gap-x-2 items-center">
                             <Modal
                               style="bg-warning px-6 pt-2.5 pb-2 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#dc4c64] transition duration-150 ease-in-out hover:bg-altColor hover:shadow-[0_8px_9px_-4px_rgba(220,76,100,0.3),0_4px_18px_0_rgba(220,76,100,0.2)] focus:bg-altColor focus:shadow-altColor focus:outline-none focus:ring-0 active:bg-altColor active:shadow-altColor"
                               btnText={<BiEditAlt />}
@@ -205,21 +205,13 @@ function AllLeaveRequests() {
                             </Modal>
                             <Modal
                               style="bg-mainColor px-6 pt-2.5 pb-2 text-xs font-medium uppercase leading-normal text-white shadow-mainColor transition duration-150 ease-in-out hover:bg-altColor hover:shadow-[0_8px_9px_-4px_rgba(220,76,100,0.3),0_4px_18px_0_rgba(220,76,100,0.2)] focus:bg-altColor focus:shadow-altColor focus:outline-none focus:ring-0 active:bg-altColor active:shadow-altColor"
-                              btnText={<FaRegCommentDots />}
-                              targetId="leaveComment"
+                              btnText={"leave comment"}
+                              targetId="leaveCommentMain"
                               modalTitle={`Leave a comment`}
                               confirmText="send"
                               action={leaveComment}
                               // size="small"
                             >
-                              <input
-                                type="text"
-                                {...register("id", {
-                                  required: true,
-                                  value: leave.id,
-                                })}
-                                hidden
-                              />
                               <textarea
                                 {...register("statusMessage", {
                                   required: true,
@@ -228,7 +220,7 @@ function AllLeaveRequests() {
                                 className="w-full p-3 rounded-md border border-mainColor focus:outline-none"
                               ></textarea>
                             </Modal>
-                          </span>
+                          </span> */}
                         </td>
                       </tr>
                     ))}

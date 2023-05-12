@@ -4,6 +4,7 @@ import {
   useGetShiftQuery,
   useAssignTeacherMutation,
   useDeleteShiftMutation,
+  useUnassignTeacherMutation,
 } from "../../api/shift/shiftApi";
 import { useGetAllStaffQuery } from "../../api/staff/staffApi";
 import { useParams, useNavigate } from "react-router-dom";
@@ -13,7 +14,8 @@ import Modal from "../../components/Modal";
 import useToast from "../../hooks/useToast";
 
 import { useForm } from "react-hook-form";
-import { MdOutlinePersonAddAlt } from "react-icons/md";
+import { MdOutlinePersonAddAlt, MdPersonRemove } from "react-icons/md";
+// import { IoPersonRemoveSharp } from "react-icons/io";
 
 function ShiftDetails() {
   const { shiftId } = useParams();
@@ -28,6 +30,15 @@ function ShiftDetails() {
       isSuccess: assigned,
     },
   ] = useAssignTeacherMutation();
+  const [
+    unassignTeacher,
+    {
+      isError: unassigningError,
+      isLoading: unassigning,
+      error: unassignError,
+      isSuccess: unassigned,
+    },
+  ] = useUnassignTeacherMutation();
   const [
     deleteShift,
     {
@@ -49,7 +60,9 @@ function ShiftDetails() {
     assignTeacher({ ...data, shift: shiftId });
     reset();
   };
-
+  const unassignStaff = (staffId) => {
+    unassignTeacher({ user: staffId, shift: shiftId });
+  };
   // assign shift notification
   const {} = useToast(
     "assign-shift",
@@ -59,6 +72,16 @@ function ShiftDetails() {
     assigning,
     assigned,
     assigningError
+  );
+  // unassign shift notification
+  const {} = useToast(
+    "unassign-shift",
+    "Staff has been unassigned.",
+    `${unassignError?.data?.message}`,
+    "mutation",
+    unassigning,
+    unassigned,
+    unassigningError
   );
 
   // delete shift notification
@@ -134,12 +157,18 @@ function ShiftDetails() {
               currentData?.users?.map((teacher, i) => (
                 <li
                   key={teacher.id}
-                  className={`capitalize p-3 w-full  ${
+                  className={`capitalize p-3 w-full flex justify-between items-center  cursor-pointer  ${
                     i + 1 < currentData?.users?.length &&
                     "border-b border-b-mainColor"
                   }`}
                 >
-                  {teacher.fullName}
+                  <p>{teacher.fullName}</p>
+                  <button
+                    onClick={() => unassignStaff(teacher.id)}
+                    className="text-xl text-red-600 bg-transparent"
+                  >
+                    <MdPersonRemove />
+                  </button>
                 </li>
               ))
             ) : (

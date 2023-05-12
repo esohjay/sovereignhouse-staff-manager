@@ -40,6 +40,18 @@ const shiftApi = appApi.injectEndpoints({
       // In this case, `getPost` will be re-run. `getPosts` *might*  rerun, if this id was under its results.
       invalidatesTags: (result, error, { id }) => [{ type: "Shift", id }],
     }),
+    unassignTeacher: build.mutation({
+      query(data) {
+        return {
+          url: `/shift/${data.shift}/unassign`,
+          method: "PUT",
+          body: data,
+        };
+      },
+      // Invalidates all queries that subscribe to this Post `id` only.
+      // In this case, `getPost` will be re-run. `getPosts` *might*  rerun, if this id was under its results.
+      invalidatesTags: (result, error, { id }) => [{ type: "Shift", id }],
+    }),
     endShift: build.mutation({
       query(data) {
         return {
@@ -109,4 +121,5 @@ export const {
   useEndShiftMutation,
   useDeleteShiftMutation,
   useUpdateShiftMutation,
+  useUnassignTeacherMutation,
 } = shiftApi;

@@ -116,13 +116,13 @@ function AllUserTasks() {
                         </th>
                         <th
                           scope="col"
-                          className="px-6 py-4 first-letter:uppercase"
+                          className="px-6 py-4 first-letter:uppercase whitespace-nowrap"
                         >
                           start date
                         </th>
                         <th
                           scope="col"
-                          className="px-6 py-4 first-letter:uppercase"
+                          className="px-6 py-4 first-letter:uppercase whitespace-nowrap"
                         >
                           due date
                         </th>

@@ -56,7 +56,11 @@ function LeaveDetails() {
       setError("status", { type: "required" });
       return;
     }
-    updateLeave({ status: getValues("status"), id: currentData?.id });
+    updateLeave({
+      status: getValues("status"),
+      id: currentData?.id,
+      userId: currentData?.userId,
+    });
   };
   const leaveComment = () => {
     if (!getValues("statusMessage")) {
@@ -66,6 +70,7 @@ function LeaveDetails() {
     updateLeave({
       statusMessage: getValues("statusMessage"),
       id: currentData?.id,
+      userId: currentData?.userId,
     });
   };
   // delete user notification

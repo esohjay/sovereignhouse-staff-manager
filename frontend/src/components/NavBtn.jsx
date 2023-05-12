@@ -1,7 +1,7 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
 
-function NavBtn({ icon, path, text }) {
+function NavBtn({ icon, path, text, action }) {
   return (
     <NavLink
       to={path}
@@ -11,7 +11,10 @@ function NavBtn({ icon, path, text }) {
           : "w-28 h-28 bg-white rounded-lg shadow-md text-stone-800 block"
       }
     >
-      <div className="h-full flex flex-col  justify-center items-center space-y-2">
+      <div
+        onClick={action}
+        className="h-full flex flex-col  justify-center items-center space-y-2"
+      >
         <button className="text-3xl">{icon}</button>
 
         <p className="text-mainColor capitalize text-sm">{text}</p>

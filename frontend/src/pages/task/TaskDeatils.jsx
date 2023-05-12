@@ -5,6 +5,7 @@ import {
   useAssignStaffMutation,
   useDeleteTaskMutation,
   useUpdateTaskMutation,
+  useUnassignStaffMutation,
 } from "../../api/task/taskApi";
 import { useGetAllStaffQuery } from "../../api/staff/staffApi";
 import { useParams, useNavigate } from "react-router-dom";
@@ -13,7 +14,7 @@ import useToast from "../../hooks/useToast";
 import Modal from "../../components/Modal";
 
 import { useForm } from "react-hook-form";
-import { MdOutlinePersonAddAlt } from "react-icons/md";
+import { MdOutlinePersonAddAlt, MdPersonRemove } from "react-icons/md";
 
 import dayjs from "dayjs";
 import localizedFormat from "dayjs/plugin/localizedFormat";
@@ -32,6 +33,15 @@ function TaskDetails() {
       isSuccess: assigned,
     },
   ] = useAssignStaffMutation();
+  const [
+    unassignStaff,
+    {
+      isError: unassigningError,
+      isLoading: unassigning,
+      error: unassignError,
+      isSuccess: unassigned,
+    },
+  ] = useUnassignStaffMutation();
   const { data: teachers } = useGetAllStaffQuery();
   const [
     updateTask,
@@ -68,7 +78,9 @@ function TaskDetails() {
     }
     assignStaff({ task: taskId, asignees: getValues("asignees") });
   };
-
+  const handleUnassignStaff = (staffId) => {
+    unassignStaff({ user: staffId, id: taskId });
+  };
   const updateTaskStatus = () => {
     if (!getValues("status")) {
       setError("status", { type: "required" });
@@ -94,6 +106,16 @@ function TaskDetails() {
     assigning,
     assigned,
     assigningError
+  );
+  // unassign task notification
+  const {} = useToast(
+    "unassign-task",
+    "User unassigned successfully",
+    `${assignError?.data?.message}`,
+    "mutation",
+    unassigning,
+    unassigned,
+    unassigningError
   );
 
   // delete user notification
@@ -163,12 +185,18 @@ function TaskDetails() {
               currentData?.asignees?.map((teacher, i) => (
                 <li
                   key={teacher.id}
-                  className={`capitalize px-3 pt-3 pb-1 w-full  ${
+                  className={`capitalize px-3 pt-3 pb-1 w-full flex justify-between items-center  cursor-pointer ${
                     i + 1 < currentData?.asignees?.length &&
                     "border-b border-b-mainColor"
                   }`}
                 >
-                  {teacher.fullName}
+                  <p>{teacher.fullName}</p>
+                  <button
+                    onClick={() => handleUnassignStaff(teacher.id)}
+                    className="text-xl text-red-600 bg-transparent"
+                  >
+                    <MdPersonRemove />
+                  </button>
                 </li>
               ))
             ) : (

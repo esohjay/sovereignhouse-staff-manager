@@ -1,6 +1,9 @@
 const Task = require("../models/task");
 const User = require("../models/user");
 const { Op } = require("sequelize");
+const Notification = require("../models/notification");
+const { notificationMessage } = require("../utils/emailTemplate");
+const { sendMail } = require("../utils/mailer");
 
 module.exports.createTask = async (req, res) => {
   const task = await Task.create(req.body);
@@ -17,9 +20,42 @@ module.exports.assignStaff = async (req, res) => {
       },
     });
     await task.addAsignees(users);
+    let emails = [];
+    for (let user of users) {
+      emails.push(user.email);
+      const notify = await Notification.create({
+        title: "Task assigned",
+        content: "A task has been assigned to you",
+        path: `${process.env.FRONTEND_URL}/vms/${user.id}/task`,
+        userId: `${user.id}`,
+      });
+      //send email
+      const message = notificationMessage(
+        `${user.firstName}`,
+        "A task has been assigned to you. Click on the button below to view the details.",
+        `${process.env.FRONTEND_URL}/vms/${user.id}/task`
+      );
+      const mailSent = sendMail(
+        `${user.email}`,
+        // emailAuth,
+        `Task assigned`,
+        message
+      );
+      console.log(mailSent);
+    }
     res.status(201).json(task);
   } else {
-    return res.status(401).send("Unauthorized Request");
+    return res.status(401).send({ message: "Unauthorized Request" });
+  }
+};
+module.exports.unAssignStaff = async (req, res) => {
+  const user = await User.findByPk(req.body.user);
+  const task = await Task.findByPk(req.params.id);
+  if (task.userId === req.user.uid) {
+    await task.removeAsignees(user);
+    return res.status(201).json(task);
+  } else {
+    return res.status(401).send({ message: "Unauthorized Request" });
   }
 };
 module.exports.updateTask = async (req, res) => {
