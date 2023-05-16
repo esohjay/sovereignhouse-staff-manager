@@ -7,6 +7,7 @@ import * as Yup from "yup";
 import { useForm } from "react-hook-form";
 import logo from "../assets/logo.png";
 import Cookies from "js-cookie";
+import Modal from "../components/Modal";
 
 //redux
 import {
@@ -14,14 +15,20 @@ import {
   selectUser,
   selectError,
   selectCurrentUser,
+  selectResetPassword,
+  selectStatus,
+  resetPassword,
 } from "../features/authSlice";
 import { useDispatch, useSelector } from "react-redux";
 import useAuth from "../hooks/useAuth";
+import Loader from "../components/Loader";
 
 function Login() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const error = useSelector(selectError);
+  const loginStatus = useSelector(selectStatus);
+  const resetLinkSent = useSelector(selectResetPassword);
   // const user = useSelector(selectCurrentUser);
   const user = useSelector(selectUser);
   const storedUser = Cookies.get("user")
@@ -37,6 +44,8 @@ function Login() {
   const {
     register,
     handleSubmit,
+    getValues,
+    setError,
     formState: { errors },
   } = useForm(formOptions);
   const onSubmit = (data) => {
@@ -47,8 +56,13 @@ function Login() {
       navigate(`/vms/${user?.id}/dashboard`);
     }
   }, [user]);
-  // auth/user-not-found
-  // auth/wrong-password
+  const handleSendPwReset = () => {
+    if (!getValues("resetEmail")) {
+      setError("resetEmail", { type: "required" });
+      return;
+    }
+    dispatch(resetPassword({ email: getValues("resetEmail") }));
+  };
   console.log(error);
   return (
     <section className="bg-mainColor px-5 flex flex-col justify-center items-center gap-y-5 py-24 min-h-screen">
@@ -87,20 +101,49 @@ function Login() {
               className="p-2 rounded-md mb-2 block bg-white w-full focus:outline-none border border-slate-300"
             />
             {errors.password && (
-              <span className="text-red-500">{errors.password?.message}</span>
+              <div className="text-red-500">{errors.password?.message}</div>
             )}
             {error && error.name === "FirebaseError" ? (
-              <span className="text-red-500">
+              <div className="text-red-500">
                 {error.code === "auth/user-not-found" ||
                 error.code === "auth/wrong-password"
-                  ? "Username or password is incorrect"
-                  : "Unable to sign you in. Try again later"}
-              </span>
+                  ? "Email or password is incorrect"
+                  : "Unable to process your request with the given details. Try again later"}
+              </div>
             ) : (
               ""
             )}
           </div>
-          <button className="bg-mainColor text-white capitalize font-medium rounded-md inline-block py-2 px-6">
+          <Modal
+            style="bg-transparent  text-base font-medium pt-2 leading-normal mb-3 text-mainColor  transition duration-150 ease-in-out hover:text-altColor    focus:outline-none focus:ring-0 "
+            btnText="Forgot password"
+            targetId="forgotPw"
+            modalTitle={`Enter your email address`}
+            confirmText="send"
+            action={handleSendPwReset}
+            // size="small"
+          >
+            <div className="w-full">
+              <input
+                data-te-select-init
+                {...register("resetEmail")}
+                className="w-full p-3 rounded-md border border-mainColor focus:outline-none"
+              />
+            </div>
+          </Modal>
+          {errors.resetEmail && (
+            <div className="text-red-500">Email is required</div>
+          )}
+          {resetLinkSent && (
+            <div className="text-green-500">
+              A reset link has been sent to the email address provided.
+            </div>
+          )}
+          {loginStatus === "pending" && <Loader text="Logging in..." />}
+          <button
+            disabled={loginStatus === "pending"}
+            className="bg-mainColor text-white capitalize font-medium rounded-md inline-block py-2 px-6"
+          >
             submit
           </button>
         </form>

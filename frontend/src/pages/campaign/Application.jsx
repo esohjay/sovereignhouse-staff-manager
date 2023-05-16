@@ -78,7 +78,7 @@ function Application() {
       </figure>
       <article className="w-full bg-gray rounded-lg shadow-md max-w-md lg:max-w-lg p-5">
         <h3 className="uppercase text-center font-medium mb-5">
-          {currentData?.title} role
+          {currentData?.position} role
         </h3>
         {submissionStatus !== "fulfilled" ? (
           <form onSubmit={handleSubmit(onSubmit)}>
@@ -169,7 +169,6 @@ function Application() {
                   <option value="">Select gender</option>
                   <option value="male">Male</option>
                   <option value="female">Female</option>
-                  <option value="other">Other</option>
                 </select>
                 {errors.gender && (
                   <span className="text-red-500">{errors.gender?.message}</span>

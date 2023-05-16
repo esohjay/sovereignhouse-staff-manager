@@ -172,7 +172,7 @@ function Campaigns() {
                               ? "copied"
                               : "copy"
                           }
-                          targetId="copyLink"
+                          targetId={`copytext${campaign.id}`}
                           modalTitle="Copy campaign link"
                           confirmText="copy"
                           action={() => handleCopyClick(campaign.id)}
@@ -185,7 +185,6 @@ function Campaigns() {
                             <input
                               data-te-select-init
                               disabled
-                              {...register("campaignLink", {})}
                               value={`${import.meta.env.VITE_FRONTEND_URL}/${
                                 campaign.id
                               }/apply`}

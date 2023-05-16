@@ -1,9 +1,9 @@
 import React, { useEffect } from "react";
 import {
-  useGetUserTasksQuery,
   useUpdateTaskMutation,
   useDeleteTaskMutation,
 } from "../../api/task/taskApi";
+import { useGetStaffQuery } from "../../api/staff/staffApi";
 
 import { useNavigate, useParams } from "react-router-dom";
 import { useForm } from "react-hook-form";
@@ -23,8 +23,7 @@ dayjs.extend(localizedFormat);
 function AllUserTasks() {
   const navigate = useNavigate();
   const { id } = useParams();
-  const { currentData, isError, isFetching, error, isSuccess } =
-    useGetUserTasksQuery(id);
+  const { currentData: userDetails } = useGetStaffQuery(id);
   const [
     updateTask,
     {
@@ -69,15 +68,7 @@ function AllUserTasks() {
     deleted,
     deletingError
   );
-  const {} = useToast(
-    "get-all-leave application",
-    "Successfully loaded",
-    `${error?.data?.message}`,
-    "query",
-    isFetching,
-    isSuccess,
-    isError
-  );
+
   // Update shift notification
   const {} = useToast(
     "update-task-1-request",
@@ -88,11 +79,7 @@ function AllUserTasks() {
     updated,
     updatingError
   );
-  useEffect(() => {
-    if (deleted) {
-      navigate(-1);
-    }
-  }, [deleted]);
+
   return (
     <article className="w-full p-5 md:p-10">
       <article className="w-full p-5 md:p-10">
@@ -141,7 +128,7 @@ function AllUserTasks() {
                       </tr>
                     </thead>
                     <tbody>
-                      {currentData?.map((task, i) => (
+                      {userDetails?.tasks?.map((task, i) => (
                         <tr
                           key={task.id}
                           className="border-b transition duration-300 ease-in-out hover:bg-neutral-100 dark:border-neutral-500 dark:hover:bg-neutral-600"
@@ -213,24 +200,30 @@ function AllUserTasks() {
                                   </select>
                                 </div>
                               </Modal>
-                              <button
-                                onClick={() => navigate(`${task.id}/edit`)}
-                                className="bg-warning text-white font-medium border-none text-xs px-2 py-1 inline-block rounded-sm shadow-warning duration-200 transition-all hover:bg-altColor hover:shadow-altColor"
-                              >
-                                <BiEditAlt />
-                              </button>
+                              {id === task?.userId && (
+                                <>
+                                  <button
+                                    onClick={() => navigate(`${task.id}/edit`)}
+                                    className="bg-warning text-white font-medium border-none text-xs px-2 py-1 inline-block rounded-sm shadow-warning duration-200 transition-all hover:bg-altColor hover:shadow-altColor"
+                                  >
+                                    <BiEditAlt />
+                                  </button>
 
-                              <Modal
-                                style="bg-danger px-2 py-1 text-xs font-medium uppercase rounded-sm text-white shadow-mainColor transition duration-150 ease-in-out hover:bg-altColor hover:shadow-[0_8px_9px_-4px_rgba(220,76,100,0.3),0_4px_18px_0_rgba(220,76,100,0.2)] focus:bg-altColor focus:shadow-altColor focus:outline-none focus:ring-0 active:bg-altColor active:shadow-altColor"
-                                btnText={<FaTrashAlt />}
-                                targetId="deleteTask"
-                                modalTitle={`delete task`}
-                                confirmText="delete"
-                                action={() => deleteTask(task.id)}
-                                // size="small"
-                              >
-                                <p>{task.title} will be deleted permanently</p>
-                              </Modal>
+                                  <Modal
+                                    style="bg-danger px-2 py-1 text-xs font-medium uppercase rounded-sm text-white shadow-mainColor transition duration-150 ease-in-out hover:bg-altColor hover:shadow-[0_8px_9px_-4px_rgba(220,76,100,0.3),0_4px_18px_0_rgba(220,76,100,0.2)] focus:bg-altColor focus:shadow-altColor focus:outline-none focus:ring-0 active:bg-altColor active:shadow-altColor"
+                                    btnText={<FaTrashAlt />}
+                                    targetId="deleteTask"
+                                    modalTitle={`delete task`}
+                                    confirmText="delete"
+                                    action={() => deleteTask(task.id)}
+                                    // size="small"
+                                  >
+                                    <p>
+                                      {task.title} will be deleted permanently
+                                    </p>
+                                  </Modal>
+                                </>
+                              )}
                             </span>
                           </td>
                         </tr>

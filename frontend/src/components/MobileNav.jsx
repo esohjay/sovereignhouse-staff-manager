@@ -115,6 +115,7 @@ function MobileNav() {
       </div>
       {/* Sidebar */}
       <aside
+        onClick={() => dispatch(toggleSidebar())}
         className={`h-screen  bg-gray absolute p-5 w-4/5 top-0 ${
           isSidebarOpen ? "left-0" : "-left-full"
           //   showNav ? "w-4/5 md:w-64 animate-fade" : "w-0 animate-fade"

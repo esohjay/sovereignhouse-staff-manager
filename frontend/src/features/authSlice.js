@@ -9,6 +9,7 @@ import {
   signOut,
   updateEmail,
   updatePassword,
+  sendPasswordResetEmail,
 } from "firebase/auth";
 import { auth } from "../config/firebase";
 
@@ -42,6 +43,15 @@ export const signUpWithEmailAndPassword = createAsyncThunk(
     }
     // return user.user.toJSON();
     return data;
+  }
+);
+
+export const resetPassword = createAsyncThunk(
+  "auth/resetPassword",
+  async (info) => {
+    //create user
+    const user = await sendPasswordResetEmail(auth, info.email);
+    return true;
   }
 );
 
@@ -198,6 +208,7 @@ const initialState = {
   statusMsg: null,
   signedOut: false,
   error: null,
+  passwordReset: false,
 };
 
 export const authSlice = createSlice({
@@ -287,6 +298,18 @@ export const authSlice = createSlice({
     builder.addCase(changeEmail.pending, (state, action) => {
       state.status = "pending";
     });
+    //reset password
+    builder.addCase(resetPassword.fulfilled, (state, action) => {
+      state.passwordReset = action.payload;
+      state.status = "success";
+    });
+    builder.addCase(resetPassword.rejected, (state, action) => {
+      state.error = action.error;
+      state.status = "failed";
+    });
+    builder.addCase(resetPassword.pending, (state, action) => {
+      state.status = "pending";
+    });
     //logout
     builder.addCase(logOut.fulfilled, (state, action) => {
       state.currentUser = action.payload;
@@ -323,5 +346,7 @@ export const selectCurrentUser = (state) => state.auth.currentUser;
 export const selectToken = (state) => state.auth.token;
 export const selectAuthStatus = (state) => state.auth.signedOut;
 export const selectAdminStatus = (state) => state.auth.isAdmin;
+export const selectResetPassword = (state) => state.auth.passwordReset;
+export const selectStatus = (state) => state.auth.status;
 
 export default authSlice.reducer;

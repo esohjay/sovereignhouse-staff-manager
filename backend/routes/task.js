@@ -14,12 +14,12 @@ const { verifyUser, verifyAdmin } = require("../middlewares/auth");
 
 const router = express.Router();
 router.post("/", verifyUser, catchAsync(createTask));
-router.put("/:id", catchAsync(updateTask));
+router.put("/:id", verifyUser, catchAsync(updateTask));
 router.put("/", verifyUser, catchAsync(assignStaff));
 router.put("/:id/unassign", verifyUser, catchAsync(unAssignStaff));
-router.get("/", catchAsync(getAllTasks));
-router.get("/:id", catchAsync(getTask));
+router.get("/", verifyUser, catchAsync(getAllTasks));
+router.get("/:id", verifyUser, catchAsync(getTask));
 router.get("/user/:id", verifyUser, catchAsync(getUserTasks));
-router.delete("/:id", catchAsync(deleteTask));
+router.delete("/:id", verifyUser, catchAsync(deleteTask));
 
 module.exports = router;

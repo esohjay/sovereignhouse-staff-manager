@@ -9,7 +9,7 @@ function Recruitment() {
   return (
     <section className="p-8">
       <section className=" ">
-        <div className="grid grid-cols-3 gap-3 mb-7 font-medium  w-fit">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-3 mb-7 font-medium  w-fit">
           <NavLink
             to={`/vms/${id}/admin/recruitment`}
             className={({ isActive }) =>

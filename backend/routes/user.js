@@ -15,6 +15,7 @@ const { verifyUser, verifyAdmin } = require("../middlewares/auth");
 
 const router = express.Router();
 router.post("/", verifyAdmin, catchAsync(createUser));
+// make user admin
 router.post("/make-admin", verifyUser, catchAsync(makeAdmin));
 router.post("/login", verifyUser, catchAsync(login));
 router.put("/:id", verifyUser, catchAsync(updateUser));

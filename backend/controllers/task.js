@@ -7,6 +7,8 @@ const { sendMail } = require("../utils/mailer");
 
 module.exports.createTask = async (req, res) => {
   const task = await Task.create(req.body);
+  const user = await User.findByPk(req.user.uid);
+  await task.addAsignees(user);
   res.status(201).json(task);
 };
 module.exports.assignStaff = async (req, res) => {
@@ -85,6 +87,10 @@ module.exports.getUserTasks = async (req, res) => {
 };
 module.exports.deleteTask = async (req, res) => {
   const { id } = req.params;
-  await Task.destroy({ where: { id } });
-  res.status(204).json({ message: "Task deleted" });
+  if (id === req.user.uid) {
+    await Task.destroy({ where: { id } });
+    return res.status(204).json({ message: "Task deleted" });
+  } else {
+    return res.status(401).send({ message: "Unauthorized action" });
+  }
 };

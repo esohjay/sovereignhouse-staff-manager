@@ -37,7 +37,7 @@ module.exports.createUser = async (req, res) => {
   const mailSent = sendMail(
     req.body.email,
     // emailAuth,
-    `You have been added as ${req.body.contractType}`,
+    `Your profile has been created`,
     message
   );
 
@@ -51,7 +51,7 @@ module.exports.createUser = async (req, res) => {
 };
 module.exports.makeAdmin = async (req, res) => {
   const { id } = req.body;
-  const newAmin = await admin.auth().setCustomUserClaims(id, { admin: true });
+  await admin.auth().setCustomUserClaims(id, { admin: true });
   res.status(200).json("done");
 };
 module.exports.resetPassword = async (req, res) => {

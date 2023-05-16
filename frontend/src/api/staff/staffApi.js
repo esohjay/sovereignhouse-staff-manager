@@ -67,7 +67,7 @@ const staffApi = appApi.injectEndpoints({
           method: "DELETE",
         };
       },
-      // Invalidates all queries that subscribe to this Staff `id` only.
+
       invalidatesTags: (result, error, id) => [{ type: "Staff", id }],
     }),
   }),

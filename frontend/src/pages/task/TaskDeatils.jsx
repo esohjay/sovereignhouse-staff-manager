@@ -22,7 +22,7 @@ dayjs.extend(localizedFormat);
 
 function TaskDetails() {
   const navigate = useNavigate();
-  const { taskId } = useParams();
+  const { taskId, id } = useParams();
   const { currentData } = useGetTaskQuery(taskId);
   const [
     assignStaff,
@@ -142,31 +142,31 @@ function TaskDetails() {
           </h3>
         </div>
         {/* Single row */}
-        <article className="flex justify-evenly items-center">
-          <div className="flex gap-x-2  w-full justify-center  p-3 border-b border-r border-r-mainColor border-b-mainColor">
+        <article className="flex flex-col lg:flex-row justify-evenly items-center">
+          <div className="flex gap-x-2 flex-col lg:flex-row  w-full lg:justify-center  p-3 border-b border-r border-r-mainColor border-b-mainColor">
             <p className="capitalize font-medium">created by:</p>
             <p className="first-letter:uppercase">
               {currentData?.user?.fullName}
             </p>
           </div>
-          <div className="flex gap-x-2  w-full justify-center  p-3 border-b border-r border-r-mainColor border-b-mainColor">
+          <div className="flex gap-x-2  w-full lg:justify-center  p-3 border-b border-r border-r-mainColor border-b-mainColor">
             <p className="capitalize font-medium">status:</p>
             <p className="first-letter:uppercase">{currentData?.status}</p>
           </div>
-          <div className="flex gap-x-2 w-full  justify-center p-3 border-b border-b-mainColor">
+          <div className="flex gap-x-2 w-full  lg:justify-center p-3 border-b border-b-mainColor">
             <p className="capitalize font-medium">priority:</p>
             <p className="first-letter:uppercase">{currentData?.priority}</p>
           </div>
         </article>
         {/* Single row */}
-        <article className="flex justify-evenly items-center">
-          <div className="flex gap-x-2  w-full justify-center  p-3 border-b border-r border-r-mainColor border-b-mainColor">
+        <article className="flex flex-col lg:flex-row justify-evenly items-center">
+          <div className="flex gap-x-2  w-full lg:justify-center  p-3 border-b border-r border-r-mainColor border-b-mainColor">
             <p className="capitalize font-medium">start date:</p>
             <p className="first-letter:uppercase">
               {dayjs(currentData?.startDate).format("dddd, MMM D, YYYY")}
             </p>
           </div>
-          <div className="flex gap-x-2 w-full  justify-center p-3 border-b border-b-mainColor">
+          <div className="flex gap-x-2 w-full  lg:justify-center p-3 border-b border-b-mainColor">
             <p className="capitalize font-medium">end date:</p>
             <p className="first-letter:uppercase">
               {dayjs(currentData?.dueDate).format("dddd, MMM D, YYYY")}
@@ -174,26 +174,30 @@ function TaskDetails() {
           </div>
         </article>
         {/* Single row */}
-        <article className="grid grid-cols-3 gap-x-2.5 border-b place-items-center ">
+        <article className="grid lg:grid-cols-3 gap-x-2.5 border-b place-items-center ">
           <div className="flex flex-col justify-center  h-full w-full">
             <p className="text-center  capitalize  p-3 font-medium">
               assigned staff
             </p>
           </div>
           <ul className="first-letter:uppercase w-full border-r border-l border-mainColor">
-            {currentData?.asignees?.length > 0 ? (
+            {currentData?.asignees?.length > 1 ? (
               currentData?.asignees?.map((teacher, i) => (
                 <li
                   key={teacher.id}
-                  className={`capitalize px-3 pt-3 pb-1 w-full flex justify-between items-center  cursor-pointer ${
+                  className={`capitalize px-3 pt-3 pb-1 w-full  justify-between items-center  cursor-pointer ${
                     i + 1 < currentData?.asignees?.length &&
                     "border-b border-b-mainColor"
+                  } ${
+                    currentData?.user?.id === teacher.id ? "hidden" : "flex"
                   }`}
                 >
                   <p>{teacher.fullName}</p>
                   <button
                     onClick={() => handleUnassignStaff(teacher.id)}
-                    className="text-xl text-red-600 bg-transparent"
+                    className={`text-xl text-red-600 bg-transparent ${
+                      currentData?.user?.id !== teacher.id ? "hidden" : "flex"
+                    }`}
                   >
                     <MdPersonRemove />
                   </button>
@@ -204,28 +208,34 @@ function TaskDetails() {
             )}
           </ul>
 
-          <Modal
-            style="bg-mainColor px-6 pt-2.5 pb-2 text-xs font-medium uppercase rounded-sm text-white shadow-mainColor transition duration-150 ease-in-out hover:bg-altColor hover:shadow-altColor focus:bg-altColor focus:shadow-altColor focus:outline-none focus:ring-0 active:bg-altColor active:shadow-altColor"
-            btnText="assign staff"
-            targetId="assignTask"
-            modalTitle={`Select staff`}
-            confirmText="assign"
-            action={handleAssignStaff}
-            // size="small"
-          >
-            {teachers?.map((teacher) => (
-              <span key={teacher.id} className="flex gap-x-2">
-                <input
-                  type="checkbox"
-                  className="accent-mainColor"
-                  id={teacher.id}
-                  value={teacher.id}
-                  {...register("asignees")}
-                />
-                <label htmlFor={teacher.id}>{teacher.fullName}</label>
-              </span>
-            ))}
-          </Modal>
+          {currentData?.user?.id === id && (
+            <Modal
+              style="bg-mainColor px-6 pt-2.5 pb-2 text-xs font-medium uppercase rounded-sm text-white shadow-mainColor transition duration-150 ease-in-out hover:bg-altColor hover:shadow-altColor focus:bg-altColor focus:shadow-altColor focus:outline-none focus:ring-0 active:bg-altColor active:shadow-altColor"
+              btnText="assign staff"
+              targetId="assignTask"
+              modalTitle={`Select staff`}
+              confirmText="assign"
+              action={handleAssignStaff}
+              // size="small"
+            >
+              {teachers?.map((teacher) => (
+                <span key={teacher.id} className="flex gap-x-2">
+                  {currentData?.user?.id !== teacher.id && (
+                    <>
+                      <input
+                        type="checkbox"
+                        className="accent-mainColor"
+                        id={teacher.id}
+                        value={teacher.id}
+                        {...register("asignees")}
+                      />
+                      <label htmlFor={teacher.id}>{teacher.fullName}</label>
+                    </>
+                  )}
+                </span>
+              ))}
+            </Modal>
+          )}
         </article>
         {/* Single row */}
         <article className="flex gap-x-2.5">
@@ -237,7 +247,7 @@ function TaskDetails() {
           </p>
         </article>
       </article>
-      <article className="p-5 flex gap-x-3">
+      <article className="p-5 flex flex-col lg:flex-row items-center justify-center gap-3">
         <Modal
           style="bg-orange-500 px-6 pt-2.5 pb-2 text-xs font-medium uppercase leading-normal text-white shadow-orange-500 transition duration-150 ease-in-out hover:bg-altColor hover:shadow-altColor focus:bg-altColor focus:shadow-altColor focus:outline-none focus:ring-0 active:bg-altColor active:shadow-altColor"
           btnText="Update status"
@@ -261,24 +271,28 @@ function TaskDetails() {
             </select>
           </div>
         </Modal>
-        <button
-          type="button"
-          onClick={() => navigate("edit")}
-          className="inline-block rounded bg-warning px-6 pt-2.5 pb-2 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#e4a11b] transition duration-150 ease-in-out hover:bg-warning-600 hover:shadow-[0_8px_9px_-4px_rgba(228,161,27,0.3),0_4px_18px_0_rgba(228,161,27,0.2)] focus:bg-warning-600 focus:shadow-[0_8px_9px_-4px_rgba(228,161,27,0.3),0_4px_18px_0_rgba(228,161,27,0.2)] focus:outline-none focus:ring-0 active:bg-warning-700 active:shadow-[0_8px_9px_-4px_rgba(228,161,27,0.3),0_4px_18px_0_rgba(228,161,27,0.2)]"
-        >
-          Edit details
-        </button>
-        <Modal
-          style="bg-danger px-6 pt-2.5 pb-2 text-xs font-medium uppercase rounded-sm text-white shadow-mainColor transition duration-150 ease-in-out hover:bg-red-400 hover:shadow-red-400,0_4px_18px_0_rgba(220,76,100,0.2)] focus:bg-altColor focus:shadow-altColor focus:outline-none focus:ring-0 active:bg-altColor active:shadow-altColor"
-          btnText="delete"
-          targetId="deleteTask"
-          modalTitle={`delete task`}
-          confirmText="delete"
-          action={() => deleteTask(currentData?.id)}
-          // size="small"
-        >
-          <p>{currentData?.title} will be deleted permanently</p>
-        </Modal>
+        {currentData?.user?.id === id && (
+          <>
+            <button
+              type="button"
+              onClick={() => navigate("edit")}
+              className="inline-block rounded bg-warning px-6 pt-2.5 pb-2 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#e4a11b] transition duration-150 ease-in-out hover:bg-warning-600 hover:shadow-[0_8px_9px_-4px_rgba(228,161,27,0.3),0_4px_18px_0_rgba(228,161,27,0.2)] focus:bg-warning-600 focus:shadow-[0_8px_9px_-4px_rgba(228,161,27,0.3),0_4px_18px_0_rgba(228,161,27,0.2)] focus:outline-none focus:ring-0 active:bg-warning-700 active:shadow-[0_8px_9px_-4px_rgba(228,161,27,0.3),0_4px_18px_0_rgba(228,161,27,0.2)]"
+            >
+              Edit details
+            </button>
+            <Modal
+              style="bg-danger px-6 pt-2.5 pb-2 text-xs font-medium uppercase rounded-sm text-white shadow-mainColor transition duration-150 ease-in-out hover:bg-red-400 hover:shadow-red-400,0_4px_18px_0_rgba(220,76,100,0.2)] focus:bg-altColor focus:shadow-altColor focus:outline-none focus:ring-0 active:bg-altColor active:shadow-altColor"
+              btnText="delete"
+              targetId="deleteTask"
+              modalTitle={`delete task`}
+              confirmText="delete"
+              action={() => deleteTask(currentData?.id)}
+              // size="small"
+            >
+              <p>{currentData?.title} will be deleted permanently</p>
+            </Modal>
+          </>
+        )}
       </article>
     </article>
   );

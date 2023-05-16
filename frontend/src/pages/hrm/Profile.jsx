@@ -407,13 +407,11 @@ function Profile() {
             targetId="makeAdmin"
             modalTitle={`Make an admin`}
             confirmText="continue"
-            action={() => makeAdmin({ id })}
-            // size="small"
+            action={() => makeAdmin({ id: userId })}
           >
             <p>{currentData?.firstName} will become an admin</p>
           </Modal>
         )}
-        {/* <Btn text={"reset password"} onClick={handleResetPassword} /> */}
       </article>
     </article>
   );
