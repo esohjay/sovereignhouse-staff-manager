@@ -20,7 +20,7 @@ dayjs.extend(localizedFormat);
 
 function CampaignDetails() {
   const navigate = useNavigate();
-  const { campaignId } = useParams();
+  const { campaignId, id } = useParams();
   const { currentData, isError, isFetching, error, isSuccess } =
     useGetCampaignQuery(campaignId);
 
@@ -217,6 +217,34 @@ function CampaignDetails() {
             <p>This will be deleted permanently</p>
           </Modal>
         </div>
+      </article>
+      <article className="pt-6">
+        <h3 className="text-xl font-semibold mb-6">
+          {currentData?.Applicants?.length > 0
+            ? `${currentData?.Applicants?.length} `
+            : ""}
+          Applicants
+        </h3>
+        {currentData?.Applicants?.length > 0 ? (
+          <ol className="list-decimal list-inside">
+            {currentData?.Applicants?.map((applicant) => (
+              <li key={applicant.id} className="flex items-center gap-12 py-4">
+                <p className="inline">{applicant.firstName}</p>
+                <Btn
+                  text={"view"}
+                  size="px-3 py-[4px]  text-[10px]"
+                  onClick={() =>
+                    navigate(
+                      `/vms/${id}/admin/recruitment/applicant/all/${applicant.id}`
+                    )
+                  }
+                />
+              </li>
+            ))}
+          </ol>
+        ) : (
+          <p>No applications yet</p>
+        )}
       </article>
     </article>
   );

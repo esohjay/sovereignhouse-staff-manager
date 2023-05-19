@@ -2,25 +2,31 @@ import React from "react";
 import Btn from "../../components/Btn";
 import { useNavigate, useParams } from "react-router-dom";
 import { useGetAllKnowledgeBaseQuery } from "../../api/staff/knowlege-base-api";
+import Cookies from "js-cookie";
 
 function KnowledgeBase() {
   const navigate = useNavigate();
   const { id } = useParams();
   const { currentData, isError, isFetching, error, isSuccess } =
     useGetAllKnowledgeBaseQuery();
+  const isAdmin = Cookies.get("isAdmin")
+    ? JSON.parse(Cookies.get("isAdmin"))
+    : null;
   return (
     <article className="">
-      <div className="grid p-5 grid-cols-2 gap-3 mb-5 font-bold w-fit">
-        <Btn
-          text={"all"}
-          onClick={() => navigate(`/vms/${id}/knowledge-base`)}
-        />
-        <Btn
-          text={"add"}
-          color={2}
-          onClick={() => navigate(`/vms/${id}/knowledge-base/add`)}
-        />
-      </div>
+      {isAdmin && (
+        <div className="grid p-5 grid-cols-2 gap-3 mb-5 font-bold w-fit">
+          <Btn
+            text={"all"}
+            onClick={() => navigate(`/vms/${id}/knowledge-base`)}
+          />
+          <Btn
+            text={"add"}
+            color={2}
+            onClick={() => navigate(`/vms/${id}/knowledge-base/add`)}
+          />
+        </div>
+      )}
       <div className="flex flex-col overflow-x-auto">
         <div className="sm:-mx-6 lg:-mx-8">
           <div className="inline-block min-w-full py-2 sm:px-6 lg:px-8">

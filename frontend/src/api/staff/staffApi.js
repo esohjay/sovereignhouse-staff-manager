@@ -59,6 +59,15 @@ const staffApi = appApi.injectEndpoints({
       },
       invalidatesTags: (result, error, { id }) => [{ type: "Staff", id }],
     }),
+    updateNotification: build.mutation({
+      query(data) {
+        return {
+          url: `/user/${data.id}/notification`,
+          method: "PUT",
+          body: data,
+        };
+      },
+    }),
 
     deleteStaff: build.mutation({
       query(id) {
@@ -82,4 +91,5 @@ export const {
   useResetPasswordMutation,
   useChangeStatusMutation,
   useMakeAdminMutation,
+  useUpdateNotificationMutation,
 } = staffApi;

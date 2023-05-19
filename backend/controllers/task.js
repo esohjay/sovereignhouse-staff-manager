@@ -28,7 +28,7 @@ module.exports.assignStaff = async (req, res) => {
       const notify = await Notification.create({
         title: "Task assigned",
         content: "A task has been assigned to you",
-        path: `${process.env.FRONTEND_URL}/vms/${user.id}/task`,
+        path: `/vms/${user.id}/task`,
         userId: `${user.id}`,
       });
       //send email

@@ -10,6 +10,7 @@ const {
   makeAdmin,
   resetPassword,
   changeStatus,
+  updateNotification,
 } = require("../controllers/user");
 const { verifyUser, verifyAdmin } = require("../middlewares/auth");
 
@@ -18,6 +19,7 @@ router.post("/", verifyAdmin, catchAsync(createUser));
 // make user admin
 router.post("/make-admin", verifyUser, catchAsync(makeAdmin));
 router.post("/login", verifyUser, catchAsync(login));
+router.put("/:id/notification", verifyUser, catchAsync(updateNotification));
 router.put("/:id", verifyUser, catchAsync(updateUser));
 router.post("/reset-password", verifyAdmin, catchAsync(resetPassword));
 router.put("/:id/change-status", verifyAdmin, catchAsync(changeStatus));

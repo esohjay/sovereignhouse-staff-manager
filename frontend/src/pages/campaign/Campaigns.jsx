@@ -93,108 +93,86 @@ function Campaigns() {
                   </tr>
                 </thead>
                 <tbody>
-                  {currentData?.map((campaign, i) => (
-                    <tr
-                      key={campaign.id}
-                      className="border-b transition duration-300 ease-in-out hover:bg-neutral-100 dark:border-neutral-500 dark:hover:bg-neutral-600"
-                    >
-                      <td className="whitespace-nowrap px-6 py-4 font-medium">
-                        {i + 1}
-                      </td>
-                      <td className="whitespace-nowrap px-6 py-4 first-letter:uppercase">
-                        <p
-                          onClick={() => navigate(`${campaign.id}`)}
-                          className="cursor-pointer"
-                        >
-                          {campaign.position}
-                        </p>
-                      </td>
-
-                      <td className="whitespace-nowrap px-6 py-4 first-letter:uppercase">
-                        {campaign.contractType}
-                      </td>
-                      <td className="whitespace-nowrap px-6 py-4 first-letter:uppercase">
-                        {campaign.status}
-                      </td>
-                      <td className="whitespace-nowrap px-6 py-4 first-letter:uppercase">
-                        {campaign.Applicants?.length}
-                      </td>
-                      <td className="whitespace-nowrap px-6 py-4 first-letter:uppercase flex gap-x-2 items-center">
-                        <button
-                          type="button"
-                          onClick={() => navigate(`${campaign.id}`)}
-                          className="inline-block rounded bg-mainColor px-3 pt-1.5 pb-1 text-[9px] font-medium uppercase leading-normal text-white shadow-mainColor transition duration-150 ease-in-out hover:bg-altColor hover:shadow-altColor focus:bg-altColor focus:shadow-altColor focus:outline-none focus:ring-0 active:bg-green-500 active:shadow-green-500"
-                        >
-                          view
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => navigate(`${campaign.id}/edit`)}
-                          className="inline-block rounded bg-warning px-3 pt-1.5 pb-1 text-[9px] font-medium uppercase leading-normal text-white shadow-mainColor transition duration-150 ease-in-out hover:bg-altColor hover:shadow-altColor focus:bg-altColor focus:shadow-altColor focus:outline-none focus:ring-0 active:bg-green-500 active:shadow-green-500"
-                        >
-                          edit
-                        </button>
-
-                        {/* <Modal
-                          style="whitespace-nowrap bg-transparent text-sm font-normal text-black hover:bg-neutral-100 active:text-neutral-800 active:no-underline disabled:pointer-events-none disabled:bg-transparent disabled:text-neutral-400 dark:text-neutral-200 dark:hover:bg-neutral-600"
-                          targetId="changeCampaignStatus"
-                          modalTitle={`Change campaign status`}
-                          confirmText="update"
-                          btnText={`copy`}
-                          action={updateCampaignStatus}
-                          // size="small"
-                        >
-                          <div className="w-full">
-                            <input
-                              type="text"
-                              {...register("id", {
-                                required: true,
-                                value: campaign.id,
-                              })}
-                              hidden
-                            />
-                            <select
-                              data-te-select-init
-                              {...register("status", { required: true })}
-                              className="w-full p-3 rounded-md border border-mainColor focus:outline-none"
-                            >
-                              <option value="">Update status</option>
-                              <option value="pending">Pending</option>
-                              <option value="active">Active</option>
-                              <option value="inactive">Inactive</option>
-                            </select>
-                          </div>
-                        </Modal> */}
-                        <Modal
-                          style="bg-mainColor px-3 pt-1.5 pb-1 text-[9px] font-medium uppercase leading-normal text-white shadow-mainColor transition duration-150 ease-in-out hover:bg-altColor hover:shadow-altColor focus:bg-altColor focus:shadow-altColor focus:outline-none focus:ring-0 active:bg-altColor active:shadow-altColor"
-                          btnText={
-                            isCopied && copiedCampaign === campaign.id
-                              ? "copied"
-                              : "copy"
-                          }
-                          targetId={`copytext${campaign.id}`}
-                          modalTitle="Copy campaign link"
-                          confirmText="copy"
-                          action={() => handleCopyClick(campaign.id)}
-                          // size="small"
-                        >
-                          <div
-                            className="w-full"
-                            onDoubleClick={() => handleCopyClick(campaign.id)}
+                  {currentData?.length > 0 ? (
+                    currentData?.map((campaign, i) => (
+                      <tr
+                        key={campaign.id}
+                        className="border-b transition duration-300 ease-in-out hover:bg-neutral-100 dark:border-neutral-500 dark:hover:bg-neutral-600"
+                      >
+                        <td className="whitespace-nowrap px-6 py-4 font-medium">
+                          {i + 1}
+                        </td>
+                        <td className="whitespace-nowrap px-6 py-4 first-letter:uppercase">
+                          <p
+                            onClick={() => navigate(`${campaign.id}`)}
+                            className="cursor-pointer"
                           >
-                            <input
-                              data-te-select-init
-                              disabled
-                              value={`${import.meta.env.VITE_FRONTEND_URL}/${
-                                campaign.id
-                              }/apply`}
-                              className="w-full p-3 rounded-md border border-mainColor focus:outline-none"
-                            />
-                          </div>
-                        </Modal>
+                            {campaign.position}
+                          </p>
+                        </td>
+
+                        <td className="whitespace-nowrap px-6 py-4 first-letter:uppercase">
+                          {campaign.contractType}
+                        </td>
+                        <td className="whitespace-nowrap px-6 py-4 first-letter:uppercase">
+                          {campaign.status}
+                        </td>
+                        <td className="whitespace-nowrap px-6 py-4 first-letter:uppercase">
+                          {campaign.Applicants?.length}
+                        </td>
+                        <td className="whitespace-nowrap px-6 py-4 first-letter:uppercase flex gap-x-2 items-center">
+                          <button
+                            type="button"
+                            onClick={() => navigate(`${campaign.id}`)}
+                            className="inline-block rounded bg-mainColor px-3 pt-1.5 pb-1 text-[9px] font-medium uppercase leading-normal text-white shadow-mainColor transition duration-150 ease-in-out hover:bg-altColor hover:shadow-altColor focus:bg-altColor focus:shadow-altColor focus:outline-none focus:ring-0 active:bg-green-500 active:shadow-green-500"
+                          >
+                            view
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => navigate(`${campaign.id}/edit`)}
+                            className="inline-block rounded bg-warning px-3 pt-1.5 pb-1 text-[9px] font-medium uppercase leading-normal text-white shadow-mainColor transition duration-150 ease-in-out hover:bg-altColor hover:shadow-altColor focus:bg-altColor focus:shadow-altColor focus:outline-none focus:ring-0 active:bg-green-500 active:shadow-green-500"
+                          >
+                            edit
+                          </button>
+
+                          <Modal
+                            style="bg-mainColor px-3 pt-1.5 pb-1 text-[9px] font-medium uppercase leading-normal text-white shadow-mainColor transition duration-150 ease-in-out hover:bg-altColor hover:shadow-altColor focus:bg-altColor focus:shadow-altColor focus:outline-none focus:ring-0 active:bg-altColor active:shadow-altColor"
+                            btnText={
+                              isCopied && copiedCampaign === campaign.id
+                                ? "copied"
+                                : "copy"
+                            }
+                            targetId={`copytext${campaign.id}`}
+                            modalTitle="Copy campaign link"
+                            confirmText="copy"
+                            action={() => handleCopyClick(campaign.id)}
+                            // size="small"
+                          >
+                            <div
+                              className="w-full"
+                              onDoubleClick={() => handleCopyClick(campaign.id)}
+                            >
+                              <input
+                                data-te-select-init
+                                disabled
+                                value={`${import.meta.env.VITE_FRONTEND_URL}/${
+                                  campaign.id
+                                }/apply`}
+                                className="w-full p-3 rounded-md border border-mainColor focus:outline-none"
+                              />
+                            </div>
+                          </Modal>
+                        </td>
+                      </tr>
+                    ))
+                  ) : (
+                    <tr className="p-5 w-full">
+                      <td colSpan={6} className="text-center text-xl py-6 ">
+                        No campaign yet
                       </td>
                     </tr>
-                  ))}
+                  )}
                 </tbody>
               </table>
             </div>

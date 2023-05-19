@@ -9,7 +9,7 @@ module.exports.createLeave = async (req, res) => {
   const notifyAdmin = await Notification.create({
     title: "New leave reequest",
     content: "A memeber of staff has submitted a leave request.",
-    path: `${process.env.FRONTEND_URL}/vms/${process.env.ADMIN_ID}/admin/leave/${leave.id}`,
+    path: `/vms/${process.env.ADMIN_ID}/admin/leave/${leave.id}`,
     userId: `${process.env.ADMIN_ID}`,
   });
   //send email
@@ -41,7 +41,7 @@ module.exports.updateLeave = async (req, res) => {
   const notify = await Notification.create({
     title: "Update on leave request",
     content: "There has been an update on your leave request",
-    path: `${process.env.FRONTEND_URL}/vms/${user.id}/leave/${id}`,
+    path: `/vms/${user.id}/leave/${id}`,
     userId: `${user.id}`,
   });
   //send email

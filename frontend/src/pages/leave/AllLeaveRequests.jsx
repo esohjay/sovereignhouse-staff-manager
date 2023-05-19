@@ -131,30 +131,31 @@ function AllLeaveRequests() {
                     </tr>
                   </thead>
                   <tbody>
-                    {currentData?.map((leave, i) => (
-                      <tr
-                        key={leave.id}
-                        className="border-b transition duration-300 ease-in-out hover:bg-neutral-100 dark:border-neutral-500 dark:hover:bg-neutral-600"
-                      >
-                        <td className="whitespace-nowrap px-6 py-4 font-medium">
-                          {i + 1}
-                        </td>
-                        <td
-                          className="whitespace-nowrap px-6 py-4 cursor-pointer"
-                          onClick={() => navigate(`${leave.id}`)}
+                    {currentData?.length > 0 ? (
+                      currentData?.map((leave, i) => (
+                        <tr
+                          key={leave.id}
+                          className="border-b transition duration-300 ease-in-out hover:bg-neutral-100 dark:border-neutral-500 dark:hover:bg-neutral-600"
                         >
-                          {leave.user.fullName}
-                        </td>
-                        <td className="whitespace-nowrap px-6 py-4 first-letter:uppercase">
-                          {leave.type}
-                        </td>
-                        <td className="whitespace-nowrap px-6 py-4">
-                          {dayjs(leave.startDate).format("MMM D, YYYY")}
-                        </td>
-                        <td className="whitespace-nowrap px-6 py-4">
-                          {dayjs(leave.endDate).format("MMM D, YYYY")}
+                          <td className="whitespace-nowrap px-6 py-4 font-medium">
+                            {i + 1}
+                          </td>
+                          <td
+                            className="whitespace-nowrap px-6 py-4 cursor-pointer"
+                            onClick={() => navigate(`${leave.id}`)}
+                          >
+                            {leave.user.fullName}
+                          </td>
+                          <td className="whitespace-nowrap px-6 py-4 first-letter:uppercase">
+                            {leave.type}
+                          </td>
+                          <td className="whitespace-nowrap px-6 py-4">
+                            {dayjs(leave.startDate).format("MMM D, YYYY")}
+                          </td>
+                          <td className="whitespace-nowrap px-6 py-4">
+                            {dayjs(leave.endDate).format("MMM D, YYYY")}
 
-                          {/* <p className="text-xs">
+                            {/* <p className="text-xs">
                             {" "}
                             &#40;
                             {dayjs(leave.endDate).diff(
@@ -163,16 +164,16 @@ function AllLeaveRequests() {
                             )}{" "}
                             days &#41;
                           </p> */}
-                        </td>
-                        <td className="whitespace-nowrap px-6 py-4 first-letter:uppercase">
-                          {leave.status}
-                        </td>
-                        <td className="whitespace-nowrap px-6 py-4">
-                          <Btn
-                            text={"view"}
-                            onClick={() => navigate(`${leave.id}`)}
-                          />
-                          {/* <span className="flex gap-x-2 items-center">
+                          </td>
+                          <td className="whitespace-nowrap px-6 py-4 first-letter:uppercase">
+                            {leave.status}
+                          </td>
+                          <td className="whitespace-nowrap px-6 py-4">
+                            <Btn
+                              text={"view"}
+                              onClick={() => navigate(`${leave.id}`)}
+                            />
+                            {/* <span className="flex gap-x-2 items-center">
                             <Modal
                               style="bg-warning px-6 pt-2.5 pb-2 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#dc4c64] transition duration-150 ease-in-out hover:bg-altColor hover:shadow-[0_8px_9px_-4px_rgba(220,76,100,0.3),0_4px_18px_0_rgba(220,76,100,0.2)] focus:bg-altColor focus:shadow-altColor focus:outline-none focus:ring-0 active:bg-altColor active:shadow-altColor"
                               btnText={<BiEditAlt />}
@@ -221,9 +222,16 @@ function AllLeaveRequests() {
                               ></textarea>
                             </Modal>
                           </span> */}
+                          </td>
+                        </tr>
+                      ))
+                    ) : (
+                      <tr className="p-5 w-full">
+                        <td colSpan={7} className="text-center text-xl py-6 ">
+                          No leave request yet
                         </td>
                       </tr>
-                    ))}
+                    )}
                   </tbody>
                 </table>
               </div>

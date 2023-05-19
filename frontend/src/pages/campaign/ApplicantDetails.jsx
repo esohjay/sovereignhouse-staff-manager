@@ -9,6 +9,7 @@ import {
   useGetApplicationQuery,
   useUpdateApplicationMutation,
   useDeleteApplicantMutation,
+  useSetInterviewMutation,
 } from "../../api/recruitment/campaignApi";
 import { useCreateStaffMutation } from "../../api/staff/staffApi";
 import generateRandomString from "../../lib/generatePassword";
@@ -34,6 +35,15 @@ function ApplicantDetails() {
       error: deleteErrorMessage,
     },
   ] = useDeleteApplicantMutation();
+  const [
+    setupInterview,
+    {
+      isError: interviewError,
+      isLoading: interviewLoading,
+      isSuccess: interviewSuccess,
+      error: interviewErrorMessage,
+    },
+  ] = useSetInterviewMutation();
   const [
     updateApplication,
     {
@@ -96,12 +106,13 @@ function ApplicantDetails() {
       setError("link", { type: "required" });
       return;
     }
-    updateApplication({
+    setupInterview({
       id: currentData?.id,
       link: getValues("link"),
       message: getValues("message"),
       email: currentData?.email,
       status: "interviewing",
+      name: currentData?.firstName,
     });
   };
 
@@ -114,6 +125,16 @@ function ApplicantDetails() {
     isFetching,
     isSuccess,
     isError
+  );
+  // set up interview
+  const {} = useToast(
+    "set-interview-applicant",
+    "Interview details sent",
+    `${interviewErrorMessage?.data?.message}`,
+    "mutation",
+    interviewLoading,
+    interviewSuccess,
+    interviewError
   );
 
   // Delete content notification
@@ -216,8 +237,8 @@ function ApplicantDetails() {
           </div>
         </article>
       </article>
-      <article className="items-center lg:flex-row flex-col gap-3 flex">
-        <div className="h-full flex gap-2 items-center justify-items-center">
+      <article className="items-center  gap-3 flex">
+        <div className="h-full flex lg:flex-row flex-col gap-2 items-center justify-items-center">
           <a
             type="button"
             download

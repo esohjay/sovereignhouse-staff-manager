@@ -15,7 +15,7 @@ module.exports.assignStaff = async (req, res) => {
   const notify = await Notification.create({
     title: "Shift assigned",
     content: "You have been assigned to a shift",
-    path: `${process.env.FRONTEND_URL}/vms/${user.id}/timesheet`,
+    path: `/vms/${user.id}/timesheet`,
     userId: `${user.id}`,
   });
   //send email

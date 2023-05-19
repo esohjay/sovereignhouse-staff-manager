@@ -70,6 +70,17 @@ const campaignApi = appApi.injectEndpoints({
         { type: "Applicants", id },
       ],
     }),
+    setInterview: build.mutation({
+      query: (formBody) => ({
+        url: `/applicant/${formBody.id}/interview`,
+        method: "PUT",
+        body: formBody,
+      }),
+      invalidatesTags: (result, error, { id }) => [
+        { type: "Applicants", id: "APPLICANTLIST" },
+        { type: "Applicants", id },
+      ],
+    }),
     deleteCampaign: build.mutation({
       query(id) {
         return {
@@ -104,4 +115,5 @@ export const {
   useGetApplicationsQuery,
   useDeleteApplicantMutation,
   useUpdateApplicationMutation,
+  useSetInterviewMutation,
 } = campaignApi;

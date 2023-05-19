@@ -1,8 +1,9 @@
 const User = require("../models/user");
 const { sendMail } = require("../utils/mailer");
-const { welcomeMessage } = require("../utils/emailTemplate");
+const { welcomeMessage, resetPassword } = require("../utils/emailTemplate");
 const Task = require("../models/task");
 const Timesheet = require("../models/timesheet");
+const Notification = require("../models/notification");
 const admin = require("../config/firebase");
 const getAuth = require("firebase-admin/auth");
 
@@ -62,8 +63,9 @@ module.exports.resetPassword = async (req, res) => {
   } catch (error) {
     return res.status(400).json(error);
   }
+
   //send email
-  const message = welcomeMessage(
+  const message = resetPassword(
     req.body.firstName,
     `${process.env.FRONTEND_URL}/login`,
     req.body.email,
@@ -160,10 +162,16 @@ module.exports.getAllUsers = async (req, res) => {
   console.log(users);
   res.status(200).json(users);
 };
+module.exports.updateNotification = async (req, res) => {
+  const notification = await Notification.update(req.body, {
+    where: { id: req.body.id },
+  });
+  res.status(200).json(notification);
+};
 module.exports.getUser = async (req, res) => {
   const { id } = req.params;
   const user = await User.findByPk(id, {
-    include: ["shifts", Timesheet, "tasks"],
+    include: ["shifts", Timesheet, "tasks", Notification],
   });
   res.status(200).json(user);
 };

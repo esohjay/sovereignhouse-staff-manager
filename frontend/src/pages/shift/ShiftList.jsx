@@ -53,54 +53,64 @@ function ShiftList() {
                   </tr>
                 </thead>
                 <tbody>
-                  {currentData?.map((shift, i) => {
-                    const day = setDay(shift.dayOfTheWeek);
-                    return (
-                      <tr
-                        key={shift.id}
-                        className="border-b dark:border-neutral-500"
-                      >
-                        <td className="whitespace-nowrap px-6 py-4 font-medium">
-                          {i + 1}
-                        </td>
-                        <td className="whitespace-nowrap px-6 py-4 first-letter:uppercase">
-                          <Link
-                            to={`${shift.id}`}
-                            className="first-letter:uppercase"
-                          >
-                            {shift.title}
-                          </Link>
-                        </td>
-                        <td className="whitespace-nowrap px-6 py-4 first-letter:uppercase">
-                          {shift.venue}
-                        </td>
-                        <td className="whitespace-nowrap px-6 py-4 ">{day}</td>
-                        <td className="whitespace-nowrap px-6 py-4 first-letter:uppercase">
-                          {shift.studentCategory}
-                        </td>
-                        <td className="whitespace-nowrap px-6 py-4 ">
-                          {shift.duration}
-                        </td>
-                        <td className="whitespace-nowrap px-6 py-4 flex items-center gap-x-2">
-                          <Link
-                            to={`${shift.id}`}
-                            className="text-mainColor text-lg"
-                          >
-                            <FaRegEye />
-                          </Link>
-                          <Link
-                            to={`${shift.id}/edit`}
-                            className="text-warning text-lg"
-                          >
-                            <FaEdit />
-                          </Link>
-                          <button className="bg-transparent text-lg text-danger ">
-                            <FaTrash />
-                          </button>
-                        </td>
-                      </tr>
-                    );
-                  })}
+                  {currentData?.length > 0 ? (
+                    currentData?.map((shift, i) => {
+                      const day = setDay(shift.dayOfTheWeek);
+                      return (
+                        <tr
+                          key={shift.id}
+                          className="border-b dark:border-neutral-500"
+                        >
+                          <td className="whitespace-nowrap px-6 py-4 font-medium">
+                            {i + 1}
+                          </td>
+                          <td className="whitespace-nowrap px-6 py-4 first-letter:uppercase">
+                            <Link
+                              to={`${shift.id}`}
+                              className="first-letter:uppercase"
+                            >
+                              {shift.title}
+                            </Link>
+                          </td>
+                          <td className="whitespace-nowrap px-6 py-4 first-letter:uppercase">
+                            {shift.venue}
+                          </td>
+                          <td className="whitespace-nowrap px-6 py-4 ">
+                            {day}
+                          </td>
+                          <td className="whitespace-nowrap px-6 py-4 first-letter:uppercase">
+                            {shift.studentCategory}
+                          </td>
+                          <td className="whitespace-nowrap px-6 py-4 ">
+                            {shift.duration}
+                          </td>
+                          <td className="whitespace-nowrap px-6 py-4 flex items-center gap-x-2">
+                            <Link
+                              to={`${shift.id}`}
+                              className="text-mainColor text-lg"
+                            >
+                              <FaRegEye />
+                            </Link>
+                            <Link
+                              to={`${shift.id}/edit`}
+                              className="text-warning text-lg"
+                            >
+                              <FaEdit />
+                            </Link>
+                            <button className="bg-transparent text-lg text-danger ">
+                              <FaTrash />
+                            </button>
+                          </td>
+                        </tr>
+                      );
+                    })
+                  ) : (
+                    <tr className="p-5 w-full">
+                      <td colSpan={7} className="text-center text-xl py-6 ">
+                        No shift yet
+                      </td>
+                    </tr>
+                  )}
                 </tbody>
               </table>
             </div>

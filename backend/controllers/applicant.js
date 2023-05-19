@@ -4,6 +4,7 @@ const Notification = require("../models/notification");
 const {
   applicationMessage,
   notificationMessage,
+  interviewMessage,
 } = require("../utils/emailTemplate");
 const { sendMail } = require("../utils/mailer");
 
@@ -12,6 +13,8 @@ module.exports.createApplicant = async (req, res) => {
   const notify = await Notification.create({
     title: "New application",
     content: "New volunteer application submitted",
+    path: `/vms/${process.env.ADMIN_ID}/admin/recruitment`,
+    userId: `${process.env.ADMIN_ID}`,
   });
   //send email
   const messageApplicant = applicationMessage(req.body.firstName);
@@ -28,7 +31,7 @@ module.exports.createApplicant = async (req, res) => {
     `${process.env.FRONTEND_URL}/vms/admin`
   );
   const adminMailSent = sendMail(
-    "esohjay3@gmail.com",
+    process.env.ADMIN_EMAIL,
     // emailAuth,
     `New application received`,
     messageAdmin
@@ -52,9 +55,17 @@ module.exports.updateApplicant = async (req, res) => {
 };
 module.exports.scheduleInterview = async (req, res) => {
   const { id } = req.params;
-  const { status, email, message, link } = req.body;
+  const { status, email, message, link, name } = req.body;
 
   const applicant = await Applicant.update(req.body, { where: { id } });
+  //send email
+  const messageApplicant = interviewMessage(name, message, link);
+  const adminMailSent = sendMail(
+    email,
+    // emailAuth,
+    `Interview invitation`,
+    messageApplicant
+  );
   res.status(201).json(applicant);
 };
 

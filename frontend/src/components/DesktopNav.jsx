@@ -5,8 +5,18 @@ import Cookies from "js-cookie";
 import logo from "../assets/logo.png";
 import avater from "../assets/User-avatar.png";
 
+import {
+  useGetStaffQuery,
+  useUpdateNotificationMutation,
+} from "../api/staff/staffApi";
+
 //redux
-import { selectSidebarState, toggleSidebar } from "../features/appSlice";
+import {
+  selectSidebarState,
+  toggleSidebar,
+  selectNotificationState,
+  toggleNotification,
+} from "../features/appSlice";
 import { useSelector, useDispatch } from "react-redux";
 import { selectAuthStatus } from "../features/authSlice";
 
@@ -36,10 +46,13 @@ import { selectCurrentUser, logOut } from "../features/authSlice";
 function DesktopNav({ children }) {
   const dispatch = useDispatch();
   const isSidebarOpen = useSelector(selectSidebarState);
+  const isNotificationOpen = useSelector(selectNotificationState);
   const signedOut = useSelector(selectAuthStatus);
   const navigate = useNavigate();
+  const [updateNotification] = useUpdateNotificationMutation();
   const user = useSelector(selectCurrentUser);
   const { id } = useParams();
+  const { currentData } = useGetStaffQuery(id);
   const isAdmin = Cookies.get("isAdmin")
     ? JSON.parse(Cookies.get("isAdmin"))
     : null;
@@ -48,7 +61,10 @@ function DesktopNav({ children }) {
       navigate("/login");
     }
   }, [signedOut]);
-
+  const handleClickNotification = (id, link) => {
+    updateNotification({ id, viewed: true });
+    navigate(link);
+  };
   return (
     <>
       <nav
@@ -80,16 +96,34 @@ function DesktopNav({ children }) {
             path={`/vms/${id}/profile`}
             icon={<FaRegUser />}
           />
-          <DesktopTopNavItem
-            text="notification"
-            path="/n"
-            icon={<FaRegBell />}
-          />
+
           <DesktopTopNavItem
             text="timesheet"
             path={`/vms/${id}/timesheet`}
             icon={<MdTimer />}
           />
+          {/* <DesktopTopNavItem
+            text="notification"
+            path="/n"
+            icon={<FaRegBell />}
+          />  */}
+          <div
+            onClick={() => dispatch(toggleNotification())}
+            className={
+              "text-white block font-medium hover:text-mainColor rounded-md hover:bg-lightGreen cursor-pointer"
+            }
+          >
+            <div
+              className="flex p-2 items-center  flex-col justify-center 
+      gap-y-1"
+            >
+              <button className="text-xl">
+                <FaRegBell />
+              </button>
+
+              <p className="capitalize text-xs">notification</p>
+            </div>
+          </div>
           <div
             onClick={() => dispatch(logOut())}
             className={
@@ -109,7 +143,35 @@ function DesktopNav({ children }) {
           </div>
           {/* <DesktopTopNavItem text="logout" path="/n" icon={<MdLogout />} /> */}
         </ul>
+        {/* Notification Dropdown */}
+        <div
+          className={`max-w-sm absolute top-16 right-0 bg-gray hidden md:block bg-opacity-50  backdrop-blur-md ${
+            isNotificationOpen ? "h-[600px]" : "h-0"
+          } transition-all duration-500 overflow-hidden overflow-y-scroll`}
+        >
+          <ul className="p-5 space-y-1">
+            {currentData?.notifications?.length > 0 ? (
+              currentData?.notifications?.map((notification) => (
+                <li
+                  onClick={() =>
+                    handleClickNotification(notification.id, notification.path)
+                  }
+                  key={notification.id}
+                  className={`p-3 ${
+                    notification.viewed ? "hidden" : "block"
+                  } hover:bg-mainColor hover:text-white first-letter:uppercase border border-mainColor`}
+                >
+                  <p className="">{notification.title}</p>
+                  <p className="text-sm">{notification.content}</p>
+                </li>
+              ))
+            ) : (
+              <p>No notifications</p>
+            )}{" "}
+          </ul>
+        </div>
       </nav>
+
       <section className="hidden w-full  relative gap-x-4 md:flex">
         <nav
           className={`w-64 bg-gray h-screen  shadow-sm fixed top-16 ${

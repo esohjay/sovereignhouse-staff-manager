@@ -14,9 +14,14 @@ import {
   toggleSidebar,
   toggleDropdown,
   selectDropdownState,
+  selectNotificationState,
+  toggleNotification,
 } from "../features/appSlice";
 import { useSelector, useDispatch } from "react-redux";
-import { useGetStaffQuery } from "../api/staff/staffApi";
+import {
+  useGetStaffQuery,
+  useUpdateNotificationMutation,
+} from "../api/staff/staffApi";
 
 //components
 import NavItem from "./NavItem";
@@ -33,17 +38,26 @@ import {
   MdOutlineSettingsSuggest,
   MdLogout,
   MdOutlineEventBusy,
+  MdOutlineWorkspaces,
+  MdPendingActions,
 } from "react-icons/md";
 import { SlOptionsVertical } from "react-icons/sl";
-import { FaRegBell, FaRegUser, FaEnvelope, FaUserCog } from "react-icons/fa";
+import {
+  FaRegBell,
+  FaRegUser,
+  FaEnvelope,
+  FaUserCog,
+  FaBookReader,
+} from "react-icons/fa";
 
 function MobileNav() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const isSidebarOpen = useSelector(selectSidebarState);
   const isDropdownOpen = useSelector(selectDropdownState);
+  const isNotificationOpen = useSelector(selectNotificationState);
   const signedOut = useSelector(selectAuthStatus);
-
+  const [updateNotification] = useUpdateNotificationMutation();
   const { id } = useParams();
   const isAdmin = Cookies.get("isAdmin")
     ? JSON.parse(Cookies.get("isAdmin"))
@@ -54,6 +68,10 @@ function MobileNav() {
       navigate("/login");
     }
   }, [signedOut]);
+  const handleClickNotification = (id, link) => {
+    updateNotification({ id, viewed: true });
+    navigate(link);
+  };
   return (
     <nav className="bg-mainColor px-5 lg:px-9 flex items-center justify-between h-16 relative md:hidden">
       <ul className="flex gap-x-3">
@@ -72,7 +90,10 @@ function MobileNav() {
         </Link>
       </ul>
       <ul className="flex justify-around items-center gap-x-3 md:hidden">
-        <button className="text-white border-none text-xl">
+        <button
+          onClick={() => dispatch(toggleNotification())}
+          className="text-white border-none text-xl"
+        >
           <FaRegBell />
         </button>
         {/* Dropdown trigger */}
@@ -83,6 +104,33 @@ function MobileNav() {
           <SlOptionsVertical />
         </button>
       </ul>
+      {/* Notification Dropdown */}
+      <div
+        className={`w-full absolute top-16 left-0 bg-gray md:hidden bg-opacity-50  backdrop-blur-md ${
+          isNotificationOpen ? "h-96" : "h-0"
+        } transition-all duration-500 overflow-hidden overflow-y-scroll`}
+      >
+        <ul className="p-5 space-y-1">
+          {currentData?.notifications?.length > 0 ? (
+            currentData?.notifications?.map((notification) => (
+              <li
+                onClick={() =>
+                  handleClickNotification(notification.id, notification.path)
+                }
+                key={notification.id}
+                className={`p-3 ${
+                  notification.viewed ? "hidden" : "block"
+                } hover:bg-mainColor hover:text-white first-letter:uppercase border border-mainColor`}
+              >
+                <p className="">{notification.title}</p>
+                <p className="text-sm">{notification.content}</p>
+              </li>
+            ))
+          ) : (
+            <p>No notifications</p>
+          )}{" "}
+        </ul>
+      </div>
       {/* Dropdown */}
       <div
         className={`w-full absolute top-16 left-0 bg-gray md:hidden bg-opacity-50  backdrop-blur-md ${
@@ -158,10 +206,34 @@ function MobileNav() {
             path={isAdmin ? `/vms/${id}/admin/leave` : `/vms/${id}/leave`}
             icon={<MdOutlineEventBusy />}
           />
+          {isAdmin && (
+            <>
+              <NavItem
+                text={"HRM"}
+                path={`/vms/${id}/admin/staff`}
+                icon={<FaRegUser />}
+              />
+              <NavItem
+                text={"Recruitment"}
+                path={`/vms/${id}/admin/recruitment`}
+                icon={<MdOutlineWorkspaces />}
+              />
+              <NavItem
+                text={"shifts"}
+                path={isAdmin ? `/vms/${id}/admin/shift` : `/vms/${id}/shift`}
+                icon={<MdPendingActions />}
+              />
+            </>
+          )}
           <NavItem
             text={"tasks"}
             path={`/vms/${id}/task`}
             icon={<VscTasklist />}
+          />
+          <NavItem
+            text={"knowledge base"}
+            path={`/vms/${id}/knowledge-base`}
+            icon={<FaBookReader />}
           />
           {/* <NavItem
             text={"expenses"}
