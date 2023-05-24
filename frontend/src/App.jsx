@@ -59,7 +59,7 @@ function App() {
   const router = createBrowserRouter(
     createRoutesFromElements(
       <Route path="/" element={<Landing />}>
-        <Route index path="login" element={<Login />} />
+        <Route index element={<Login />} />
 
         <Route path="vms/:id" element={<Home />}>
           <Route element={<ProtectedRoute />}>

@@ -10,7 +10,7 @@ function AdminRoute() {
   const user = Cookies.get("user") ? JSON.parse(Cookies.get("user")) : null;
   useEffect(() => {
     if (!user && !isAdmin) {
-      <Navigate to="/login" state={{ from: location }} replace />;
+      <Navigate to="/" state={{ from: location }} replace />;
     }
   }, [user, isAdmin]);
   return isAdmin ? (

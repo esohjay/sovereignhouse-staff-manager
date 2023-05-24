@@ -200,7 +200,6 @@ function Profile() {
 
   return (
     <article className="p-5">
-      {resetStatus === "fulfilled" && <p>Reset</p>}
       <article className="border rounded-md border-mainColor">
         <div className="p-3 border-b border-b-mainColor">
           <h3 className="text-center font-semibold text-mainColor capitalize p-3">
@@ -211,7 +210,7 @@ function Profile() {
         <article className="flex flex-col lg:flex-row justify-evenly items-center">
           <div className="flex gap-x-2  w-full lg:justify-center  p-3 border-b lg:border-r lg:border-r-mainColor border-b-mainColor">
             <p className="capitalize font-medium">email:</p>
-            <p className="first-letter:uppercase">{currentData?.email}</p>
+            <p className="">{currentData?.email}</p>
           </div>
           <div className="flex gap-x-2 w-full  lg:justify-center p-3 border-b border-b-mainColor">
             <p className="capitalize font-medium">phone:</p>

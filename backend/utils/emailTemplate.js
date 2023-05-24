@@ -19,9 +19,12 @@ module.exports.welcomeMessage = (name, link, email, password) => {
             </p>
             <a href=${link} style="display:inline-block;background-color:#016838;color:white;padding:16px 30px;border:none;border-radius:5px;text-decoration:none;margin-bottom:5px">Login</a>
            <ul>
-           <li style="font-weight:bold;font-size:18px">Email: ${email}</li>
-           <li style="font-weight:bold;font-size:18px">Password: ${password}</li>
+           <li style="font-weight:bold;font-size:16px;margin-bottom:5px">Email: ${email}</li>
+           <li style="font-weight:bold;font-size:16px">Password: ${password}</li>
            </ul>
+           <p style="line-height:1.7;margin-bottom:1rem;">
+           You can change your password after you login.
+            </p>
             <p style="line-height:1.7;color:#AFAFAF;margin-bottom:1rem;">
             If you experience any issues logging into your account, reach out to us at admin@vm.sovereignhousegh.com.
             </p>
@@ -44,14 +47,17 @@ module.exports.resetPassword = (name, link, email, password) => {
             <h1 style="text-align:center;color:#016838;text-transform:uppercase;letter-spacing:1.5;">Sovereign House GH</h1>
             <h3 style="text-transform:capitalize;color:#016838;margin-bottom:1.5rem;">Hello ${name},</h3>
             <p style="line-height:1.7;margin-bottom:1rem;">
-            Your passweord has been reset. 
+            Your password has been reset. 
            Click on the link and use the credentials below to access your account.
             </p>
             <a href=${link} style="display:inline-block;background-color:#016838;color:white;padding:16px 30px;border:none;border-radius:5px;text-decoration:none;margin-bottom:5px">Login</a>
            <ul>
-           <li style="font-weight:bold;font-size:18px">Email: ${email}</li>
-           <li style="font-weight:bold;font-size:18px">New password: ${password}</li>
+           <li style="font-weight:bold;font-size:16px;margin-bottom:5px">Email: ${email}</li>
+           <li style="font-weight:bold;font-size:16px">Password: ${password}</li>
            </ul>
+           <p style="line-height:1.7;margin-bottom:1rem;">
+           You can change your password after you login.
+            </p>
             <p style="line-height:1.7;color:#AFAFAF;margin-bottom:1rem;">
             If you experience any issues logging into your account, reach out to us at admin@sovereignhousegh.com.
             </p>

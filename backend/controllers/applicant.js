@@ -28,7 +28,7 @@ module.exports.createApplicant = async (req, res) => {
   const messageAdmin = notificationMessage(
     "Admin",
     "New volunteer application has been received",
-    `${process.env.FRONTEND_URL}/vms/admin`
+    `${process.env.FRONTEND_URL}/vms/admin/recruitment`
   );
   const adminMailSent = sendMail(
     process.env.ADMIN_EMAIL,
@@ -41,10 +41,8 @@ module.exports.createApplicant = async (req, res) => {
 };
 module.exports.uploadFile = async (req, res) => {
   if (!req.file) {
-    return res.status(400).send("No file was uploaded");
+    return res.status(400).send({ message: "No file was uploaded" });
   }
-  console.log(req.file.filename);
-  console.log(req.file);
   res.status(201).json({ fileSrc: req.file.filename });
 };
 module.exports.updateApplicant = async (req, res) => {

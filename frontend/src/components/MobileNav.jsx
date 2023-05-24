@@ -65,7 +65,7 @@ function MobileNav() {
   const { currentData } = useGetStaffQuery(id);
   useEffect(() => {
     if (signedOut) {
-      navigate("/login");
+      navigate("/");
     }
   }, [signedOut]);
   const handleClickNotification = (id, link) => {
