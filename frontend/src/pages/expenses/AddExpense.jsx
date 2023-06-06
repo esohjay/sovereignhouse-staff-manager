@@ -1,13 +1,64 @@
 import React, { useEffect } from "react";
 
 import { useForm } from "react-hook-form";
+import { useParams } from "react-router-dom";
 
-import { useRequestLeaveMutation } from "../../api/leave/leaveApi";
 import useToast from "../../hooks/useToast";
+import {
+  useCreateExpenseMutation,
+  useUploadReceiptMutation,
+} from "../../api/expenses";
 
 function AddExpenses() {
-  const [requestLeave, { error, isLoading, isSuccess, isError }] =
-    useRequestLeaveMutation();
+  const [createExpense, { error, isLoading, isSuccess, isError }] =
+    useCreateExpenseMutation();
+  const { id } = useParams();
+  const [uploadReceipt, { data: receipt, isSuccess: uploaded }] =
+    useUploadReceiptMutation();
+
+  const {
+    register,
+    handleSubmit,
+    setError,
+    reset,
+    formState: { errors },
+  } = useForm();
+  const onSubmit = (data) => {
+    if (!receipt) {
+      setError("file", { type: "required" });
+      return;
+    }
+
+    createExpense({
+      ...data,
+      image: receipt.fileSrc,
+      userId: id,
+      status: "pending",
+    });
+  };
+
+  const handleFileUpload = (e) => {
+    const file = e.target.files[0];
+    if (file.size > 1024 * 1024 * 5) {
+      alert("File size too large");
+      return;
+    }
+    if (
+      file.type ===
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.document" ||
+      file.type === "application/pdf" ||
+      file.type === "application/msword" ||
+      "image/jpeg" ||
+      "image/png"
+    ) {
+      const bodyFormData = new FormData();
+      bodyFormData.append("file", file);
+      uploadReceipt(bodyFormData);
+    } else {
+      alert("File format not allowed");
+      return;
+    }
+  };
 
   // Notification
   const {} = useToast(
@@ -19,15 +70,7 @@ function AddExpenses() {
     isSuccess,
     isError
   );
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-    reset,
-  } = useForm();
-  const onSubmit = (data) => {
-    requestLeave(data);
-  };
+
   useEffect(() => {
     if (isSuccess) {
       reset();
@@ -37,101 +80,84 @@ function AddExpenses() {
     <article className="w-full p-5">
       <form onSubmit={handleSubmit(onSubmit)}>
         <article className="w-full grid md:grid-cols-2 gap-x-3">
-          {/* leave title */}
+          {/* amount*/}
           <div className="mb-3">
             <label
-              htmlFor="title"
+              htmlFor="amount"
               className="capitalize font-medium mb-1 block text-sm"
             >
-              leave title
+              Amount &#40;&pound;&#41;
+            </label>
+            <input
+              type="number"
+              {...register("amount", { required: true })}
+              className="p-2 rounded-md mb-2 block bg-white w-full focus:outline-none border border-slate-300"
+            />
+            {errors.amount && (
+              <span className="text-red-500 ">amount is required</span>
+            )}
+          </div>
+          {/* amount*/}
+          <div className="mb-3">
+            <label
+              htmlFor="receiptNo"
+              className="capitalize font-medium mb-1 block text-sm"
+            >
+              receipt number
             </label>
             <input
               type="text"
-              {...register("title", { required: true })}
+              {...register("receiptNo", { required: true })}
               className="p-2 rounded-md mb-2 block bg-white w-full focus:outline-none border border-slate-300"
             />
-            {errors.title && (
-              <span className="text-red-500 ">title is required</span>
-            )}
-          </div>
-          {/* leave type */}
-          <div className="mb-3">
-            <label
-              htmlFor="type"
-              className="capitalize font-medium mb-1 block text-sm"
-            >
-              leave type
-            </label>
-            <select
-              {...register("type")}
-              className="p-2  rounded-md mb-2 block bg-white w-full focus:outline-none border border-slate-300"
-            >
-              <option value="">Select type</option>
-              <option value="maternity leave">Maternity leave</option>
-              <option value="paternity leave">Paternity leave</option>
-              <option value="annual leave">Annual leave</option>
-              <option value="sick leave">Sick leave</option>
-              <option value="educational leave">Educational leave</option>
-              <option value="other">Other</option>
-            </select>
-            {errors.type && (
-              <span className="text-red-500">leave type is required</span>
+            {errors.receiptNo && (
+              <span className="text-red-500 ">receipt number is required</span>
             )}
           </div>
         </article>
-        <article className="w-full grid grid-cols-2 gap-x-3">
-          {/* start date */}
-          <div className="mb-3">
+        <div className="mb-5">
+          <label>
             <label
-              htmlFor="startDate"
-              className="capitalize font-medium mb-1 block text-sm"
+              htmlFor="receipt"
+              className="block mb-2 font-semibold text-sm"
             >
-              start date
+              Upload Receipt
             </label>
             <input
-              type="date"
-              {...register("startDate", { required: true })}
-              className="p-2 rounded-md mb-2 block bg-white w-full focus:outline-none border border-slate-300"
+              type="file"
+              id="receipt"
+              disabled={status === "pending"}
+              onChange={handleFileUpload}
+              className="text-sm text-grey-500 file:border-2 file:border-transparent file:mr-3 file:py-1 file:px-3 file:text-sm 
+                file:rounded-md file:transition-all file:duration-500 file:font-medium file:bg-mainColor file:text-white
+                hover:file:cursor-pointer hover:file:bg-white  hover:file:text-mainColor hover:file:border-mainColor 
+          "
             />
-            {errors.startDate && (
-              <span className="text-red-500 ">start date is required</span>
-            )}
-          </div>
-          {/* end date */}
-          <div className="mb-3">
-            <label
-              htmlFor="endDate"
-              className="capitalize font-medium mb-1 block text-sm"
-            >
-              end date
-            </label>
-            <input
-              type="date"
-              {...register("endDate", { required: true })}
-              className="p-2 rounded-md mb-2 block bg-white w-full focus:outline-none border border-slate-300"
-            />
-            {errors.endDate && (
-              <span className="text-red-500 ">end date is required</span>
-            )}
-          </div>
-        </article>
+          </label>
+          {uploaded && (
+            <span className="text-green-500 ">Receipt uploaded</span>
+          )}
+          {errors.file && !receipt && (
+            <span className="text-red-500 ">Upload your receipt</span>
+          )}
+        </div>
 
-        {/* reason */}
+        {/* description */}
         <div className="mb-3">
           <label
-            htmlFor="reason"
+            htmlFor="description"
             className="capitalize font-medium mb-1 block text-sm"
           >
-            reason
+            description
           </label>
           <textarea
             type="text"
-            {...register("reason", { required: true })}
+            {...register("description", { required: true })}
             rows="7"
             className="p-2 rounded-md mb-2 block bg-white w-full focus:outline-none border border-slate-300"
           />
-          {errors.reason && (
-            <span className="text-red-500">leave reason is required</span>
+          {errors.description && (
+            <span className="text-red-500">description is required</span>
           )}
         </div>
         <button

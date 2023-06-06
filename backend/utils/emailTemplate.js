@@ -32,6 +32,37 @@ module.exports.welcomeMessage = (name, link, email, password) => {
         </body>
       </html>`;
 };
+module.exports.requestInterview = (name, date) => {
+  return `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+      <html xmlns="http://www.w3.org/1999/xhtml">
+        <head>
+          <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+          <meta http-equiv="X-UA-Compatible" content="IE=edge">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <title>Sovereignhousegh</title>
+          
+        </head>
+        <body style="margin:0;padding:2rem;background-color:#fafafa;">
+          <div class="container" style="background-color:white;border:1px solid transparent;border-radius:10px;border-top:18px solid #016838;padding:1rem;">
+            <h1 style="text-align:center;color:#016838;text-transform:uppercase;letter-spacing:1.5;">Sovereign House GH</h1>
+            <h3 style="text-transform:capitalize;color:#016838;margin-bottom:1.5rem;">Hello ${name},</h3>
+            <p style="line-height:1.7;margin-bottom:1rem;">
+            Thank you for your interest in Volunteering with Sovereign House GH.</p>
+            <p style="line-height:1.7;margin-bottom:1rem;">
+            Can you let me know if you are available on the day and time listed below for an online interview? 
+            </p>
+            
+           
+           <p style="font-weight:bold;font-size:16px;margin-bottom:15px">Date and time: ${date}</p>
+           
+           <p style="line-height:1.7;margin-bottom:1rem;">
+           Regards Jane
+            </p>
+          </div>
+        </body>
+      </html>`;
+};
+
 module.exports.resetPassword = (name, link, email, password) => {
   return `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
       <html xmlns="http://www.w3.org/1999/xhtml">
@@ -86,7 +117,7 @@ module.exports.applicationMessage = (name) => {
         </body>
       </html>`;
 };
-module.exports.interviewMessage = (name, message, link) => {
+module.exports.interviewMessage = (name, link) => {
   return `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
       <html xmlns="http://www.w3.org/1999/xhtml">
         <head>
@@ -99,9 +130,9 @@ module.exports.interviewMessage = (name, message, link) => {
             <h1 style="text-align:center;color:#016838;text-transform:uppercase;letter-spacing:1.5;">Sovereign House GH</h1>
             <h3 style="text-transform:capitalize;color:#016838;margin-bottom:1.5rem;">Hello ${name},</h3>
             <p style="line-height:1.7;margin-bottom:1rem;">
-            ${message}
+            Once again, thank you for your interest in volunteering for Sovereingn House GH. The meeting link can be found below.
             </p>
-            <li style="font-weight:bold;font-size:16px">Meeting link: ${link}</li>
+            <p style="font-weight:bold;font-size:16px">Meeting link: ${link}</p>
             <p style="line-height:1.7;margin-bottom:1rem;">Or click on the button below</p>
             <a href=${link} style="display:inline-block;background-color:#016838;color:white;padding:16px 30px;border:none;border-radius:5px;text-decoration:none;margin-bottom:5px">View</a>
            

@@ -10,6 +10,7 @@ import {
   useUpdateApplicationMutation,
   useDeleteApplicantMutation,
   useSetInterviewMutation,
+  useRequestInterviewMutation,
 } from "../../api/recruitment/campaignApi";
 import { useCreateStaffMutation } from "../../api/staff/staffApi";
 import generateRandomString from "../../lib/generatePassword";
@@ -44,6 +45,15 @@ function ApplicantDetails() {
       error: interviewErrorMessage,
     },
   ] = useSetInterviewMutation();
+  const [
+    requestInterview,
+    {
+      isError: requestInterviewError,
+      isLoading: requestInterviewLoading,
+      isSuccess: requestInterviewSuccess,
+      error: requestInterviewErrorMessage,
+    },
+  ] = useRequestInterviewMutation();
   const [
     updateApplication,
     {
@@ -97,11 +107,11 @@ function ApplicantDetails() {
       status: getValues("status"),
     });
   };
-  const scheduleInterview = () => {
-    if (!getValues("message")) {
-      setError("message", { type: "required" });
-      return;
-    }
+  const sendInterviewLink = () => {
+    // if (!getValues("message")) {
+    //   setError("message", { type: "required" });
+    //   return;
+    // }
     if (!getValues("link")) {
       setError("link", { type: "required" });
       return;
@@ -109,9 +119,22 @@ function ApplicantDetails() {
     setupInterview({
       id: currentData?.id,
       link: getValues("link"),
-      message: getValues("message"),
+      // message: getValues("message"),
       email: currentData?.email,
       status: "interviewing",
+      name: currentData?.firstName,
+    });
+  };
+  const scheduleInterview = () => {
+    if (!getValues("date")) {
+      setError("date", { type: "required" });
+      return;
+    }
+
+    requestInterview({
+      id: currentData?.id,
+      date: dayjs(getValues("date")).format("dddd, MMM D, YYYY hh:mma"),
+      email: currentData?.email,
       name: currentData?.firstName,
     });
   };
@@ -135,6 +158,16 @@ function ApplicantDetails() {
     interviewLoading,
     interviewSuccess,
     interviewError
+  );
+  // request interview
+  const {} = useToast(
+    "request-interview-applicant",
+    "Interview schedule sent",
+    `${requestInterviewErrorMessage?.data?.message}`,
+    "mutation",
+    requestInterviewLoading,
+    requestInterviewSuccess,
+    requestInterviewError
   );
 
   // Delete content notification
@@ -277,14 +310,14 @@ function ApplicantDetails() {
           </Modal>
           <Modal
             style="bg-warning px-6 pt-2.5 pb-2 text-xs font-medium uppercase leading-normal text-white shadow-warning transition duration-150 ease-in-out hover:bg-altColor hover:shadow-altColor focus:bg-altColor focus:shadow-altColor focus:outline-none focus:ring-0 active:bg-altColor active:shadow-altColor"
-            btnText={"schedule an interview"}
+            btnText={"send meeting link"}
             targetId="interview"
-            modalTitle={`Send invterview message`}
+            modalTitle={`Send invterview link`}
             confirmText="send"
-            action={scheduleInterview}
+            action={sendInterviewLink}
             // size="small"
           >
-            <div className="mb-2">
+            {/* <div className="mb-2">
               <label
                 htmlFor="message"
                 className="capitalize font-medium mb-1 block text-sm"
@@ -298,7 +331,7 @@ function ApplicantDetails() {
                 rows="5"
                 className="w-full p-3 rounded-md border border-mainColor focus:outline-none"
               ></textarea>
-            </div>
+            </div> */}
             <div>
               <label
                 htmlFor="meeting link"
@@ -312,6 +345,29 @@ function ApplicantDetails() {
                 })}
                 className="w-full p-3 rounded-md border border-mainColor focus:outline-none"
               ></input>
+            </div>
+          </Modal>
+          <Modal
+            style="bg-warning px-6 pt-2.5 pb-2 text-xs font-medium uppercase leading-normal text-white shadow-warning transition duration-150 ease-in-out hover:bg-altColor hover:shadow-altColor focus:bg-altColor focus:shadow-altColor focus:outline-none focus:ring-0 active:bg-altColor active:shadow-altColor"
+            btnText={"schedule an interview"}
+            targetId="interviewLink"
+            modalTitle={`Schedule an interview`}
+            confirmText="send"
+            action={scheduleInterview}
+            // size="small"
+          >
+            <div className="mb-3">
+              <label
+                htmlFor="date"
+                className="capitalize font-medium mb-1 block text-sm"
+              >
+                date and time
+              </label>
+              <input
+                type="datetime-local"
+                {...register("date", { required: true })}
+                className="p-2 rounded-md mb-2 block bg-white w-full focus:outline-none border border-slate-300"
+              />
             </div>
           </Modal>
 
@@ -328,6 +384,8 @@ function ApplicantDetails() {
           </Modal>
         </div>
       </article>
+      {errors.link && <p className="text-red-500">Meeting link is required</p>}
+      {errors.date && <p className="text-red-500">Meeting date is required</p>}
     </article>
   );
 }

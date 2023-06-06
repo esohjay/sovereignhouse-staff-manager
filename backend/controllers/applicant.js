@@ -5,6 +5,7 @@ const {
   applicationMessage,
   notificationMessage,
   interviewMessage,
+  requestInterview,
 } = require("../utils/emailTemplate");
 const { sendMail } = require("../utils/mailer");
 
@@ -31,7 +32,7 @@ module.exports.createApplicant = async (req, res) => {
     `${process.env.FRONTEND_URL}/vms/admin/recruitment`
   );
   const adminMailSent = sendMail(
-    process.env.ADMIN_EMAIL,
+    [process.env.ADMIN_EMAIL, process.env.ADMIN2_EMAIL],
     // emailAuth,
     `New application received`,
     messageAdmin
@@ -51,13 +52,26 @@ module.exports.updateApplicant = async (req, res) => {
   const applicant = await Applicant.update(req.body, { where: { id } });
   res.status(201).json(applicant);
 };
+module.exports.requestInterview = async (req, res) => {
+  const { id } = req.params;
+  const { email, date, name } = req.body;
+
+  const messageApplicant = requestInterview(name, date);
+  const adminMailSent = sendMail(
+    email,
+    // emailAuth,
+    `Interview Request`,
+    messageApplicant
+  );
+  res.status(201).json({ message: "Message sent succesfully" });
+};
 module.exports.scheduleInterview = async (req, res) => {
   const { id } = req.params;
   const { status, email, message, link, name } = req.body;
 
   const applicant = await Applicant.update(req.body, { where: { id } });
   //send email
-  const messageApplicant = interviewMessage(name, message, link);
+  const messageApplicant = interviewMessage(name, link);
   const adminMailSent = sendMail(
     email,
     // emailAuth,

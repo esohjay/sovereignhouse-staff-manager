@@ -6,6 +6,7 @@ const Expenses = sequelize.define("Expenses", {
   amount: DataTypes.INTEGER,
   description: DataTypes.STRING,
   receiptNo: DataTypes.STRING,
+  status: DataTypes.STRING,
   image: DataTypes.STRING,
 });
 

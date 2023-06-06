@@ -231,15 +231,17 @@ function MobileNav() {
             icon={<VscTasklist />}
           />
           <NavItem
+            text={"expenses"}
+            path={`/vms/${id}/expenses`}
+            icon={<IoReceiptOutline />}
+          />
+          <NavItem
             text={"knowledge base"}
             path={`/vms/${id}/knowledge-base`}
             icon={<FaBookReader />}
           />
-          {/* <NavItem
-            text={"expenses"}
-            path="/expenses"
-            icon={<IoReceiptOutline />}
-          />
+
+          {/* 
           <NavItem
             text={"settings"}
             path="/settings"

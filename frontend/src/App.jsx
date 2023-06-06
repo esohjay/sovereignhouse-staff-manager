@@ -55,11 +55,15 @@ import Unauthorized from "./pages/401";
 import AdminRoute from "./components/AdminRoute";
 import KnowledgeBase from "./pages/knowledge-base/KnowledgeBase";
 
+import ExpensesContainer from "./pages/expenses/ExpensesContainer";
+import AddExpense from "./pages/expenses/AddExpense";
+
 function App() {
   const router = createBrowserRouter(
     createRoutesFromElements(
       <Route path="/" element={<Landing />}>
         <Route index element={<Login />} />
+        <Route path="login" element={<Login />} />
 
         <Route path="vms/:id" element={<Home />}>
           <Route element={<ProtectedRoute />}>
@@ -81,6 +85,9 @@ function App() {
               <Route path="add" element={<NewTask />} />
               <Route path=":taskId" element={<TaskDetails />} />
               <Route path=":taskId/edit" element={<EditTask />} />
+            </Route>
+            <Route path="expenses" element={<ExpensesContainer />}>
+              <Route path="add" element={<AddExpense />} />
             </Route>
 
             {/* Admin views */}

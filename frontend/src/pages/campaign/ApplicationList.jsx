@@ -14,6 +14,7 @@ import generateRandomString from "../../lib/generatePassword";
 
 import { useForm } from "react-hook-form";
 import useToast from "../../hooks/useToast";
+import Btn from "../../components/Btn";
 
 function ApplicationList() {
   const navigate = useNavigate();
@@ -219,7 +220,11 @@ function ApplicationList() {
                         </td>
 
                         <td className="whitespace-nowrap px-6 py-4 first-letter:uppercase flex gap-x-2 items-center">
-                          <Modal
+                          <Btn
+                            text={"view"}
+                            onClick={() => navigate(`${applicant.id}`)}
+                          />
+                          {/* <Modal
                             style="bg-warning px-3 pt-1.5 pb-1 text-[9px] font-medium uppercase leading-normal text-white shadow-warning transition duration-150 ease-in-out hover:bg-altColor hover:shadow-altColor focus:bg-altColor focus:shadow-altColor focus:outline-none focus:ring-0 active:bg-altColor active:shadow-altColor"
                             btnText={"status"}
                             targetId={`changeStatus${applicant.id}`}
@@ -296,7 +301,7 @@ function ApplicationList() {
                             // size="small"
                           >
                             <p>This will be deleted permanently</p>
-                          </Modal>
+                          </Modal> */}
                         </td>
                       </tr>
                     ))
