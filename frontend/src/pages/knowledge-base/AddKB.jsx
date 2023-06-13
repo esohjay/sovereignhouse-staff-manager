@@ -2,8 +2,11 @@ import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useCreateKnowledgeBaseMutation } from "../../api/staff/knowlege-base-api";
 import useToast from "../../hooks/useToast";
+import Btn from "../../components/Btn";
+import { useNavigate } from "react-router-dom";
 
 function AddKB() {
+  const navigate = useNavigate();
   const [createKB, { error, isLoading, isSuccess, isError }] =
     useCreateKnowledgeBaseMutation();
   const {
@@ -31,8 +34,9 @@ function AddKB() {
     }
   }, [isSuccess]);
   return (
-    <article className="w-full p-5">
-      <form onSubmit={handleSubmit(onSubmit)}>
+    <article className="w-full px-5 py-10">
+      <Btn text="back" onClick={() => navigate(-1)} />
+      <form onSubmit={handleSubmit(onSubmit)} className="pt-5">
         <article className="w-full grid md:grid-cols-3 gap-x-3">
           {/* task name */}
           <div className="mb-3">

@@ -13,8 +13,10 @@ function AddExpenses() {
   const [createExpense, { error, isLoading, isSuccess, isError }] =
     useCreateExpenseMutation();
   const { id } = useParams();
-  const [uploadReceipt, { data: receipt, isSuccess: uploaded }] =
-    useUploadReceiptMutation();
+  const [
+    uploadReceipt,
+    { data: receipt, isSuccess: uploaded, isLoading: uploading },
+  ] = useUploadReceiptMutation();
 
   const {
     register,
@@ -126,7 +128,7 @@ function AddExpenses() {
             <input
               type="file"
               id="receipt"
-              disabled={status === "pending"}
+              disabled={uploading}
               onChange={handleFileUpload}
               className="text-sm text-grey-500 file:border-2 file:border-transparent file:mr-3 file:py-1 file:px-3 file:text-sm 
                 file:rounded-md file:transition-all file:duration-500 file:font-medium file:bg-mainColor file:text-white

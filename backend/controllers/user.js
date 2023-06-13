@@ -1,7 +1,7 @@
 const User = require("../models/user");
 const { sendMail } = require("../utils/mailer");
 const { welcomeMessage, resetPassword } = require("../utils/emailTemplate");
-const Task = require("../models/task");
+const Expense = require("../models/expenses");
 const Timesheet = require("../models/timesheet");
 const Notification = require("../models/notification");
 const admin = require("../config/firebase");
@@ -171,7 +171,7 @@ module.exports.updateNotification = async (req, res) => {
 module.exports.getUser = async (req, res) => {
   const { id } = req.params;
   const user = await User.findByPk(id, {
-    include: ["shifts", Timesheet, "tasks", Notification],
+    include: ["shifts", Timesheet, "tasks", Notification, Expense],
   });
   res.status(200).json(user);
 };

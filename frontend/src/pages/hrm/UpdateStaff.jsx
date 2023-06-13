@@ -7,6 +7,8 @@ import {
 } from "../../api/staff/staffApi";
 import useToast from "../../hooks/useToast";
 
+import Cookies from "js-cookie";
+
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
 import { useForm } from "react-hook-form";
@@ -19,6 +21,9 @@ import { useDispatch, useSelector } from "react-redux";
 
 function UpdateStaff() {
   const dispatch = useDispatch();
+  const isAdmin = Cookies.get("isAdmin")
+    ? JSON.parse(Cookies.get("isAdmin"))
+    : null;
   const { id, userId } = useParams();
   const reqParam = userId ? userId : id;
   const { currentData } = useGetStaffQuery(reqParam);
@@ -339,77 +344,80 @@ function UpdateStaff() {
                 )}
               </div>
             </article>
-            <article className="w-full grid md:grid-cols-3 gap-x-3">
-              <div className="mb-3">
-                <label
-                  htmlFor="jobPosition"
-                  className="capitalize font-medium mb-1 block text-sm"
-                >
-                  job position
-                </label>
-                <input
-                  type="text"
-                  {...register("jobPosition", {
-                    required: true,
-                    value: `${currentData?.jobPosition}`,
-                  })}
-                  className="p-2 rounded-md mb-2 block bg-white w-full focus:outline-none border border-slate-300"
-                />
-                {errors.jobPosition && (
-                  <span className="text-red-500">
-                    {errors.jobPosition?.message}
-                  </span>
-                )}
-              </div>
-              {/* Contract type */}
-              <div className="mb-3 w-full">
-                <label
-                  htmlFor="contractType"
-                  className="capitalize font-medium mb-1 block text-sm"
-                >
-                  contract type
-                </label>
-                <select
-                  {...register("contractType", {
-                    value: `${currentData?.contractType}`,
-                  })}
-                  className="p-2  rounded-md mb-2 block bg-white w-full focus:outline-none border border-slate-300"
-                >
-                  <option value="">Select type</option>
-                  <option value="employee">Employee</option>
-                  <option value="volunteer">Volunteer</option>
-                  <option value="contract">Contract</option>
-                  <option value="internship">Internship</option>
-                  <option value="other">Other</option>
-                </select>
-                {errors.contractType && (
-                  <span className="text-red-500">
-                    {errors.contractType?.message}
-                  </span>
-                )}
-              </div>
-              {/* Status */}
-              <div className="mb-3 w-full">
-                <label
-                  htmlFor="status"
-                  className="capitalize font-medium mb-1 block text-sm"
-                >
-                  status
-                </label>
-                <select
-                  {...register("status", { value: `${currentData?.status}` })}
-                  disabled
-                  className="p-2  rounded-md mb-2 block bg-white w-full focus:outline-none border border-slate-300"
-                >
-                  <option value="">Select status</option>
-                  <option value="active">Active</option>
-                  <option value="inactive">Inactive</option>
-                </select>
-                {errors.status && (
-                  <span className="text-red-500">{errors.status?.message}</span>
-                )}
-              </div>
-            </article>
+            {isAdmin && (
+              <article className="w-full grid md:grid-cols-3 gap-x-3">
+                <div className="mb-3">
+                  <label
+                    htmlFor="jobPosition"
+                    className="capitalize font-medium mb-1 block text-sm"
+                  >
+                    job position
+                  </label>
+                  <input
+                    type="text"
+                    {...register("jobPosition", {
+                      required: true,
+                      value: `${currentData?.jobPosition}`,
+                    })}
+                    className="p-2 rounded-md mb-2 block bg-white w-full focus:outline-none border border-slate-300"
+                  />
+                  {errors.jobPosition && (
+                    <span className="text-red-500">
+                      {errors.jobPosition?.message}
+                    </span>
+                  )}
+                </div>
+                {/* Contract type */}
+                <div className="mb-3 w-full">
+                  <label
+                    htmlFor="contractType"
+                    className="capitalize font-medium mb-1 block text-sm"
+                  >
+                    contract type
+                  </label>
+                  <select
+                    {...register("contractType", {
+                      value: `${currentData?.contractType}`,
+                    })}
+                    className="p-2  rounded-md mb-2 block bg-white w-full focus:outline-none border border-slate-300"
+                  >
+                    <option value="">Select type</option>
+                    <option value="employee">Employee</option>
+                    <option value="volunteer">Volunteer</option>
+                    <option value="contract">Contract</option>
+                    <option value="internship">Internship</option>
+                    <option value="other">Other</option>
+                  </select>
+                  {errors.contractType && (
+                    <span className="text-red-500">
+                      {errors.contractType?.message}
+                    </span>
+                  )}
+                </div>
+                {/* Status */}
+                <div className="mb-3 w-full">
+                  <label
+                    htmlFor="status"
+                    className="capitalize font-medium mb-1 block text-sm"
+                  >
+                    status
+                  </label>
+                  <select
+                    {...register("status", { value: `${currentData?.status}` })}
+                    className="p-2  rounded-md mb-2 block bg-white w-full focus:outline-none border border-slate-300"
+                  >
+                    <option value="">Select status</option>
+                    <option value="active">Active</option>
+                    <option value="inactive">Inactive</option>
+                  </select>
+                  {errors.status && (
+                    <span className="text-red-500">
+                      {errors.status?.message}
+                    </span>
+                  )}
+                </div>
+              </article>
+            )}
             <button
               disabled={isLoading}
               className="bg-mainColor text-white capitalize font-medium rounded-md inline-block py-2 px-6"

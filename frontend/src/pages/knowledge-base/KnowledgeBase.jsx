@@ -2,6 +2,7 @@ import React from "react";
 import Btn from "../../components/Btn";
 import { useNavigate, useParams } from "react-router-dom";
 import { useGetAllKnowledgeBaseQuery } from "../../api/staff/knowlege-base-api";
+import { useGetStaffQuery } from "../../api/staff/staffApi";
 import Cookies from "js-cookie";
 
 function KnowledgeBase() {
@@ -9,6 +10,8 @@ function KnowledgeBase() {
   const { id } = useParams();
   const { currentData, isError, isFetching, error, isSuccess } =
     useGetAllKnowledgeBaseQuery();
+  const { currentData: staff } = useGetStaffQuery(id);
+
   const isAdmin = Cookies.get("isAdmin")
     ? JSON.parse(Cookies.get("isAdmin"))
     : null;
@@ -54,7 +57,9 @@ function KnowledgeBase() {
                       return (
                         <tr
                           key={article.id}
-                          className="border-b dark:border-neutral-500"
+                          className={`border-b dark:border-neutral-500 ${
+                            staff?.contractType !== article.group && "hidden"
+                          }`}
                         >
                           <td className="whitespace-nowrap px-6 py-4 font-medium">
                             {i + 1}

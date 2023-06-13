@@ -9,6 +9,9 @@ const {
 } = require("../utils/emailTemplate");
 const { sendMail } = require("../utils/mailer");
 
+const fs = require("fs");
+const { unlink } = require("fs/promises");
+
 module.exports.createApplicant = async (req, res) => {
   const applicant = await Applicant.create(req.body);
   const notify = await Notification.create({
@@ -101,6 +104,15 @@ module.exports.getCampaignApplicants = async (req, res) => {
 };
 module.exports.deleteApplicant = async (req, res) => {
   const { id } = req.params;
-  await Applicant.destroy({ where: { id } });
+  const application = await Applicant.findOne({ where: { id } });
+  if (fs.existsSync(`public/uploads/resumes/${application.fileSrc}`)) {
+    // The file exists, so you can proceed with deleting it
+    try {
+      await unlink(`public/uploads/resumes/${application.fileSrc}`);
+    } catch (err) {
+      return res.status(400).json(err);
+    }
+  }
+  await application.destroy();
   res.status(204).json({ message: "Applicant deleted" });
 };

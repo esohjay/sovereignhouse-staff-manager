@@ -57,6 +57,9 @@ import KnowledgeBase from "./pages/knowledge-base/KnowledgeBase";
 
 import ExpensesContainer from "./pages/expenses/ExpensesContainer";
 import AddExpense from "./pages/expenses/AddExpense";
+import AllExpenses from "./pages/expenses/AllExpenses";
+import ExpenseDetails from "./pages/expenses/ExpenseDetails";
+import EditExpense from "./pages/expenses/EditExpense";
 
 function App() {
   const router = createBrowserRouter(
@@ -88,6 +91,9 @@ function App() {
             </Route>
             <Route path="expenses" element={<ExpensesContainer />}>
               <Route path="add" element={<AddExpense />} />
+              <Route path=":expenseId" element={<ExpenseDetails />} />
+              <Route path=":expenseId/edit" element={<EditExpense />} />
+              <Route index element={<AllExpenses />} />
             </Route>
 
             {/* Admin views */}

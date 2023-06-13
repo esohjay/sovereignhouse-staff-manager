@@ -23,7 +23,10 @@ const expenseApi = appApi.injectEndpoints({
         method: "PUT",
         body: formBody,
       }),
-      invalidatesTags: [{ type: "Expenses", id: "LIST" }],
+      invalidatesTags: (result, error, { id }) => [
+        { type: "Expenses", id: "LIST" },
+        { type: "Expenses", id },
+      ],
     }),
     getAllExpenses: build.query({
       query: () => "/expenses",
