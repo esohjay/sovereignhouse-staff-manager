@@ -32,7 +32,7 @@ module.exports.createApplicant = async (req, res) => {
   const messageAdmin = notificationMessage(
     "Admin",
     "New volunteer application has been received",
-    `${process.env.FRONTEND_URL}/vms/admin/recruitment`
+    `${process.env.FRONTEND_URL}/vms/${process.env.ADMIN_ID}/admin/recruitment/applicant/all/${applicant.id}`
   );
   const adminMailSent = sendMail(
     [process.env.ADMIN_EMAIL, process.env.ADMIN2_EMAIL],
