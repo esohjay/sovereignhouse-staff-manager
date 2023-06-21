@@ -8,6 +8,7 @@ const {
   deleteShift,
   assignStaff,
   unAssignStaff,
+  getUserShift,
 } = require("../controllers/shift");
 const { verifyUser, verifyAdmin } = require("../middlewares/auth");
 
@@ -18,6 +19,7 @@ router.put("/", verifyAdmin, catchAsync(assignStaff));
 router.put("/:id/unassign", verifyAdmin, catchAsync(unAssignStaff));
 router.get("/", verifyUser, catchAsync(getAllShifts));
 router.get("/:id", verifyUser, catchAsync(getShift));
+router.get("/:id/user-shift", verifyUser, catchAsync(getUserShift));
 router.delete("/:id", verifyAdmin, catchAsync(deleteShift));
 
 module.exports = router;

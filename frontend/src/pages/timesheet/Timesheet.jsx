@@ -5,6 +5,7 @@ import {
   useRecordClockInMutation,
   useGetUserTimesheetQuery,
   useEndShiftMutation,
+  useGetUserShiftQuery,
 } from "../../api/shift/shiftApi";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { setDay, formatDate } from "../../lib/setDay";
@@ -40,8 +41,11 @@ function Timesheet() {
     },
   ] = useEndShiftMutation();
   const [clockInError, setClockInError] = useState("");
-  const { currentData } = useGetStaffQuery(reqParam);
+  // const { currentData } = useGetStaffQuery(reqParam);
+  const { currentData } = useGetUserShiftQuery(reqParam);
   const { currentData: userTimesheet } = useGetUserTimesheetQuery(reqParam);
+  // console.log(shift);
+  console.log(userTimesheet);
   const handleClockIn = (shiftDay, shiftId) => {
     const date = new Date();
     const today = date.getDay();
@@ -49,23 +53,23 @@ function Timesheet() {
       setClockInError("You can only clock in on the assigned day");
       return;
     }
-    if (
-      currentData?.timesheets?.length &&
-      !currentData?.timesheets[0].endTime
-    ) {
+    if (userTimesheet?.length && !userTimesheet[0]?.endTime) {
       setClockInError("You have a shift in progress");
       return;
     }
-    if (currentData?.timesheets?.length) {
-      const shifts = currentData?.timesheets?.filter(
+    if (userTimesheet.length) {
+      //prevent user from clockin twice in a day
+      const shifts = userTimesheet?.filter(
         (timesheet) => timesheet.shiftId === shiftId
       );
-      console.log(shifts);
+
       const now = formatDate(date);
       const latestTimesheet = formatDate(
-        new Date(`${shifts[shifts.length - 1]?.startTime}`)
+        // new Date(`${shifts[shifts.length - 1]?.startTime}`)
+        new Date(`${shifts[0]?.startTime}`)
       );
       console.log(latestTimesheet);
+      console.log(shifts);
       const isEqual = Date.parse(now) === Date.parse(latestTimesheet);
       console.log(isEqual);
       if (isEqual) {
@@ -149,7 +153,8 @@ function Timesheet() {
                       </tr>
                     </thead>
                     <tbody>
-                      {currentData?.shifts?.map((shift, i) => {
+                      {currentData?.map((shifts, i) => {
+                        const { shift } = shifts;
                         const day = setDay(shift.dayOfTheWeek);
                         return (
                           <tr
@@ -201,63 +206,6 @@ function Timesheet() {
               </div>
             </div>
           </div>
-
-          {/* <table className="w-full">
-            <thead className="">
-              <tr className="bg-gray">
-                <th className="capitalize px-2 py-4 text-left font-semibold w-[280px">
-                  title
-                </th>
-                <th className="capitalize px-2 py-4 text-left font-semibold w-[180px">
-                  venue
-                </th>
-                <th className="capitalize px-2 py-4 font-semibold w-[280px text-left">
-                  action
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {currentData?.shifts?.map((shift) => {
-                const day = setDay(shift.dayOfTheWeek);
-                return (
-                  <tr
-                    key={shift.id}
-                    className="hover:bg-lightGreen p-3 cursor-pointer group"
-                  >
-                    <td className=" text-left first-letter:uppercase px-2 py-3">
-                      <Link
-                        to={`/admin/${id}/shift/${shift.id}`}
-                        className="mb-1 text-sm font-semibold "
-                      >
-                        {shift.title}
-                      </Link>
-
-                      <p className="text-xs">
-                        &#40;{shift.startTime.substring(0, 5)} to{" "}
-                        {shift.endTime.substring(0, 5)}&#41;
-                      </p>
-                    </td>
-                    <td className="text-left px-2 py-3 ">
-                      <p className="text-sm first-letter:uppercase">
-                        {shift.venue}
-                      </p>
-                      <p className="text-xs">&#40;{day}&#41;</p>
-                    </td>
-                    <td className="text-left px-2 py-3">
-                      <button
-                        onClick={() =>
-                          handleClockIn(shift.dayOfTheWeek, shift.id)
-                        }
-                        className="inline-block capitalize bg-mainColor text-sm text-white px-3 py-1 rounded-md"
-                      >
-                        clock in
-                      </button>
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table> */}
         </article>
         <article className="mb-7 bg-white rounded-md shadow-md p-2">
           <div className="p-3 border-b border-b-mainColor">

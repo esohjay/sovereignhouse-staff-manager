@@ -2,6 +2,7 @@ const Shift = require("../models/shift");
 const User = require("../models/user");
 const Notification = require("../models/notification");
 const { notificationMessage } = require("../utils/emailTemplate");
+const UserShift = require("../models/userShift");
 const { sendMail } = require("../utils/mailer");
 
 module.exports.createShift = async (req, res) => {
@@ -51,6 +52,16 @@ module.exports.getShift = async (req, res) => {
   const { id } = req.params;
   const shift = await Shift.findOne({ where: { id }, include: "users" });
   res.status(200).json(shift);
+};
+module.exports.getUserShift = async (req, res) => {
+  const { id } = req.params;
+  const timesheets = await UserShift.findAll({
+    where: { userId: id },
+    include: ["shift"],
+    // order: [["createdAt", "DESC"]],
+    // limit: 10,
+  });
+  res.status(200).json(timesheets);
 };
 module.exports.deleteShift = async (req, res) => {
   const { id } = req.params;

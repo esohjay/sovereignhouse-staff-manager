@@ -9,10 +9,10 @@ const shiftApi = appApi.injectEndpoints({
           ? // successful query
             [
               ...result.map(({ id }) => ({ type: "Shift", id })),
-              { type: "Shift", id: "LIST" },
+              { type: "Shift" },
             ]
           : // an error occurred, but we still want to refetch this query when `{ type: 'Posts', id: 'LIST' }` is invalidated
-            [{ type: "Shift", id: "LIST" }],
+            [{ type: "Shift" }],
     }),
     createShift: build.mutation({
       query: (formBody) => ({
@@ -52,18 +52,7 @@ const shiftApi = appApi.injectEndpoints({
       // In this case, `getPost` will be re-run. `getPosts` *might*  rerun, if this id was under its results.
       invalidatesTags: (result, error, { id }) => [{ type: "Shift", id }],
     }),
-    endShift: build.mutation({
-      query(data) {
-        return {
-          url: `/timesheet/${data.id}`,
-          method: "PUT",
-          body: data,
-        };
-      },
-      invalidatesTags: (result, error, { id }) => [
-        { type: "UserTimesheet", id },
-      ],
-    }),
+
     getAllTimesheets: build.query({
       query: () => "/timesheet",
       providesTags: (result) =>
@@ -79,7 +68,29 @@ const shiftApi = appApi.injectEndpoints({
     }),
     getUserTimesheet: build.query({
       query: (id) => `/timesheet/user/${id}`,
-      providesTags: (result, error, id) => [{ type: "UserTimesheet", id }],
+      providesTags: (result) =>
+        // is result available?
+        result
+          ? // successful query
+            [
+              ...result.map(({ id }) => ({ type: "UserTimesheet", id })),
+              { type: "UserTimesheet", id: "UserTimesheetLIST" },
+            ]
+          : // an error occurred, but we still want to refetch this query when `{ type: 'Posts', id: 'LIST' }` is invalidated
+            [{ type: "UserTimesheet", id: "UserTimesheetLIST" }],
+    }),
+    getUserShift: build.query({
+      query: (id) => `/shift/${id}/user-shift`,
+      providesTags: (result) =>
+        // is result available?
+        result
+          ? // successful query
+            [
+              ...result.map(({ id }) => ({ type: "UserShift", id })),
+              { type: "UserShift", id: "UserShiftLIST" },
+            ]
+          : // an error occurred, but we still want to refetch this query when `{ type: 'Posts', id: 'LIST' }` is invalidated
+            [{ type: "UserShift", id: "UserShiftLIST" }],
     }),
     recordClockIn: build.mutation({
       query: (formBody) => ({
@@ -87,7 +98,20 @@ const shiftApi = appApi.injectEndpoints({
         method: "POST",
         body: formBody,
       }),
-      invalidatesTags: [{ type: "UserTimesheet", id: "TIMESHEETLIST" }],
+      invalidatesTags: [
+        { type: "UserTimesheet", id: "UserTimesheetLIST" },
+        { type: "UserShift", id: "UserShiftLIST" },
+      ],
+    }),
+    endShift: build.mutation({
+      query(data) {
+        return {
+          url: `/timesheet/${data.id}`,
+          method: "PUT",
+          body: data,
+        };
+      },
+      invalidatesTags: [{ type: "UserTimesheet", id: "UserTimesheetLIST" }],
     }),
     updateShift: build.mutation({
       query: (formBody) => ({
@@ -122,4 +146,5 @@ export const {
   useDeleteShiftMutation,
   useUpdateShiftMutation,
   useUnassignTeacherMutation,
+  useGetUserShiftQuery,
 } = shiftApi;
