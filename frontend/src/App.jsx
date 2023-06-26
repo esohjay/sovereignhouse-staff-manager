@@ -61,12 +61,15 @@ import AllExpenses from "./pages/expenses/AllExpenses";
 import ExpenseDetails from "./pages/expenses/ExpenseDetails";
 import EditExpense from "./pages/expenses/EditExpense";
 
+import BuryForm from "./pages/student-application/BuryForm";
+
 function App() {
   const router = createBrowserRouter(
     createRoutesFromElements(
       <Route path="/" element={<Landing />}>
         <Route index element={<Login />} />
         <Route path="login" element={<Login />} />
+        <Route path="clp/bury" element={<BuryForm />} />
 
         <Route path="vms/:id" element={<Home />}>
           <Route element={<ProtectedRoute />}>
