@@ -1,7 +1,6 @@
 import React from "react";
 
 function RadioInput({ register, name, label, errors, optionValues }) {
-  console.log(optionValues);
   return (
     <div className="mb-3">
       <p className="capitalize font-medium mb-1 block text-sm">{label}</p>
@@ -24,7 +23,7 @@ function RadioInput({ register, name, label, errors, optionValues }) {
       ))}
 
       {errors && errors[name] && (
-        <span className="text-red-500">{errors[name]?.message}</span>
+        <span className="text-red-500">this field is required</span>
       )}
     </div>
   );

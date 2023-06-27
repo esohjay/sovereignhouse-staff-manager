@@ -62,6 +62,9 @@ import ExpenseDetails from "./pages/expenses/ExpenseDetails";
 import EditExpense from "./pages/expenses/EditExpense";
 
 import BuryForm from "./pages/student-application/BuryForm";
+import StudentApplication from "./pages/student-application/StudentApplication";
+import StudentApplicationList from "./pages/student-application/ApplicationList";
+import StudentApplicantDetails from "./pages/student-application/ApplicationDetails";
 
 function App() {
   const router = createBrowserRouter(
@@ -69,7 +72,7 @@ function App() {
       <Route path="/" element={<Landing />}>
         <Route index element={<Login />} />
         <Route path="login" element={<Login />} />
-        <Route path="clp/bury" element={<BuryForm />} />
+        <Route path="clp/bury" element={<BuryForm />}></Route>
 
         <Route path="vms/:id" element={<Home />}>
           <Route element={<ProtectedRoute />}>
@@ -118,6 +121,16 @@ function App() {
                 <Route path=":userId" element={<Profile />} />
                 <Route path=":userId/edit" element={<UpdateStaff />} />
                 <Route index element={<AllStaff />} />
+              </Route>
+              <Route
+                path="students-application"
+                element={<StudentApplication />}
+              >
+                <Route index element={<StudentApplicationList />} />
+                <Route
+                  path=":studentId"
+                  element={<StudentApplicantDetails />}
+                />
               </Route>
               <Route path="recruitment" element={<Recruitment />}>
                 <Route path="add" element={<AddCampaign />} />

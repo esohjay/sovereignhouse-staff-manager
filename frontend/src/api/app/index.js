@@ -26,6 +26,7 @@ export const appApi = createApi({
     "Expenses",
     "UserShift",
     "Shift",
+    "StudentApplication",
   ],
   endpoints: (builder) => ({
     upload: builder.mutation({

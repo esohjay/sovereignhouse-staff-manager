@@ -16,7 +16,7 @@ function Input({ register, name, label, errors, required, description }) {
         className="p-2 rounded-md mb-2 block bg-white w-full focus:outline-none border border-slate-300"
       />
       {errors && errors[name] && (
-        <span className="text-red-500">{errors[name]?.message}</span>
+        <span className="text-red-500">this field is required</span>
       )}
     </div>
   );
