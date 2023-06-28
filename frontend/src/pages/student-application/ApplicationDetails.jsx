@@ -85,7 +85,7 @@ function ApplicantDetails() {
           </div>
           <div className="flex gap-x-2 w-full flex-col lg:justify-center p-3 ">
             <p className="capitalize font-xs md:text-sm font-semibold">
-              application stage
+              age category
             </p>
             <p className="first-letter:uppercase">{currentData?.age_group}</p>
           </div>
@@ -124,6 +124,202 @@ function ApplicantDetails() {
             <p className="first-letter:uppercase">{currentData?.address}</p>
           </div>
         </article>
+        {currentData?.age_group !== "adult" && (
+          <section>
+            <article className="flex flex-col lg:flex-row justify-evenly items-center border-t border-b-mainColor">
+              <div className="flex gap-x-2 flex-col  w-full lg:justify-center  p-3  lg:border-r lg:border-r-mainColor ">
+                <p className="capitalize font-xs md:text-sm font-semibold">
+                  school
+                </p>
+                <p className="first-letter:uppercase">{currentData?.school}</p>
+              </div>
+              <div className="flex gap-x-2 flex-col w-full  lg:justify-center p-3 border-r border-r-mainColor">
+                <p className="capitalize font-xs md:text-sm font-semibold">
+                  class
+                </p>
+                <p className="first-letter:uppercase">{currentData?.class}</p>
+              </div>
+              <div className="flex gap-x-2 w-full flex-col lg:justify-center p-3 ">
+                <p className="capitalize font-xs md:text-sm font-semibold">
+                  gp surgery
+                </p>
+                <p className="first-letter:uppercase">
+                  {currentData?.gp_surgery}
+                </p>
+              </div>
+            </article>
+            <article className="flex flex-col lg:flex-row justify-evenly border-t items-center  ">
+              <div className="flex gap-x-2 flex-col  w-full lg:justify-center  p-3  lg:border-r lg:border-r-mainColor ">
+                <p className="capitalize font-xs md:text-sm font-semibold">
+                  parent name
+                </p>
+                <p className="first-letter:uppercase">
+                  {currentData?.parent_name}
+                </p>
+              </div>
+              <div className="flex gap-x-2 flex-col w-full  lg:justify-center p-3  ">
+                <p className="capitalize font-xs md:text-sm font-semibold">
+                  parent address
+                </p>
+                <p className="first-letter:uppercase">
+                  {currentData?.parent_address}
+                </p>
+              </div>
+            </article>
+            <article className="flex flex-col lg:flex-row justify-evenly border-t items-center  ">
+              <div className="flex gap-x-2 flex-col  w-full lg:justify-center  p-3  lg:border-r lg:border-r-mainColor ">
+                <p className="capitalize font-xs md:text-sm font-semibold">
+                  emergency contact name
+                </p>
+                <p className="first-letter:uppercase">
+                  {currentData?.emergency_contact_name}
+                </p>
+              </div>
+              <div className="flex gap-x-2 flex-col w-full  lg:justify-center p-3  ">
+                <p className="capitalize font-xs md:text-sm font-semibold">
+                  emergency contact phone
+                </p>
+                <p className="first-letter:uppercase">
+                  {currentData?.emergency_contact_phone}
+                </p>
+              </div>
+            </article>
+            <article className="flex flex-col lg:flex-row justify-evenly border-y items-center  ">
+              <div className="flex gap-x-2 flex-col  w-full lg:justify-center  p-3  lg:border-r lg:border-r-mainColor ">
+                <p className="capitalize font-xs md:text-sm font-semibold">
+                  learning needs
+                </p>
+                <p className="first-letter:uppercase">
+                  {currentData?.learning_needs}
+                </p>
+              </div>
+              <div className="flex gap-x-2 flex-col w-full  lg:justify-center p-3  ">
+                <p className="capitalize font-xs md:text-sm font-semibold">
+                  allergies
+                </p>
+                <p className="first-letter:uppercase">
+                  {currentData?.allergies}
+                </p>
+              </div>
+            </article>
+            <article className="w-full  rounded-md px-10">
+              <div className="flex flex-col">
+                <div className="overflow-x-auto sm:-mx-6 lg:-mx-8">
+                  <div className="inline-block min-w-full py-2 sm:px-6 lg:px-8">
+                    <div className="overflow-hidden">
+                      <table className="min-w-full text-left text-sm font-light">
+                        <thead className="border-b font-medium dark:border-neutral-500">
+                          <tr>
+                            <th scope="col" className="px-6 py-4">
+                              AI
+                            </th>
+                            <th scope="col" className="px-6 py-4">
+                              Selection
+                            </th>
+                            <th scope="col" className="px-6 py-4">
+                              Iteration
+                            </th>
+                            <th scope="col" className="px-6 py-4">
+                              Motion
+                            </th>
+                            <th scope="col" className="px-6 py-4">
+                              Events
+                            </th>
+                            <th scope="col" className="px-6 py-4">
+                              Variables
+                            </th>
+                            <th scope="col" className="px-6 py-4">
+                              Python
+                            </th>
+                            <th scope="col" className="px-6 py-4">
+                              Hardware
+                            </th>
+                            <th
+                              scope="col"
+                              className="px-6 py-4  whitespace-nowrap"
+                            >
+                              E-Safety
+                            </th>
+                            <th
+                              scope="col"
+                              className="px-6 py-4 whitespace-nowrap"
+                            >
+                              HTML/CSS
+                            </th>
+                            <th
+                              scope="col"
+                              className="px-6 py-4 whitespace-nowrap"
+                            >
+                              Input/Output
+                            </th>
+                            <th
+                              scope="col"
+                              className="px-6 py-4 whitespace-nowrap"
+                            >
+                              Game design
+                            </th>
+                            <th
+                              scope="col"
+                              className="px-6 py-4 whitespace-nowrap"
+                            >
+                              Programming construct
+                            </th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {
+                            <tr className="border-b transition duration-300 ease-in-out hover:bg-neutral-100 dark:border-neutral-500 dark:hover:bg-neutral-600">
+                              <td className="whitespace-nowrap px-6 py-4 font-medium">
+                                {currentData?.ai}
+                              </td>
+                              <td className="whitespace-nowrap px-6 py-4 first-letter:uppercase text-center">
+                                {currentData?.selection}
+                              </td>
+                              <td className="whitespace-nowrap px-6 py-4 first-letter:uppercase text-center">
+                                {currentData?.iteration}
+                              </td>
+                              <td className="whitespace-nowrap px-6 py-4 first-letter:uppercase text-center">
+                                {currentData?.motions}
+                              </td>
+                              <td className="whitespace-nowrap px-6 py-4 first-letter:uppercase text-center">
+                                {currentData?.events}
+                              </td>
+
+                              <td className="whitespace-nowrap px-6 py-4 first-letter:uppercase text-center">
+                                {currentData?.variables}
+                              </td>
+                              <td className="whitespace-nowrap px-6 py-4 first-letter:uppercase text-center">
+                                {currentData?.pyhton}
+                              </td>
+                              <td className="whitespace-nowrap px-6 py-4 first-letter:uppercase text-center">
+                                {currentData?.hardware}
+                              </td>
+                              <td className="whitespace-nowrap px-6 py-4 first-letter:uppercase text-center">
+                                {currentData?.e_safety}
+                              </td>
+                              <td className="whitespace-nowrap px-6 py-4 first-letter:uppercase text-center">
+                                {currentData?.html_css}
+                              </td>
+                              <td className="whitespace-nowrap px-6 py-4 first-letter:uppercase text-center">
+                                {currentData?.inputs_outputs}
+                              </td>
+                              <td className="whitespace-nowrap px-6 py-4 first-letter:uppercase text-center">
+                                {currentData?.game_design}
+                              </td>
+                              <td className="whitespace-nowrap px-6 py-4 first-letter:uppercase text-center">
+                                {currentData?.programming_constructs}
+                              </td>
+                            </tr>
+                          }
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </article>
+          </section>
+        )}
       </article>
     </article>
   );

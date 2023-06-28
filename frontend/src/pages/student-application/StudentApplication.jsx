@@ -24,7 +24,7 @@ function StudentApplication() {
             target="_blank"
             className="inline-block rounded bg-mainColor px-6 pt-2.5 pb-2 text-xs font-medium uppercase leading-normal text-white shadow-mainColor transition duration-150 ease-in-out hover:bg-altColor hover:shadow-altColor focus:bg-altColor focus:shadow-altColor focus:outline-none focus:ring-0 active:bg-green-500 active:shadow-green-500"
           >
-            Export Excelsheet
+            Export to Excelsheet
           </a>
         </div>
         <article className="bg-white shadow-md rounded-md min-h-[50vh] ">

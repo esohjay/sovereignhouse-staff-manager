@@ -178,6 +178,14 @@ function BuryForm() {
                   ]}
                 />
               </article>
+              {age === "adult" && (
+                <Input
+                  name="address"
+                  label="address"
+                  register={register}
+                  errors={errors}
+                />
+              )}
             </section>
             {age !== "adult" && (
               <section>
