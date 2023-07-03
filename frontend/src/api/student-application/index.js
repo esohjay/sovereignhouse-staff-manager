@@ -29,6 +29,17 @@ const studentApplicationApi = appApi.injectEndpoints({
       }),
       providesTags: (result, error, id) => [{ type: "StudentApplication", id }],
     }),
+    updateStudentApplication: build.mutation({
+      query: (formBody) => ({
+        url: `/student_application/${formBody.id}/update`,
+        method: "PUT",
+        body: formBody,
+      }),
+      invalidatesTags: (result, error, { id }) => [
+        { type: "StudentApplication", id: "LIST" },
+        { type: "StudentApplication", id },
+      ],
+    }),
     deleteApplication: build.mutation({
       query(id) {
         return {
@@ -49,4 +60,5 @@ export const {
   useGetAllApplicantionsQuery,
   useGetApplicantionQuery,
   useDeleteApplicationMutation,
+  useUpdateStudentApplicationMutation,
 } = studentApplicationApi;

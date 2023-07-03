@@ -49,7 +49,7 @@ function ApplicationList() {
                       Age group
                     </th>
                     <th scope="col" className="px-6 py-4">
-                      gender
+                      Status
                     </th>
                     <th scope="col" className="px-6 py-4">
                       Actions
@@ -81,7 +81,7 @@ function ApplicationList() {
                           {applicant?.age_group}
                         </td>
                         <td className="whitespace-nowrap px-6 py-4 first-letter:uppercase">
-                          {applicant.gender}
+                          {applicant.status}
                         </td>
 
                         <td className="whitespace-nowrap px-6 py-4 first-letter:uppercase flex gap-x-2 items-center">

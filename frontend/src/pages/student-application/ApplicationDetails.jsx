@@ -8,6 +8,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import {
   useDeleteApplicationMutation,
   useGetApplicantionQuery,
+  useUpdateStudentApplicationMutation,
 } from "../../api/student-application";
 
 import dayjs from "dayjs";
@@ -31,6 +32,37 @@ function ApplicantDetails() {
       error: deleteErrorMessage,
     },
   ] = useDeleteApplicationMutation();
+  const [
+    updateApplication,
+    {
+      isError: errorUpdating,
+      isLoading: updating,
+      isSuccess: updated,
+      error: updateError,
+    },
+  ] = useUpdateStudentApplicationMutation();
+
+  const {
+    register: registerStudent,
+    handleSubmit,
+    getValues: getValuesStudent,
+    setError: setErrorStudent,
+    formState: { errors },
+  } = useForm();
+
+  const updateStudentApplicationStage = () => {
+    if (!getValuesStudent("student_status")) {
+      setErrorStudent("student_status", { type: "required" });
+      return;
+    }
+
+    updateApplication({
+      id: currentData?.id,
+      email: currentData?.email,
+      first_name: currentData?.first_name,
+      status: getValuesStudent("student_status"),
+    });
+  };
 
   // Load content notification
   const {} = useToast(
@@ -46,7 +78,7 @@ function ApplicantDetails() {
   // Delete content notification
   const {} = useToast(
     "delete-single-student-application",
-    `${currentData?.firstName}'s application deleted`,
+    `${currentData?.first_name}'s application deleted`,
     `${deleteErrorMessage?.data?.message}`,
     "mutation",
     deleting,
@@ -54,7 +86,16 @@ function ApplicantDetails() {
     deleteError
   );
   // Update content notification
-
+  // Update content notification
+  const {} = useToast(
+    "update-single-student-application",
+    `Application updated`,
+    `${updateError?.data?.message}`,
+    "mutation",
+    updating,
+    updated,
+    errorUpdating
+  );
   useEffect(() => {
     if (deleted) {
       navigate(-1);
@@ -105,6 +146,12 @@ function ApplicantDetails() {
               phone no
             </p>
             <p className="first-letter:uppercase">{currentData?.phone}</p>
+          </div>
+          <div className="flex gap-x-2 flex-col w-full border-l border-l-mainColor lg:justify-center p-3  ">
+            <p className="capitalize font-xs md:text-sm font-semibold">
+              status
+            </p>
+            <p className="first-letter:uppercase">{currentData?.status}</p>
           </div>
         </article>
         {/* Single row */}
@@ -320,6 +367,41 @@ function ApplicantDetails() {
             </article>
           </section>
         )}
+      </article>
+      <article className="flex gap-4 py-6">
+        <Modal
+          style="bg-warning px-6 pt-2.5 pb-2 text-xs font-medium uppercase leading-normal text-white shadow-warning transition duration-150 ease-in-out hover:bg-altColor hover:shadow-altColor focus:bg-altColor focus:shadow-altColor focus:outline-none focus:ring-0 active:bg-altColor active:shadow-altColor"
+          btnText={"update application stage"}
+          targetId="changeApplicationStatusstudent"
+          modalTitle={`Update application stage`}
+          confirmText="update"
+          action={updateStudentApplicationStage}
+          // size="small"
+        >
+          <div className="w-full">
+            <select
+              data-te-select-init
+              {...registerStudent("student_status", { required: true })}
+              className="w-full p-3 rounded-md border border-mainColor focus:outline-none"
+            >
+              <option value="">Update stage</option>
+              <option value="pending">Pending</option>
+              <option value="accepted">Accepted</option>
+              <option value="rejected">Rejected</option>
+            </select>
+          </div>
+        </Modal>
+        <Modal
+          style="bg-danger px-6 pt-2.5 pb-2 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#dc4c64] transition duration-150 ease-in-out hover:bg-danger-600 hover:shadow-[0_8px_9px_-4px_rgba(220,76,100,0.3),0_4px_18px_0_rgba(220,76,100,0.2)] focus:bg-danger-600 focus:shadow-[0_8px_9px_-4px_rgba(220,76,100,0.3),0_4px_18px_0_rgba(220,76,100,0.2)] focus:outline-none focus:ring-0 active:bg-danger-700 active:shadow-[0_8px_9px_-4px_rgba(220,76,100,0.3),0_4px_18px_0_rgba(220,76,100,0.2)]"
+          btnText={`Delete application`}
+          targetId="deleteApplicantion"
+          modalTitle="Do you want to delete?"
+          confirmText="delete"
+          action={() => deleteApplicant(currentData?.id)}
+          // size="small"
+        >
+          <p>This will be deleted permanently</p>
+        </Modal>
       </article>
     </article>
   );
