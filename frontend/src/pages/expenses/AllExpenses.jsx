@@ -49,36 +49,44 @@ function AllExpenses() {
                   </tr>
                 </thead>
                 <tbody>
-                  {currentData?.map((expense, i) => (
-                    <tr
-                      key={expense.id}
-                      className="border-b transition duration-300 ease-in-out hover:bg-neutral-100 dark:border-neutral-500 dark:hover:bg-neutral-600"
-                    >
-                      <td className="whitespace-nowrap px-6 py-4 font-medium">
-                        {i + 1}
-                      </td>
-                      <td
-                        className="whitespace-nowrap px-6 py-4 cursor-pointer"
-                        onClick={() => navigate(`${expense.id}`)}
+                  {currentData?.length > 0 ? (
+                    currentData?.map((expense, i) => (
+                      <tr
+                        key={expense.id}
+                        className="border-b transition duration-300 ease-in-out hover:bg-neutral-100 dark:border-neutral-500 dark:hover:bg-neutral-600"
                       >
-                        {expense.user.fullName}
-                      </td>
-                      <td className="whitespace-nowrap px-6 py-4 first-letter:uppercase">
-                        {expense.amount}
-                      </td>
-                      <td className="whitespace-nowrap px-6 py-4 first-letter:uppercase">
-                        {expense.status}
-                      </td>
-                      <td className="whitespace-nowrap px-6 py-4">
-                        <div className="flex gap-x-2">
-                          <Btn
-                            text={"view"}
-                            onClick={() => navigate(`${expense.id}`)}
-                          />
-                        </div>
+                        <td className="whitespace-nowrap px-6 py-4 font-medium">
+                          {i + 1}
+                        </td>
+                        <td
+                          className="whitespace-nowrap px-6 py-4 cursor-pointer"
+                          onClick={() => navigate(`${expense.id}`)}
+                        >
+                          {expense.user.fullName}
+                        </td>
+                        <td className="whitespace-nowrap px-6 py-4 first-letter:uppercase">
+                          {expense.amount}
+                        </td>
+                        <td className="whitespace-nowrap px-6 py-4 first-letter:uppercase">
+                          {expense.status}
+                        </td>
+                        <td className="whitespace-nowrap px-6 py-4">
+                          <div className="flex gap-x-2">
+                            <Btn
+                              text={"view"}
+                              onClick={() => navigate(`${expense.id}`)}
+                            />
+                          </div>
+                        </td>
+                      </tr>
+                    ))
+                  ) : (
+                    <tr className="p-5 w-full">
+                      <td colSpan={6} className="text-center text-xl py-6 ">
+                        No campaign yet
                       </td>
                     </tr>
-                  ))}
+                  )}
                 </tbody>
               </table>
             </div>
