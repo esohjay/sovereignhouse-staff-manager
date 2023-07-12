@@ -81,7 +81,7 @@ function Dashboard() {
           {/* User */}
           <article
             onClick={() => navigate(`/vms/${id}/admin/staff`)}
-            className="w-full cursor-pointer h-40 bg-white rounded-md shadow-md p-3 mb-3"
+            className="w-full cursor-pointer h-40 bg-white rounded-md shadow-md hover:shadow-xl p-3 mb-3"
           >
             <button className="text-white bg-mainColor font-semibold p-2 text-lg rounded-md mb-3">
               <HiUserGroup />
@@ -133,7 +133,7 @@ function Dashboard() {
           {/* Leave requests */}
           <article
             onClick={() => navigate(`/vms/${id}/admin/leave`)}
-            className="w-full cursor-pointer h-40 bg-white rounded-md shadow-md p-3 mb-3"
+            className="w-full cursor-pointer h-40 bg-white rounded-md shadow-md hover:shadow-xl p-3 mb-3"
           >
             <button className="text-white bg-mainColor font-semibold p-2 text-lg rounded-md mb-3">
               <MdOutlineEventBusy />
@@ -157,7 +157,7 @@ function Dashboard() {
           {/* SHifts */}
           <article
             onClick={() => navigate(`/vms/${id}/admin/shift`)}
-            className="w-full cursor-pointer h-40 bg-white rounded-md shadow-md p-3 mb-3"
+            className="w-full cursor-pointer h-40 bg-white rounded-md shadow-md hover:shadow-xl p-3 mb-3"
           >
             <button className="text-white bg-mainColor font-semibold p-2 text-lg rounded-md mb-3">
               <MdPendingActions />
@@ -174,7 +174,7 @@ function Dashboard() {
             onClick={() =>
               navigate(`/vms/${id}/admin/recruitment/applicant/all`)
             }
-            className="w-full cursor-pointer h-40 bg-white rounded-md shadow-md p-3 mb-3"
+            className="w-full cursor-pointer h-40 bg-white rounded-md shadow-md hover:shadow-xl p-3 mb-3"
           >
             <button className="text-white bg-mainColor font-semibold p-2 text-lg rounded-md mb-3">
               <FaUserEdit />
@@ -208,7 +208,7 @@ function Dashboard() {
           {/* Tasks */}
           <article
             onClick={() => navigate(`/vms/${id}/task`)}
-            className="w-full cursor-pointer h-40 bg-white rounded-md shadow-md p-3 mb-3"
+            className="w-full cursor-pointer h-40 bg-white rounded-md shadow-md hover:shadow-xl p-3 mb-3"
           >
             <button className="text-white bg-mainColor font-semibold p-2 text-lg rounded-md mb-3">
               <VscTasklist />
@@ -245,7 +245,7 @@ function Dashboard() {
           {/* SHifts */}
           <article
             onClick={() => navigate(`/vms/${id}/timesheet`)}
-            className="w-full cursor-pointer h-40 bg-white rounded-md shadow-md p-3 mb-3"
+            className="w-full cursor-pointer h-40 bg-white rounded-md shadow-md hover:shadow-xl p-3 mb-3"
           >
             <button className="text-white bg-mainColor font-semibold p-2 text-lg rounded-md mb-3">
               <MdPendingActions />
@@ -260,7 +260,7 @@ function Dashboard() {
           {/* Tasks */}
           <article
             onClick={() => navigate(`/vms/${id}/task`)}
-            className="w-full cursor-pointer h-40 bg-white rounded-md shadow-md p-3 mb-3"
+            className="w-full cursor-pointer h-40 bg-white rounded-md shadow-md hover:shadow-xl p-3 mb-3"
           >
             <button className="text-white bg-mainColor font-semibold p-2 text-lg rounded-md mb-3">
               <VscTasklist />
