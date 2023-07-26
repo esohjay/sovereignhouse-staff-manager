@@ -4,6 +4,9 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useGetAllKnowledgeBaseQuery } from "../../api/staff/knowlege-base-api";
 import { useGetStaffQuery } from "../../api/staff/staffApi";
 import Cookies from "js-cookie";
+import dayjs from "dayjs";
+import localizedFormat from "dayjs/plugin/localizedFormat";
+dayjs.extend(localizedFormat);
 
 function KnowledgeBase() {
   const navigate = useNavigate();
@@ -47,7 +50,7 @@ function KnowledgeBase() {
                       Group
                     </th>
                     <th scope="col" className="px-6 py-4">
-                      Date published
+                      Action
                     </th>
                   </tr>
                 </thead>
@@ -58,7 +61,9 @@ function KnowledgeBase() {
                         <tr
                           key={article.id}
                           className={`border-b dark:border-neutral-500 ${
-                            staff?.contractType !== article.group && "hidden"
+                            isAdmin || staff?.contractType === article.group
+                              ? null
+                              : "hidden"
                           }`}
                         >
                           <td className="whitespace-nowrap px-6 py-4 font-medium">
@@ -78,7 +83,13 @@ function KnowledgeBase() {
                           </td>
 
                           <td className="whitespace-nowrap px-6 py-4 first-letter:uppercase">
-                            {article.createdAt}
+                            <a
+                              href={`${article.link}`}
+                              className="first-letter:uppercase py-2 px-4 bg-mainColor text-white rounded"
+                              target="_blank"
+                            >
+                              read
+                            </a>
                           </td>
                         </tr>
                       );
