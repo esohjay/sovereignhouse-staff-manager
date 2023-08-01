@@ -302,6 +302,9 @@ function ApplicantDetails() {
                 <option value="">Update stage</option>
                 <option value="pending">Pending</option>
                 <option value="interviewing">Interviewing</option>
+                <option value="turned_down_interview">
+                  Turned down Interview
+                </option>
                 <option value="documentation">Documentation</option>
                 <option value="accepted">Accepted</option>
                 <option value="rejected">Rejected</option>
