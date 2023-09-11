@@ -4,7 +4,15 @@ const leaveApi = appApi.injectEndpoints({
   endpoints: (build) => ({
     requestLeave: build.mutation({
       query: (formBody) => ({
-        url: "/leave",
+        url: "/leave/add-leave-admin",
+        method: "POST",
+        body: formBody,
+      }),
+      invalidatesTags: [{ type: "Leave", id: "LEAVELIST" }],
+    }),
+    addLeaveAdmin: build.mutation({
+      query: (formBody) => ({
+        url: "/leave/add-leave-admin",
         method: "POST",
         body: formBody,
       }),
@@ -72,4 +80,5 @@ export const {
   useGetLeaveQuery,
   useDeleteLeaveMutation,
   useGetUserLeaveQuery,
+  useAddLeaveAdminMutation,
 } = leaveApi;

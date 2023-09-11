@@ -82,19 +82,20 @@ function AddShift() {
               htmlFor="studentCategory"
               className="capitalize font-medium mb-1 block text-sm"
             >
-              student category
+              shift category
             </label>
             <select
               {...register("studentCategory", { required: true })}
               className="p-2  rounded-md mb-2 block bg-white w-full focus:outline-none border border-slate-300"
             >
               <option value="">Select category</option>
-              <option value="junior">Junior</option>
-              <option value="mid-level">Mid-level</option>
-              <option value="advanced">Advanced</option>
+              <option value="basic">Basic Class</option>
+              <option value="intermediate">Intermediate Class</option>
+              <option value="advanced">Advanced Class</option>
+              <option value="non-teaching">Non teaching</option>
             </select>
             {errors.studentCategory && (
-              <span className="text-red-500">student category is required</span>
+              <span className="text-red-500">shift category is required</span>
             )}
           </div>
           {/* week day */}

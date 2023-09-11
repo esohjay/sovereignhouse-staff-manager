@@ -39,6 +39,7 @@ import EditShift from "./pages/shift/EditShift";
 import Timesheet from "./pages/timesheet/Timesheet";
 import AllStaffTimesheets from "./pages/timesheet/AllStaffTimesheets";
 import RequestLeave from "./pages/leave/RequestLeave";
+import AddStaffLeave from "./pages/leave/AddStaffLeave";
 import LeaveContainer from "./pages/leave/LeaveContainer";
 import LeaveDetails from "./pages/leave/LeaveDetails";
 import LeavereRequest from "./pages/leave/LeavereRequest";
@@ -109,19 +110,22 @@ function App() {
                 path="all-staff-timesheets"
                 element={<AllStaffTimesheets />}
               />
-
+              {/* Leave */}
               <Route path="leave" element={<LeaveContainer />}>
                 <Route path="request" element={<RequestLeave />} />
+                <Route path="add" element={<AddStaffLeave />} />
                 <Route path=":leaveId" element={<LeaveDetails />} />
                 <Route path=":leaveId/edit" element={<EditLeave />} />
                 <Route index element={<AllLeaveRequests />} />
               </Route>
+              {/* Staff */}
               <Route path="staff" element={<Hrm />}>
                 <Route path="add" element={<NewStaff />} />
                 <Route path=":userId" element={<Profile />} />
                 <Route path=":userId/edit" element={<UpdateStaff />} />
                 <Route index element={<AllStaff />} />
               </Route>
+              {/* Application */}
               <Route
                 path="students-application"
                 element={<StudentApplication />}
@@ -132,6 +136,7 @@ function App() {
                   element={<StudentApplicantDetails />}
                 />
               </Route>
+              {/* Campaign */}
               <Route path="recruitment" element={<Recruitment />}>
                 <Route path="add" element={<AddCampaign />} />
                 <Route path="applicant/all" element={<ApplicationList />} />
@@ -143,6 +148,7 @@ function App() {
                 <Route path=":campaignId/edit" element={<EditCampaign />} />
                 <Route index element={<Campaigns />} />
               </Route>
+              {/* Shift */}
               <Route path="shift" element={<Shift />}>
                 <Route path="add" element={<AddShift />} />
                 <Route index element={<ShiftList />} />

@@ -111,7 +111,7 @@ function ShiftDetails() {
         {/* Single row */}
         <article className="flex justify-evenly items-center">
           <div className="flex gap-x-2  w-full justify-center  p-3 border-b border-r border-r-mainColor border-b-mainColor">
-            <p className="capitalize font-medium">student category:</p>
+            <p className="capitalize font-medium">shift category:</p>
             <p className="first-letter:uppercase">
               {currentData?.studentCategory}
             </p>
@@ -149,7 +149,7 @@ function ShiftDetails() {
         <article className="grid grid-cols-3 gap-x-2.5 border-b place-items-center">
           <div className="flex flex-col justify-center border-r border-r-mainColor h-full w-full">
             <p className="text-center  capitalize  p-3 font-medium">
-              assigned {currentData?.users?.length > 1 ? "teachers" : "teacher"}
+              assigned {currentData?.users?.length > 1 ? "members" : "member"}
             </p>
           </div>
           <ul className="first-letter:uppercase w-full">
@@ -172,7 +172,7 @@ function ShiftDetails() {
                 </li>
               ))
             ) : (
-              <p className="text-slate-500 p-3">No assigned teacher</p>
+              <p className="text-slate-500 p-3">No assigned member</p>
             )}
           </ul>
           <form
@@ -183,14 +183,14 @@ function ShiftDetails() {
               htmlFor="teacher"
               className="capitalize font-medium mb-1 block text-xs"
             >
-              assign teacher
+              assign member
             </label>
             <div className="flex w-full gap-x-1 px-3 border border-mainColor rounded-full ">
               <select
                 {...register("user", { required: true })}
                 className="w-full  rounded-full focus:outline-none"
               >
-                <option value="">Select teacher</option>
+                <option value="">Select member</option>
                 {teachers?.map((teacher) => (
                   <option key={teacher.id} value={teacher.id}>
                     {teacher.fullName}

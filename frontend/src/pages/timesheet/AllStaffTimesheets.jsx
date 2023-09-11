@@ -62,7 +62,9 @@ function AllStaffTimesheets() {
                       </td>
                       <td
                         className="whitespace-nowrap px-6 py-4 cursor-pointer"
-                        onClick={() => navigate(`${staff.id}`)}
+                        onClick={() =>
+                          navigate(`/vms/${id}/admin/timesheet/${staff.id}`)
+                        }
                       >
                         {staff.fullName}
                       </td>

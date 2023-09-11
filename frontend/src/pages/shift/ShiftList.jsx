@@ -42,7 +42,7 @@ function ShiftList() {
                     </th>
                     <th scope="col" className="px-6 py-4">
                       {" "}
-                      Student category
+                      Shift category
                     </th>
                     <th scope="col" className="px-6 py-4">
                       Duration
@@ -87,19 +87,16 @@ function ShiftList() {
                           <td className="whitespace-nowrap px-6 py-4 flex items-center gap-x-2">
                             <Link
                               to={`${shift.id}`}
-                              className="text-mainColor text-lg"
+                              className="inline-block rounded bg-mainColor px-3 pt-1.5 pb-1 text-[9px] font-medium uppercase leading-normal text-white shadow-mainColor transition duration-150 ease-in-out hover:bg-altColor hover:shadow-altColor focus:bg-altColor focus:shadow-altColor focus:outline-none focus:ring-0 active:bg-green-500 active:shadow-green-500"
                             >
-                              <FaRegEye />
+                              view
                             </Link>
                             <Link
                               to={`${shift.id}/edit`}
-                              className="text-warning text-lg"
+                              className="inline-block rounded bg-warning px-3 pt-1.5 pb-1 text-[9px] font-medium uppercase leading-normal text-white shadow-mainColor transition duration-150 ease-in-out hover:bg-altColor hover:shadow-altColor focus:bg-altColor focus:shadow-altColor focus:outline-none focus:ring-0 active:bg-green-500 active:shadow-green-500"
                             >
-                              <FaEdit />
+                              edit
                             </Link>
-                            <button className="bg-transparent text-lg text-danger ">
-                              <FaTrash />
-                            </button>
                           </td>
                         </tr>
                       );

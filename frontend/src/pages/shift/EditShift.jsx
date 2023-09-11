@@ -126,9 +126,11 @@ function EditShift() {
                   <option value={`${currentData?.studentCategory}`}>
                     {currentData?.studentCategory}
                   </option>
-                  <option value="junior">Junior</option>
-                  <option value="mid-level">Mid-level</option>
-                  <option value="advanced">Advanced</option>
+                  <option value="">Select category</option>
+                  <option value="basic">Basic Class</option>
+                  <option value="intermediate">Intermediate Class</option>
+                  <option value="advanced">Advanced Class</option>
+                  <option value="non-teaching">Non teaching</option>
                 </select>
                 {errors.studentCategory && (
                   <span className="text-red-500">

@@ -9,10 +9,10 @@ const shiftApi = appApi.injectEndpoints({
           ? // successful query
             [
               ...result.map(({ id }) => ({ type: "Shift", id })),
-              { type: "Shift" },
+              { type: "Shift", id: "SHIFTLIST" },
             ]
           : // an error occurred, but we still want to refetch this query when `{ type: 'Posts', id: 'LIST' }` is invalidated
-            [{ type: "Shift" }],
+            [{ type: "Shift", id: "SHIFTLIST" }],
     }),
     createShift: build.mutation({
       query: (formBody) => ({
@@ -20,7 +20,7 @@ const shiftApi = appApi.injectEndpoints({
         method: "POST",
         body: formBody,
       }),
-      invalidatesTags: [{ type: "Shift", id: "LIST" }],
+      invalidatesTags: [{ type: "Shift", id: "SHIFTLIST" }],
     }),
     getShift: build.query({
       query: (id) => ({

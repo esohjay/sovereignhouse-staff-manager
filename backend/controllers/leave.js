@@ -6,7 +6,7 @@ const Notification = require("../models/notification");
 
 module.exports.createLeave = async (req, res) => {
   const leave = await Leave.create({ ...req.body, userId: req.user.uid });
-  const notifyAdmin = await Notification.create({
+  await Notification.create({
     title: "New leave reequest",
     content: "A memeber of staff has submitted a leave request.",
     path: `/vms/${process.env.ADMIN_ID}/admin/leave/${leave.id}`,
@@ -32,6 +32,10 @@ module.exports.createLeave = async (req, res) => {
   //     .status(400)
   //     .json({ message: "User has been created but email not sent" });
   // }
+  res.status(201).json(leave);
+};
+module.exports.addLeaveAdmin = async (req, res) => {
+  const leave = await Leave.create({ ...req.body });
   res.status(201).json(leave);
 };
 module.exports.updateLeave = async (req, res) => {

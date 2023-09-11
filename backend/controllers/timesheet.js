@@ -23,6 +23,13 @@ module.exports.getUserTimesheets = async (req, res) => {
     order: [["createdAt", "DESC"]],
     limit: 10,
   });
+  // const { count, rows } = await Timesheet.findAndCountAll({
+  //   where: { userId: id },
+  //   include: ["shift"],
+  //   order: [["createdAt", "DESC"]],
+  //   limit: 10,
+  // });
+
   res.status(200).json(timesheets);
 };
 module.exports.getTimesheet = async (req, res) => {

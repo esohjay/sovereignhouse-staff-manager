@@ -44,8 +44,7 @@ function Timesheet() {
   // const { currentData } = useGetStaffQuery(reqParam);
   const { currentData } = useGetUserShiftQuery(reqParam);
   const { currentData: userTimesheet } = useGetUserTimesheetQuery(reqParam);
-  // console.log(shift);
-  console.log(userTimesheet);
+
   const handleClockIn = (shiftDay, shiftId) => {
     const date = new Date();
     const today = date.getDay();
@@ -68,8 +67,7 @@ function Timesheet() {
         // new Date(`${shifts[shifts.length - 1]?.startTime}`)
         new Date(`${shifts[0]?.startTime}`)
       );
-      console.log(latestTimesheet);
-      console.log(shifts);
+
       const isEqual = Date.parse(now) === Date.parse(latestTimesheet);
       console.log(isEqual);
       if (isEqual) {
@@ -80,7 +78,7 @@ function Timesheet() {
     clockIn({
       startTime: date,
       shiftId,
-      userId: id,
+      userId: reqParam,
     });
   };
   // assign shift notification
@@ -111,7 +109,7 @@ function Timesheet() {
       autoClose: 5000,
     });
   };
-
+  console.lo;
   useEffect(() => {
     if (clockInError) {
       otherAlert();
@@ -212,6 +210,9 @@ function Timesheet() {
             <h3 className="text-center font-semibold text-mainColor capitalize p-3">
               timesheets
             </h3>
+            {/* <h3 className="text-center font-semibold text-mainColor capitalize p-3">
+              Total Hours Worked: {userTimesheet?.count * shift} 
+            </h3> */}
           </div>
           {/* Shifts */}
           <table className="w-full">
@@ -250,7 +251,6 @@ function Timesheet() {
                     </td>
                     <td className="text-left px-2 py-3 ">
                       <p className="text-sm">
-                        {/* {timesheet.startTime.substring(11, 16)} */}
                         {dayjs(timesheet.startTime).format("hh:mma")}
                       </p>
                     </td>
