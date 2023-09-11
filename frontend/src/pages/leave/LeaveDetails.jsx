@@ -90,7 +90,7 @@ function LeaveDetails() {
     }
   }, [deleted]);
   // Update user status notification
-  const {} = useToast(
+  useToast(
     "update-leave-request",
     "Leave request updated successfully",
     `${updateStatusError?.data?.message}`,
