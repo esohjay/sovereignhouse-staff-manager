@@ -12,7 +12,10 @@ import {
   useSetInterviewMutation,
   useRequestInterviewMutation,
 } from "../../api/recruitment/campaignApi";
-import { useCreateStaffMutation } from "../../api/staff/staffApi";
+import {
+  useCreateStaffMutation,
+  useGetStaffQuery,
+} from "../../api/staff/staffApi";
 import generateRandomString from "../../lib/generatePassword";
 
 import dayjs from "dayjs";
@@ -24,9 +27,10 @@ import useToast from "../../hooks/useToast";
 
 function ApplicantDetails() {
   const navigate = useNavigate();
-  const { applicantId } = useParams();
+  const { applicantId, id } = useParams();
   const { currentData, isError, isFetching, error, isSuccess } =
     useGetApplicationQuery(applicantId);
+  const { currentData: interviewer } = useGetStaffQuery(id);
   const [
     deleteApplicant,
     {
@@ -136,6 +140,7 @@ function ApplicantDetails() {
       date: dayjs(getValues("date")).format("dddd, MMM D, YYYY hh:mma"),
       email: currentData?.email,
       name: currentData?.firstName,
+      interviewer: interviewer.fullName,
     });
   };
 
@@ -302,7 +307,7 @@ function ApplicantDetails() {
                 <option value="">Update stage</option>
                 <option value="pending">Pending</option>
                 <option value="interviewing">Interviewing</option>
-                <option value="turned_down_interview">
+                <option value="turned down interview">
                   Turned down Interview
                 </option>
                 <option value="documentation">Documentation</option>

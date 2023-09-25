@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
@@ -26,6 +26,8 @@ import Loader from "../components/Loader";
 function Login() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  // const { password } = useParams();
+  const [searchParams] = useSearchParams();
   const error = useSelector(selectError);
   const loginStatus = useSelector(selectStatus);
   const resetLinkSent = useSelector(selectResetPassword);
@@ -63,7 +65,16 @@ function Login() {
     }
     dispatch(resetPassword({ email: getValues("resetEmail") }));
   };
-  console.log(error);
+  useEffect(() => {
+    if (searchParams.get("password") && searchParams.get("email")) {
+      dispatch(
+        logInWithEmailAndPassword({
+          email: searchParams.get("email"),
+          password: searchParams.get("password"),
+        })
+      );
+    }
+  }, []);
   return (
     <section className="bg-mainColor px-5 flex flex-col justify-center items-center gap-y-5 py-24 min-h-screen">
       <figure>

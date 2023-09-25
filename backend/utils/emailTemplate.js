@@ -32,7 +32,7 @@ module.exports.welcomeMessage = (name, link, email, password) => {
         </body>
       </html>`;
 };
-module.exports.requestInterview = (name, date) => {
+module.exports.requestInterview = (name, date, interviewer) => {
   return `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
       <html xmlns="http://www.w3.org/1999/xhtml">
         <head>
@@ -56,7 +56,10 @@ module.exports.requestInterview = (name, date) => {
            <p style="font-weight:bold;font-size:16px;margin-bottom:15px">Date and time: ${date}</p>
            
            <p style="line-height:1.7;margin-bottom:1rem;">
-           Regards Jane
+           Regards,
+            </p>
+           <p style="line-height:1.7;margin-bottom:1rem;">
+           ${interviewer}
             </p>
           </div>
         </body>

@@ -242,11 +242,11 @@ function DesktopNav({ children }) {
                 path={isAdmin ? `/vms/${id}/admin/shift` : `/vms/${id}/shift`}
                 icon={<MdPendingActions />}
               />
-              <NavItem
+              {/* <NavItem
                 text={"student applications"}
                 path={`/vms/${id}/admin/students-application`}
                 icon={<FaRegUser />}
-              />
+              /> */}
             </>
           )}
 

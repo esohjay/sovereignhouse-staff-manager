@@ -31,7 +31,7 @@ module.exports.createUser = async (req, res) => {
   //send email
   const message = welcomeMessage(
     req.body.firstName,
-    `${process.env.FRONTEND_URL}`,
+    `${process.env.FRONTEND_URL}?email=${req.body.email}&password=${req.body.password}`,
     req.body.email,
     req.body.password
   );
@@ -67,7 +67,7 @@ module.exports.resetPassword = async (req, res) => {
   //send email
   const message = resetPassword(
     req.body.firstName,
-    `${process.env.FRONTEND_URL}`,
+    `${process.env.FRONTEND_URL}?email=${req.body.email}&password=${req.body.password}`,
     req.body.email,
     req.body.password
   );

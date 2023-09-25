@@ -36,7 +36,7 @@ function LeaveContainer() {
                 : "inline-block px-3 tex-xs py-2 text-mainColor bg-white text-center rounded-md shadow-md capitalize hover:bg-lightGreen"
             }
           >
-            request leave
+            {isAdmin ? "Add leave" : "request leave"}
           </NavLink>
         </div>
         <article className="bg-white shadow-md rounded-md ">

@@ -57,9 +57,9 @@ module.exports.updateApplicant = async (req, res) => {
 };
 module.exports.requestInterview = async (req, res) => {
   const { id } = req.params;
-  const { email, date, name } = req.body;
+  const { email, date, name, interviewer } = req.body;
 
-  const messageApplicant = requestInterview(name, date);
+  const messageApplicant = requestInterview(name, date, interviewer);
   const adminMailSent = sendMail(
     email,
     // emailAuth,
