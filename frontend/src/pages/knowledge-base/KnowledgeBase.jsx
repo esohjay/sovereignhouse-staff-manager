@@ -82,13 +82,20 @@ function KnowledgeBase() {
                             {article.group}
                           </td>
 
-                          <td className="whitespace-nowrap px-6 py-4 first-letter:uppercase">
+                          <td className="whitespace-nowrap px-6 py-4 gap-3 flex first-letter:uppercase">
                             <a
                               href={`${article.link}`}
                               className="first-letter:uppercase py-2 px-4 bg-mainColor text-white rounded"
                               target="_blank"
                             >
                               read
+                            </a>
+                            <a
+                              href={`${article.id}/edit`}
+                              className="first-letter:uppercase py-2 px-4 bg-mainColor text-white rounded"
+                              target="_blank"
+                            >
+                              edit
                             </a>
                           </td>
                         </tr>

@@ -244,9 +244,7 @@ function Profile() {
           </div>
           <div className="flex gap-x-2 w-full  lg:justify-center p-3 border-b border-b-mainColor">
             <p className="capitalize font-medium">date Of birth:</p>
-            <p className="first-letter:uppercase">
-              {dayjs(currentData?.dateOfBirth).format("MMM D, YYYY")}
-            </p>
+            <p className="first-letter:uppercase">{currentData?.dateOfBirth}</p>
           </div>
           <div className="flex gap-x-2 w-full  lg:justify-center p-3 lg:border-l border-b border-b-mainColor">
             <p className="capitalize font-medium">nationality:</p>

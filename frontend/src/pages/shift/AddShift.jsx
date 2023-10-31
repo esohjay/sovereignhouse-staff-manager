@@ -117,6 +117,7 @@ function AddShift() {
               <option value="4">Thursday</option>
               <option value="5">Friday</option>
               <option value="6">Saturday</option>
+              <option value="7">Daily</option>
             </select>
             {errors.dayOfTheWeek && (
               <span className="text-red-500">week day is required</span>
