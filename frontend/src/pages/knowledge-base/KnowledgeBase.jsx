@@ -1,6 +1,6 @@
 import React from "react";
 import Btn from "../../components/Btn";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, Link } from "react-router-dom";
 import { useGetAllKnowledgeBaseQuery } from "../../api/staff/knowlege-base-api";
 import { useGetStaffQuery } from "../../api/staff/staffApi";
 import Cookies from "js-cookie";
@@ -90,13 +90,14 @@ function KnowledgeBase() {
                             >
                               read
                             </a>
-                            <a
-                              href={`${article.id}/edit`}
-                              className="first-letter:uppercase py-2 px-4 bg-mainColor text-white rounded"
-                              target="_blank"
-                            >
-                              edit
-                            </a>
+                            {isAdmin && (
+                              <Link
+                                to={`${article.id}/edit`}
+                                className="first-letter:uppercase py-2 px-4 bg-mainColor text-white rounded"
+                              >
+                                edit
+                              </Link>
+                            )}
                           </td>
                         </tr>
                       );

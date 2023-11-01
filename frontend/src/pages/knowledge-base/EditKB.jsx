@@ -1,16 +1,18 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Btn from "../../components/Btn";
 
 import { useParams, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
+import Modal from "../../components/Modal";
 import { setDay } from "../../lib/setDay";
 
 import useToast from "../../hooks/useToast";
 
 import {
-  useGetShiftQuery,
-  useUpdateShiftMutation,
-} from "../../api/shift/shiftApi";
+  useGetKnowledgeBaseQuery,
+  useUpdateKnowledgeBaseMutation,
+  useDeleteKnowledgeBaseMutation,
+} from "../../api/staff/knowlege-base-api";
 
 import dayjs from "dayjs";
 import localizedFormat from "dayjs/plugin/localizedFormat";
@@ -18,31 +20,50 @@ import customParseFormat from "dayjs/plugin/customParseFormat";
 dayjs.extend(localizedFormat);
 dayjs.extend(customParseFormat);
 
-function EditShift() {
+function EditKB() {
   const navigate = useNavigate();
-  const { shiftId } = useParams();
-  const { currentData } = useGetShiftQuery(shiftId);
+  const { kbId } = useParams();
+  const { currentData } = useGetKnowledgeBaseQuery(kbId);
 
   const [
-    updateShift,
+    updateKnowledgeBase,
     {
       isError: updatingError,
       isLoading: updating,
       error: updateError,
       isSuccess: updated,
     },
-  ] = useUpdateShiftMutation();
+  ] = useUpdateKnowledgeBaseMutation();
+
+  const [
+    deleteArticle,
+    {
+      isError: deletingError,
+      isLoading: deleting,
+      error: deleteError,
+      isSuccess: deleted,
+    },
+  ] = useDeleteKnowledgeBaseMutation();
   // Update shift notification
   const {} = useToast(
-    "update-shfft-1-request",
-    "Shift updated successfully",
+    "update-article-1-request",
+    "Article updated successfully",
     `${updateError?.data?.message}`,
     "mutation",
     updating,
     updated,
     updatingError
   );
-
+  // delete article notification
+  const {} = useToast(
+    "delete-article",
+    "Article deleted successfully",
+    `${deleteError?.data?.message}`,
+    "mutation",
+    deleting,
+    deleted,
+    deletingError
+  );
   const {
     register,
     handleSubmit,
@@ -50,12 +71,17 @@ function EditShift() {
     formState: { errors },
   } = useForm();
   const onSubmit = (data) => {
-    updateShift({
+    updateKnowledgeBase({
       ...data,
       id: currentData?.id,
       dayOfTheWeek: parseInt(data.dayOfTheWeek),
     });
   };
+  useEffect(() => {
+    if (updated || deleted) {
+      navigate(-1);
+    }
+  }, [updated, deleted]);
   return (
     <>
       {currentData && (
@@ -128,7 +154,7 @@ function EditShift() {
                 type="text"
                 {...register("link", {
                   required: true,
-                  value: `${currentData?.title}`,
+                  value: `${currentData?.link}`,
                 })}
                 rows="7"
                 className="p-2 rounded-md mb-2 block bg-white w-full focus:outline-none border border-slate-300"
@@ -137,13 +163,26 @@ function EditShift() {
                 <span className="text-red-500">link is required</span>
               )}
             </div>
-            <button
-              type="submit"
-              disabled={updating}
-              className="bg-mainColor text-white capitalize font-medium rounded-md inline-block py-2 px-6"
-            >
-              submit
-            </button>
+            <div className="flex justify-start items-center gap-5">
+              <button
+                type="submit"
+                disabled={updating}
+                className="bg-mainColor text-white capitalize font-medium rounded-md inline-block py-2 px-6"
+              >
+                submit
+              </button>
+              <Modal
+                style="bg-danger px-6 pt-2.5 pb-2 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#dc4c64] transition duration-150 ease-in-out hover:bg-danger-600 hover:shadow-[0_8px_9px_-4px_rgba(220,76,100,0.3),0_4px_18px_0_rgba(220,76,100,0.2)] focus:bg-danger-600 focus:shadow-[0_8px_9px_-4px_rgba(220,76,100,0.3),0_4px_18px_0_rgba(220,76,100,0.2)] focus:outline-none focus:ring-0 active:bg-danger-700 active:shadow-[0_8px_9px_-4px_rgba(220,76,100,0.3),0_4px_18px_0_rgba(220,76,100,0.2)]"
+                btnText={`Delete article`}
+                targetId="deleteArticle"
+                modalTitle="Do you want to delete?"
+                confirmText="delete"
+                action={() => deleteArticle(currentData?.id)}
+                // size="small"
+              >
+                <p>This will be deleted permanently</p>
+              </Modal>
+            </div>
           </form>
         </article>
       )}
@@ -151,4 +190,4 @@ function EditShift() {
   );
 }
 
-export default EditShift;
+export default EditKB;

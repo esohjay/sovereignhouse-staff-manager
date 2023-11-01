@@ -22,6 +22,7 @@ import AllStaff from "./pages/hrm/AllStaff";
 import Profile from "./pages/hrm/Profile";
 import UpdateStaff from "./pages/hrm/UpdateStaff";
 import AddKB from "./pages/knowledge-base/AddKB";
+import EditKB from "./pages/knowledge-base/EditKB";
 
 import Recruitment from "./pages/campaign/Recruitment";
 import AddCampaign from "./pages/campaign/AddCampaign";
@@ -80,6 +81,7 @@ function App() {
             <Route index path="dashboard" element={<Dashboard />} />
             <Route path="knowledge-base" element={<KnowledgeBase />} />
             <Route path="knowledge-base/add" element={<AddKB />} />
+            <Route path="knowledge-base/:kbId/edit" element={<EditKB />} />
             <Route path="timesheet" element={<Timesheet />} />
             <Route path="profile" element={<Profile />} />
             <Route path="profile/edit" element={<UpdateStaff />} />

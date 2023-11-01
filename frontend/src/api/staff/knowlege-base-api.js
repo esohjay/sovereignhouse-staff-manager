@@ -21,8 +21,39 @@ const kBApi = appApi.injectEndpoints({
             ]
           : [{ type: "KB", id: "KBLIST" }],
     }),
+    getKnowledgeBase: build.query({
+      query: (id) => ({
+        url: `/knowledge-base/${id}`,
+      }),
+      providesTags: (result, error, id) => [{ type: "KB", id }],
+    }),
+    updateKnowledgeBase: build.mutation({
+      query(data) {
+        return {
+          url: `/knowledge-base/${data.id}`,
+          method: "PUT",
+          body: data,
+        };
+      },
+      invalidatesTags: (result, error, { id }) => [{ type: "KB", id }],
+    }),
+    deleteKnowledgeBase: build.mutation({
+      query(id) {
+        return {
+          url: `knowledge-base/${id}`,
+          method: "DELETE",
+        };
+      },
+
+      invalidatesTags: (result, error, id) => [{ type: "KB", id }],
+    }),
   }),
   overrideExisting: false,
 });
-export const { useCreateKnowledgeBaseMutation, useGetAllKnowledgeBaseQuery } =
-  kBApi;
+export const {
+  useCreateKnowledgeBaseMutation,
+  useGetAllKnowledgeBaseQuery,
+  useUpdateKnowledgeBaseMutation,
+  useGetKnowledgeBaseQuery,
+  useDeleteKnowledgeBaseMutation,
+} = kBApi;
