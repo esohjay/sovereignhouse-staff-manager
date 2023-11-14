@@ -185,7 +185,7 @@ function ShiftDetails() {
             >
               assign member
             </label>
-            <div className="flex w-full gap-x-1 px-3 border border-mainColor rounded-full ">
+            <div className="flex w-full gap-x-1 pl-3 border border-mainColor border-r-0 rounded-full ">
               <select
                 {...register("user", { required: true })}
                 className="w-full  rounded-full focus:outline-none"
@@ -197,7 +197,7 @@ function ShiftDetails() {
                   </option>
                 ))}
               </select>
-              <button className="block p-3  text-mainColor text-lg">
+              <button className="block p-3 border bg-mainColor border-mainColor rounded-full text-white text-lg">
                 <MdOutlinePersonAddAlt />
               </button>
             </div>

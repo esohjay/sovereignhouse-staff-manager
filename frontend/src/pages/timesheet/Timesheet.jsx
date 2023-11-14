@@ -67,7 +67,6 @@ function Timesheet() {
         // new Date(`${shifts[shifts.length - 1]?.startTime}`)
         new Date(`${shifts[0]?.startTime}`)
       );
-
       const isEqual = Date.parse(now) === Date.parse(latestTimesheet);
       console.log(isEqual);
       if (isEqual) {
@@ -109,7 +108,7 @@ function Timesheet() {
       autoClose: 5000,
     });
   };
-  console.lo;
+
   useEffect(() => {
     if (clockInError) {
       otherAlert();
@@ -123,9 +122,7 @@ function Timesheet() {
         <article className="mb-7 bg-white rounded-md shadow-md p-2">
           <div className="p-3 border-b border-b-mainColor">
             <h3 className="text-center font-semibold text-mainColor capitalize p-3">
-              {userId
-                ? `${currentData?.fullName}'s shifts`
-                : "available shifts"}
+              available shifts
             </h3>
           </div>
           {/* Shifts */}
